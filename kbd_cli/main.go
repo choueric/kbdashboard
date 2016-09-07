@@ -28,7 +28,6 @@ func checkPretools(n string) {
 
 func runCommand(name string, arg ...string) {
 	cmd := exec.Command(name, arg...)
-	//cmd.Stdin = strings.NewReader("some input")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
@@ -38,7 +37,7 @@ func runCommand(name string, arg ...string) {
 	fmt.Println(out.String())
 }
 
-func buildKernel(item *kbd.Item) {
+func makeKernel(item *kbd.Item, target string) {
 	cmdName := "make"
 	j := []string{"-j", strconv.Itoa(item.ThreadNum)}
 	output := []string{"O", item.OutputDir}
@@ -52,7 +51,7 @@ func buildKernel(item *kbd.Item) {
 		strings.Join(cc, "="),
 		strings.Join(arch, "="),
 		strings.Join(installModPath, "="),
-		item.Target,
+		target,
 	}
 
 	cmd := exec.Command(cmdName, cmdArgs...)
@@ -126,5 +125,5 @@ func main() {
 		}
 	}
 
-	buildKernel(config.Items[0])
+	makeKernel(config.Items[0], "uImage")
 }

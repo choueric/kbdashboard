@@ -22,7 +22,6 @@ const DefaultConfig = `
 		"cross_compile":"arm-eabi-",
 		"arch":"arm",
 		"mod_install_dir":"./_build/mod",
-		"target":"uImage",
 		"src_dir":"/home/user/kernel"
 	}
 	]
@@ -35,7 +34,6 @@ type Item struct {
 	Arch          string `json:"arch"`
 	CrossComile   string `json:"cross_compile"`
 	OutputDir     string `json:"output_dir"`
-	Target        string `json:"target"`
 	ThreadNum     int    `json:"thread_num"`
 	ModInstallDir string `json:"mod_install_dir"`
 }
