@@ -6,6 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"strconv"
+	"strings"
+
+	"github.com/choueric/kernelBuildDashboard/kbd"
 )
 
 const (
@@ -34,20 +38,25 @@ func runCommand(name string, arg ...string) {
 	fmt.Println(out.String())
 }
 
-func buildKernel() {
+func buildKernel(item *kbd.Item) {
 	cmdName := "make"
+	j := []string{"-j", strconv.Itoa(item.ThreadNum)}
+	output := []string{"O", item.OutputDir}
+	cc := []string{"CROSS_COMPILE", item.CrossComile}
+	arch := []string{"ARCH", item.Arch}
+	installModPath := []string{"INSTALL_MODE_PATH", item.ModInstallDir}
+
 	cmdArgs := []string{
-		"-j4",
-		"O=./_build",
-		"CROSS_COMPILE=/home/zhs/workspace/TK1/android_dev/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-",
-		"ARCH=arm",
-		"INSTALL_MOD_PATH=./_build/mod",
-		"uImage",
+		strings.Join(j, ""),
+		strings.Join(output, "="),
+		strings.Join(cc, "="),
+		strings.Join(arch, "="),
+		strings.Join(installModPath, "="),
+		item.Target,
 	}
-	kernelDir := "/home/zhs/workspace/TK1/kernel_android"
 
 	cmd := exec.Command(cmdName, cmdArgs...)
-	cmd.Dir = kernelDir
+	cmd.Dir = item.SrcDir
 
 	runCmd(cmd)
 }
@@ -95,11 +104,27 @@ func runCmd(cmd *exec.Cmd) error {
 }
 
 func main() {
-	pretools := []string{"make"}
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
 
+	pretools := []string{"make"}
 	for _, v := range pretools {
 		checkPretools(v)
 	}
 
-	buildKernel()
+	config, err := kbd.ParseConfig("")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if config == nil {
+		log.Fatal("config is nil.")
+	}
+	if len(config.Items) == 0 {
+		log.Println("no items in config file.")
+	} else {
+		for _, item := range config.Items {
+			fmt.Println(item, "\n")
+		}
+	}
+
+	buildKernel(config.Items[0])
 }
