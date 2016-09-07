@@ -34,8 +34,8 @@ type Item struct {
 	Arch          string `json:"arch"`
 	CrossComile   string `json:"cross_compile"`
 	OutputDir     string `json:"output_dir"`
-	ThreadNum     int    `json:"thread_num"`
 	ModInstallDir string `json:"mod_install_dir"`
+	ThreadNum     int    `json:"thread_num"`
 }
 
 type Config struct {
@@ -43,7 +43,7 @@ type Config struct {
 }
 
 func (i *Item) String() string {
-	return fmt.Sprintf("Item [%s]\nSrcDir\t: %s\nArch\t: %s\nCC\t: %s",
+	return fmt.Sprintf("'%s'\nSrcDir\t: %s\nArch\t: %s\nCC\t: %s",
 		i.Name, i.SrcDir, i.Arch, i.CrossComile)
 }
 

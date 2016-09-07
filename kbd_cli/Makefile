@@ -1,8 +1,6 @@
 EXEC=kbdashboard
 
-all:$(EXEC) run
-
-$(EXEC):main.go ../kbd/config.go
+all:
 	@go build -o $(EXEC)
 
 run:$(EXEC)
