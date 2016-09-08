@@ -17,6 +17,26 @@ func isNumber(str string) bool {
 	}
 }
 
+func getProfile(arg string, config *Config) *Profile {
+	var p *Profile
+	if isNumber(arg) {
+		n, _ := strconv.Atoi(arg)
+		if n >= len(config.Profiles) || n < 0 {
+			log.Fatalf("invalid index of profile: [%d]\n", n)
+		}
+		p = config.Profiles[n]
+	} else {
+		for _, i := range config.Profiles {
+			if i.Name == arg {
+				p = i
+				break
+			}
+		}
+	}
+
+	return p
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var handerMap = map[string]CmdHandler{
@@ -57,19 +77,7 @@ func cmd_make(args []string, config *Config) {
 		log.Fatal("make need profile's name or index")
 	}
 
-	var p *Profile
-	if isNumber(args[0]) {
-		n, _ := strconv.Atoi(args[0])
-		p = config.Profiles[n]
-	} else {
-		for _, i := range config.Profiles {
-			if i.Name == args[0] {
-				p = i
-				break
-			}
-		}
-	}
-
+	p := getProfile(args[0], config)
 	if p == nil {
 		log.Fatalf("can not find profile [%s]\n", args[0])
 	}
