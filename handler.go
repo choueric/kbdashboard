@@ -24,13 +24,32 @@ var handerMap = map[string]CmdHandler{
 	"make": cmd_make,
 }
 
+func cmd_help(args []string, config *Config) {
+	fmt.Printf("Usage: \n")
+	for k, h := range handerMap {
+		fmt.Printf("  - %s\t: ", k)
+		h(nil, nil)
+	}
+	fmt.Println("  - help\t: Display this message.")
+}
+
 func cmd_list(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("No arg. List all profile of items\n")
+		return
+	}
+
 	for i, item := range config.Items {
-		fmt.Printf("\n[%d]\t: %v\n", i, item)
+		fmt.Printf("\n%s[%d]\t%s: %v\n", CGREEN, i, CEND, item)
 	}
 }
 
 func cmd_make(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("{name | index}. Build kernel specified by name or index\n")
+		return
+	}
+
 	if len(args) == 0 {
 		log.Fatal("make need item name or number")
 	}

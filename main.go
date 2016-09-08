@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 )
@@ -25,10 +24,15 @@ func parseConfig() *Config {
 }
 
 func handleCmd(cmd string, args []string, config *Config) {
+	if cmd == "help" {
+		cmd_help(nil, nil)
+		return
+	}
+
 	h, ok := handerMap[cmd]
 	if !ok {
-		printUsage()
 		log.Fatalf("[%s] is not supported\n", cmd)
+		cmd_help(nil, nil)
 	}
 	h(args, config)
 }
@@ -48,17 +52,10 @@ func main() {
 		cmd = os.Args[1]
 		args = os.Args[2:len(os.Args)]
 	default:
-		printUsage()
+		cmd_help(nil, nil)
 		return
 	}
 
 	config := parseConfig()
 	handleCmd(cmd, args, config)
-}
-
-func printUsage() {
-	fmt.Printf("Usage: \n")
-	for k, _ := range handerMap {
-		fmt.Printf("  - %s\n", k)
-	}
 }
