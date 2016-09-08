@@ -9,13 +9,13 @@ import (
 	"strings"
 )
 
-func makeKernel(item *Item, target string) {
+func makeKernel(p *Profile, target string) {
 	cmdName := "make"
-	j := []string{"-j", strconv.Itoa(item.ThreadNum)}
-	output := []string{"O", item.OutputDir}
-	cc := []string{"CROSS_COMPILE", item.CrossComile}
-	arch := []string{"ARCH", item.Arch}
-	installModPath := []string{"INSTALL_MODE_PATH", item.ModInstallDir}
+	j := []string{"-j", strconv.Itoa(p.ThreadNum)}
+	output := []string{"O", p.OutputDir}
+	cc := []string{"CROSS_COMPILE", p.CrossComile}
+	arch := []string{"ARCH", p.Arch}
+	installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
 
 	cmdArgs := []string{
 		strings.Join(j, ""),
@@ -27,7 +27,7 @@ func makeKernel(item *Item, target string) {
 	}
 
 	cmd := exec.Command(cmdName, cmdArgs...)
-	cmd.Dir = item.SrcDir
+	cmd.Dir = p.SrcDir
 
 	runCmd(cmd)
 }

@@ -35,12 +35,12 @@ func cmd_help(args []string, config *Config) {
 
 func cmd_list(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("No arg. List all profile of items\n")
+		fmt.Printf("No arg. List all profiles\n")
 		return
 	}
 
-	for i, item := range config.Items {
-		fmt.Printf("\n%s[%d]\t%s: %v\n", CGREEN, i, CEND, item)
+	for i, p := range config.Profiles {
+		fmt.Printf("\n%s[%d]\t%s: %v\n", CGREEN, i, CEND, p)
 	}
 }
 
@@ -51,25 +51,25 @@ func cmd_make(args []string, config *Config) {
 	}
 
 	if len(args) == 0 {
-		log.Fatal("make need item name or number")
+		log.Fatal("make need profile's name or index")
 	}
 
-	var item *Item
+	var p *Profile
 	if isNumber(args[0]) {
 		n, _ := strconv.Atoi(args[0])
-		item = config.Items[n]
+		p = config.Profiles[n]
 	} else {
-		for _, i := range config.Items {
+		for _, i := range config.Profiles {
 			if i.Name == args[0] {
-				item = i
+				p = i
 				break
 			}
 		}
 	}
 
-	if item == nil {
-		log.Fatalf("can not find item [%s]\n", args[0])
+	if p == nil {
+		log.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	makeKernel(item, "uImage")
+	makeKernel(p, "uImage")
 }

@@ -14,7 +14,7 @@ const (
 
 const DefaultConfig = `
 {
-	"item": [
+	"profile": [
 	{
 		"name":"demo",
 		"thread_num":4,
@@ -28,7 +28,7 @@ const DefaultConfig = `
 }
 `
 
-type Item struct {
+type Profile struct {
 	Name          string `json:"name"`
 	SrcDir        string `json:"src_dir"`
 	Arch          string `json:"arch"`
@@ -39,12 +39,12 @@ type Item struct {
 }
 
 type Config struct {
-	Items []*Item `json:"item"`
+	Profiles []*Profile `json:"profile"`
 }
 
-func (i *Item) String() string {
+func (p *Profile) String() string {
 	return fmt.Sprintf("'%s'\nSrcDir\t: %s\nArch\t: %s\nCC\t: %s",
-		i.Name, i.SrcDir, i.Arch, i.CrossComile)
+		p.Name, p.SrcDir, p.Arch, p.CrossComile)
 }
 
 func checkConfigDir(path string) {
