@@ -7,11 +7,9 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-
-	"github.com/choueric/kernelBuildDashboard/kbd"
 )
 
-func makeKernel(item *kbd.Item, target string) {
+func makeKernel(item *Item, target string) {
 	cmdName := "make"
 	j := []string{"-j", strconv.Itoa(item.ThreadNum)}
 	output := []string{"O", item.OutputDir}

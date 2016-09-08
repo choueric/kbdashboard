@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-	"github.com/choueric/kernelBuildDashboard/kbd"
 )
 
 const (
@@ -14,8 +12,8 @@ const (
 	CEND   = "\x1b[0;m"
 )
 
-func parseConfig() *kbd.Config {
-	config, err := kbd.ParseConfig("")
+func parseConfig() *Config {
+	config, err := ParseConfig("")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,7 +24,7 @@ func parseConfig() *kbd.Config {
 	return config
 }
 
-func handleCmd(cmd string, args []string, config *kbd.Config) {
+func handleCmd(cmd string, args []string, config *Config) {
 	h, ok := handerMap[cmd]
 	if !ok {
 		printUsage()

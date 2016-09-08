@@ -1,4 +1,4 @@
-package kbd
+package main
 
 import (
 	"encoding/json"

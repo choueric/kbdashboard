@@ -5,11 +5,9 @@ import (
 	"log"
 	"regexp"
 	"strconv"
-
-	"github.com/choueric/kernelBuildDashboard/kbd"
 )
 
-type CmdHandler func(args []string, config *kbd.Config)
+type CmdHandler func(args []string, config *Config)
 
 func isNumber(str string) bool {
 	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
@@ -26,18 +24,18 @@ var handerMap = map[string]CmdHandler{
 	"make": cmd_make,
 }
 
-func cmd_list(args []string, config *kbd.Config) {
+func cmd_list(args []string, config *Config) {
 	for i, item := range config.Items {
 		fmt.Printf("\n[%d]\t: %v\n", i, item)
 	}
 }
 
-func cmd_make(args []string, config *kbd.Config) {
+func cmd_make(args []string, config *Config) {
 	if len(args) == 0 {
 		log.Fatal("make need item name or number")
 	}
 
-	var item *kbd.Item
+	var item *Item
 	if isNumber(args[0]) {
 		n, _ := strconv.Atoi(args[0])
 		item = config.Items[n]
