@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 )
 
 func makeKernel(p *Profile, target string) {
@@ -72,4 +74,19 @@ func runCmd(cmd *exec.Cmd) error {
 	}
 
 	return nil
+}
+
+func execCmd(name string, argv []string) {
+	binary, err := exec.LookPath(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	env := os.Environ()
+
+	fmt.Printf("%s %v\n", binary, argv)
+	err = syscall.Exec(binary, argv, env)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -42,6 +42,7 @@ func getProfile(arg string, config *Config) *Profile {
 var handerMap = map[string]CmdHandler{
 	"list": cmd_list,
 	"make": cmd_make,
+	"edit": cmd_edit,
 }
 
 func cmd_help(args []string, config *Config) {
@@ -83,4 +84,10 @@ func cmd_make(args []string, config *Config) {
 	}
 
 	makeKernel(p, "uImage")
+}
+
+func cmd_edit(args []string, config *Config) {
+	editor := "vim"
+	var argv = []string{editor, config.configFile}
+	execCmd(editor, argv)
 }

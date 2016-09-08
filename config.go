@@ -38,7 +38,8 @@ type Profile struct {
 }
 
 type Config struct {
-	Profiles []*Profile `json:"profile"`
+	Profiles   []*Profile `json:"profile"`
+	configFile string
 }
 
 func checkConfigDir(path string) {
@@ -86,6 +87,7 @@ func ParseConfig(path string) (*Config, error) {
 	}
 
 	config := &Config{}
+	config.configFile = path
 	if err = json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
