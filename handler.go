@@ -56,7 +56,7 @@ func cmd_help(args []string, config *Config) {
 
 func cmd_list(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("No arg. List all profiles\n")
+		fmt.Printf("List all profiles\n")
 		return
 	}
 
@@ -87,6 +87,11 @@ func cmd_make(args []string, config *Config) {
 }
 
 func cmd_edit(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("Edit the config file using editor specified in config file.\n")
+		return
+	}
+
 	var argv = []string{config.Editor, config.configFile}
 	execCmd(config.Editor, argv)
 }
