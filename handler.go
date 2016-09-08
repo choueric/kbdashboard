@@ -87,7 +87,6 @@ func cmd_make(args []string, config *Config) {
 }
 
 func cmd_edit(args []string, config *Config) {
-	editor := "vim"
-	var argv = []string{editor, config.configFile}
-	execCmd(editor, argv)
+	var argv = []string{config.Editor, config.configFile}
+	execCmd(config.Editor, argv)
 }

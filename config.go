@@ -13,6 +13,7 @@ const (
 
 const DefaultConfig = `
 {
+	"editor": "vim",
 	"profile": [
 	{
 		"name":"demo",
@@ -38,6 +39,7 @@ type Profile struct {
 }
 
 type Config struct {
+	Editor     string     `json:"editor"`
 	Profiles   []*Profile `json:"profile"`
 	configFile string
 }
@@ -91,5 +93,6 @@ func ParseConfig(path string) (*Config, error) {
 	if err = json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
+	log.Println(config)
 	return config, nil
 }
