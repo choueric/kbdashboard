@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -40,11 +39,6 @@ type Profile struct {
 
 type Config struct {
 	Profiles []*Profile `json:"profile"`
-}
-
-func (p *Profile) String() string {
-	return fmt.Sprintf("'%s'\nSrcDir\t: %s\nArch\t: %s\nCC\t: %s",
-		p.Name, p.SrcDir, p.Arch, p.CrossComile)
 }
 
 func checkConfigDir(path string) {

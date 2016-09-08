@@ -40,7 +40,10 @@ func cmd_list(args []string, config *Config) {
 	}
 
 	for i, p := range config.Profiles {
-		fmt.Printf("\n%s[%d]\t%s: %v\n", CGREEN, i, CEND, p)
+		fmt.Printf("\n%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		fmt.Printf("SrcDir\t: %s\nArch\t: %s\nCC\t: %s\n",
+			p.SrcDir, p.Arch, p.CrossComile)
+
 	}
 }
 
