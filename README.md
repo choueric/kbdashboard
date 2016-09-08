@@ -11,14 +11,14 @@ the result executable is `kbd_cli`.
 
 # configuration
 Configuration file is in json format. It can contains multiple kernel
-configurations; each one is a item. The program finds configuration file 
+configurations; each one is a profile. The program finds configuration file 
 `~/.config/kbdashboard/config.json`.
 
 A sample is shown below:
 
 ```json
 {
-	"item": [
+	"profile": [
 	{
 		"name":"demo",
 		"src_dir":"/home/user/kernel"
@@ -36,9 +36,9 @@ A sample is shown below:
 }
 ```
 
-One item must include following values:
+One profile must include following values:
 ```
-name    : item name.
+name    : profile name.
 src_dir : directory path of kernel source.
 ```
 
