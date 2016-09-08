@@ -40,9 +40,10 @@ func getProfile(arg string, config *Config) *Profile {
 ////////////////////////////////////////////////////////////////////////////////
 
 var handerMap = map[string]CmdHandler{
-	"list": cmd_list,
-	"make": cmd_make,
-	"edit": cmd_edit,
+	"list":   cmd_list,
+	"make":   cmd_make,
+	"edit":   cmd_edit,
+	"config": cmd_config,
 }
 
 func cmd_help(args []string, config *Config) {
@@ -77,13 +78,29 @@ func cmd_make(args []string, config *Config) {
 	if len(args) == 0 {
 		log.Fatal("make need profile's name or index")
 	}
-
 	p := getProfile(args[0], config)
 	if p == nil {
 		log.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	makeKernel(p, "uImage")
+}
+
+func cmd_config(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("{name | index}. Configure kernel using menuconfig\n")
+		return
+	}
+
+	if len(args) == 0 {
+		log.Fatal("make need profile's name or index")
+	}
+	p := getProfile(args[0], config)
+	if p == nil {
+		log.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	configKernel(p, "menuconfig")
 }
 
 func cmd_edit(args []string, config *Config) {

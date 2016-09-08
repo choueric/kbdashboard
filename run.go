@@ -11,8 +11,7 @@ import (
 	"syscall"
 )
 
-func makeKernel(p *Profile, target string) {
-	cmdName := "make"
+func makeKernelOpt(p *Profile, target string) []string {
 	j := []string{"-j", strconv.Itoa(p.ThreadNum)}
 	output := []string{"O", p.OutputDir}
 	cc := []string{"CROSS_COMPILE", p.CrossComile}
@@ -28,10 +27,25 @@ func makeKernel(p *Profile, target string) {
 		target,
 	}
 
-	cmd := exec.Command(cmdName, cmdArgs...)
+	return cmdArgs
+}
+
+func makeKernel(p *Profile, target string) {
+	cmdArgs := makeKernelOpt(p, target)
+
+	cmd := exec.Command("make", cmdArgs...)
 	cmd.Dir = p.SrcDir
 
 	runCmd(cmd)
+}
+
+func configKernel(p *Profile, target string) {
+	cmdArgs := makeKernelOpt(p, target)
+	args := []string{"make"}
+	args = append(args, cmdArgs...)
+
+	os.Chdir(p.SrcDir)
+	execCmd("make", args)
 }
 
 func runCmd(cmd *exec.Cmd) error {
@@ -84,7 +98,6 @@ func execCmd(name string, argv []string) {
 
 	env := os.Environ()
 
-	fmt.Printf("%s %v\n", binary, argv)
 	err = syscall.Exec(binary, argv, env)
 	if err != nil {
 		log.Fatal(err)

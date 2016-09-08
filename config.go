@@ -93,6 +93,5 @@ func ParseConfig(path string) (*Config, error) {
 	if err = json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
-	log.Println(config)
 	return config, nil
 }
