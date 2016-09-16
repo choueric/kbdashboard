@@ -20,6 +20,7 @@ func parseConfig() *Config {
 		log.Fatal("config is nil.")
 	}
 
+	//log.Println(config)
 	return config
 }
 

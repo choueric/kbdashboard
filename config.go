@@ -14,6 +14,7 @@ const (
 const DefaultConfig = `
 {
 	"editor": "vim",
+	"current": 1,
 	"profile": [
 	{
 		"name":"demo",
@@ -40,6 +41,7 @@ type Profile struct {
 
 type Config struct {
 	Editor     string     `json:"editor"`
+	Current    int        `json:"current"`
 	Profiles   []*Profile `json:"profile"`
 	configFile string
 }
@@ -93,5 +95,25 @@ func ParseConfig(path string) (*Config, error) {
 	if err = json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
+
+	if config.Current >= len(config.Profiles) {
+		log.Fatal("Current in config.json is invalid: ", config.Current)
+	}
+
 	return config, nil
+}
+
+func writeConfigFile(config *Config) {
+	data, err := json.MarshalIndent(config, "  ", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file, err := os.Create(config.configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	file.Write(data)
 }
