@@ -22,6 +22,7 @@ const DefaultConfig = `
 		"output_dir":"./_build",
 		"cross_compile":"arm-eabi-",
 		"arch":"arm",
+		"target":"uImage",
 		"mod_install_dir":"./_build/mod",
 		"src_dir":"/home/user/kernel"
 	}
@@ -33,6 +34,7 @@ type Profile struct {
 	Name          string `json:"name"`
 	SrcDir        string `json:"src_dir"`
 	Arch          string `json:"arch"`
+	Target        string `json:"target"`
 	CrossComile   string `json:"cross_compile"`
 	OutputDir     string `json:"output_dir"`
 	ModInstallDir string `json:"mod_install_dir"`

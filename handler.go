@@ -44,6 +44,8 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 	var arg string
 	if len(args) == 0 {
 		arg = strconv.Itoa(config.Current)
+	} else {
+		arg = args[0]
 	}
 
 	return getProfile(arg, config)
@@ -83,9 +85,10 @@ func cmd_list(args []string, config *Config) {
 		} else {
 			fmt.Printf("\n%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
 		}
-		fmt.Printf("SrcDir\t: %s\nArch\t: %s\nCC\t: %s\n",
-			p.SrcDir, p.Arch, p.CrossComile)
-
+		fmt.Printf("SrcDir\t: %s\n", p.SrcDir)
+		fmt.Printf("Arch\t: %s\n", p.Arch)
+		fmt.Printf("CC\t: %s\n", p.CrossComile)
+		fmt.Printf("Target\t: %s\n", p.Target)
 	}
 }
 
@@ -101,7 +104,7 @@ func cmd_make(args []string, config *Config) {
 	}
 
 	fmt.Printf("cmd %s'make'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
-	makeKernel(p, "uImage")
+	makeKernel(p, p.Target)
 }
 
 func cmd_config(args []string, config *Config) {
