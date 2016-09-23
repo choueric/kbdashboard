@@ -74,7 +74,7 @@ func cmd_help(args []string, config *Config) {
 
 func cmd_list(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("List all profiles\n")
+		fmt.Printf("List all profiles.\n")
 		return
 	}
 
@@ -114,8 +114,8 @@ func cmd_make(args []string, config *Config) {
 
 func cmd_build(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[name | index]. Build kernel specified by name or index\n")
-		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target is uImage.\n")
+		fmt.Printf("[name | index]. Build kernel specified by name or index.\n")
+		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
 		return
 	}
 
@@ -130,7 +130,7 @@ func cmd_build(args []string, config *Config) {
 
 func cmd_config(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[name | index]. Configure kernel using menuconfig\n")
+		fmt.Printf("[name | index]. Configure kernel using menuconfig.\n")
 		fmt.Printf("\t\t  Same as '$ kbdashboard make menuconfig'.\n")
 		return
 	}

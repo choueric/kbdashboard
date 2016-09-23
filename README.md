@@ -76,19 +76,47 @@ Now there are 6 commands which are shown via command 'help' command:
 ```
 $ kbdashboard help
 Usage:
-  - edit        : Edit the config file using editor specified in config file.
-  - config      : [name | index]. Configure kernel using menuconfig
+  - list        : List all profiles.
   - choose      : {name | index}. Choose current profile.
-  - list        : List all profiles
-  - build       : [name | index]. Build kernel specified by name or index
+  - edit        : Edit the config file using editor specified in config file.
+  - make        : <target> [name | index]. Execute 'make' with specify target.
+  - config      : [name | index]. Configure kernel using menuconfig.
+                  Same as '$ kbdashboard make menuconfig'.
+  - build       : [name | index]. Build kernel specified by name or index.
+                  Same as '$ kbdashboard make uImage' if target in config is uImage.
   - help        : Display this message.
 ```
 
 ## list
 List the profiles. The current profile is marked by the red asterisk symbol.
 
+## choose
+Choose the current profile by name or index.
+
 ## edit
 Edit the configuration file using editor specified by the "editor" option.
+
+## make
+This command is used to execute original targets of kernel.
+
+For example, the frist thing to do after getting the kernel source is often to 
+make a default configuration. The command may be like:
+
+```sh
+$ make ARCH=arm bcm_defconfig
+```
+
+In such case, `bcm_defconfig` is the target argument:
+
+```sh
+$ kbdashboard make bcm_defconfig
+```
+
+The command uses the chosen profile. Or to specify the first profile:
+
+```sh
+$ kbdashboard make bcm_defconfig 0
+```
 
 ## config
 Invoke menuconfig to the specified kernel profile. The profile is specified by
@@ -98,7 +126,4 @@ the configuration file if no option in the command line.
 ## build
 Build the target for specified kernel profile. The way to specify profile is as
 same as command 'config'.
-
-## choose
-Choose the current profile by name or index.
 
