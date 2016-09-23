@@ -1,5 +1,5 @@
 # Kernel Build Dashboard
-Dashboard for configuring, managing build process of multiple linux kernel.
+Dashboard for configuring, managing build process of multiple linux kernels.
 
 # Build this Tool
 ```
@@ -84,6 +84,9 @@ Usage:
                   Same as `$ kbdashboard make menuconfig`.
   - build       : [name | index]. Build kernel specified by name or index.
                   Same as `$ kbdashboard make uImage` if target in config is uImage.
+  - install     : [edit] [name | index]. Execute or edit install script.
+                  If use sub-cmd 'edit', open the install script with editor.
+                  If no sub-cmd 'edit', execute the install script.
   - help        : Display this message.
 ```
 
@@ -126,6 +129,17 @@ the configuration file if no option in the command line.
 ## build
 Build the target for specified kernel profile. The way to specify profile is as
 same as command `config`.
+
+## install
+This command is used to call the install script of specified profile. The script
+is in the directory of configuration file. 
+
+If there is no such script, a new script will be created and opened by the 
+editor which is specified by `editor` config. In this way, users can write a 
+initial script.
+
+The users can also use the sub-cmd `edit` to call the editor and modify this
+script explicitly.
 
 # How to Use this Tool
 
@@ -189,3 +203,28 @@ $ kbdashboard build
 ```
 
 At last, you will find the kernel image.
+
+## Install
+
+Use `install` command to execute installation script which is writted by users:
+
+```sh
+$ kbdashboard install
+```
+
+At first, because there must be no installation script for this profile, the
+above command will create an empty script and open it using the specified editor.
+
+After user writting the new script, execute it by using the command again.
+
+If user want to modify the script, use the `edit` sub-cmd:
+
+```sh
+$ kbdashboard install edit
+```
+
+Or other profiles' installation script:
+
+```sh
+$ kbdashboard install edit anotherProfile
+```

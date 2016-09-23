@@ -3,11 +3,19 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
 	"regexp"
 	"strconv"
 )
 
 type CmdHandler func(args []string, config *Config)
+
+func checkError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func isNumber(str string) bool {
 	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
@@ -54,12 +62,13 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 ////////////////////////////////////////////////////////////////////////////////
 
 var handerMap = map[string]CmdHandler{
-	"list":   cmd_list,
-	"choose": cmd_choose,
-	"edit":   cmd_edit,
-	"make":   cmd_make,
-	"config": cmd_config,
-	"build":  cmd_build,
+	"list":    cmd_list,
+	"choose":  cmd_choose,
+	"edit":    cmd_edit,
+	"make":    cmd_make,
+	"config":  cmd_config,
+	"build":   cmd_build,
+	"install": cmd_install,
 }
 
 func cmd_help(args []string, config *Config) {
@@ -172,4 +181,58 @@ func cmd_choose(args []string, config *Config) {
 	config.Current = index
 
 	writeConfigFile(config)
+}
+
+func cmd_install(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("[edit] [name | index]. Execute or edit install script.\n")
+		fmt.Printf("\t\t  If use sub-cmd 'edit', open the install script with editor.\n")
+		fmt.Printf("\t\t  If no sub-cmd 'edit', execute the install script.\n")
+		return
+	}
+
+	var doEdit bool
+	var create bool
+
+	argc := len(args)
+	if argc != 0 && args[0] == "edit" {
+		doEdit = true
+		args = args[1:len(args)]
+	}
+
+	p, _ := getProfileByCurrent(args, config)
+	if p == nil {
+		log.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	script := getInstallFilename(p)
+	if checkFileExsit(script) == false {
+		// create script
+		file, err := os.OpenFile(script, os.O_RDWR|os.O_CREATE, 0775)
+		checkError(err)
+		_, err = file.Write([]byte("#!/bin/sh"))
+		checkError(err)
+		file.Close()
+		create = true
+	}
+
+	if doEdit {
+		fmt.Printf("cmd %s'install edit'%s profile %s[%s]%s\n",
+			CGREEN, CEND, CGREEN, p.Name, CEND)
+		var argv = []string{config.Editor, script}
+		execCmd(config.Editor, argv)
+		return
+	}
+
+	fmt.Printf("cmd %s'install'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	if create {
+		// edit script
+		var argv = []string{config.Editor, script}
+		execCmd(config.Editor, argv)
+	} else {
+		cmd := exec.Command(script)
+		cmd.Dir = p.SrcDir
+		fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
+		runCmd(cmd)
+	}
 }

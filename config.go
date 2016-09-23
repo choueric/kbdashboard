@@ -84,6 +84,21 @@ func checkConfigFile(path string) string {
 	return path
 }
 
+func getInstallFilename(p *Profile) string {
+	return os.Getenv("HOME") + "/" + ConfigDir + "/" + p.Name + "_install.sh"
+}
+
+func checkFileExsit(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil && os.IsNotExist(err) {
+		return false
+	} else if err != nil {
+		log.Fatal(err)
+	}
+
+	return true
+}
+
 func ParseConfig(path string) (*Config, error) {
 	checkConfigDir(ConfigDir)
 	path = checkConfigFile(path)
