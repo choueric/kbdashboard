@@ -12,7 +12,11 @@ import (
 )
 
 func makeKernelOpt(p *Profile, target string) []string {
-	cmdArgs := []string{target}
+	cmdArgs := []string{}
+
+	if target != "" {
+		cmdArgs = append(cmdArgs, target)
+	}
 
 	if p.ThreadNum > 0 {
 		j := []string{"-j", strconv.Itoa(p.ThreadNum)}
@@ -47,6 +51,8 @@ func makeKernel(p *Profile, target string) {
 
 	cmd := exec.Command("make", cmdArgs...)
 	cmd.Dir = p.SrcDir
+
+	fmt.Printf("    %s%v%s\n", CGREEN, cmdArgs, CEND)
 
 	runCmd(cmd)
 }
