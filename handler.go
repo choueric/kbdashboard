@@ -55,10 +55,11 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 
 var handerMap = map[string]CmdHandler{
 	"list":   cmd_list,
-	"build":  cmd_build,
-	"edit":   cmd_edit,
-	"config": cmd_config,
 	"choose": cmd_choose,
+	"edit":   cmd_edit,
+	"make":   cmd_make,
+	"config": cmd_config,
+	"build":  cmd_build,
 }
 
 func cmd_help(args []string, config *Config) {
@@ -92,9 +93,29 @@ func cmd_list(args []string, config *Config) {
 	}
 }
 
+func cmd_make(args []string, config *Config) {
+	argc := len(args)
+	if config == nil || argc == 0 {
+		fmt.Printf("<target> [name | index]. Execute 'make' with specify target.\n")
+		return
+	}
+
+	target := args[0]
+	args = args[1:len(args)]
+
+	p, _ := getProfileByCurrent(args, config)
+	if p == nil {
+		log.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	fmt.Printf("cmd %s'build %s'%s for %s[%s]%s\n", CGREEN, target, CEND, CGREEN, p.Name, CEND)
+	makeKernel(p, target)
+}
+
 func cmd_build(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("{name | index}. Build kernel specified by name or index\n")
+		fmt.Printf("[name | index]. Build kernel specified by name or index\n")
+		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target is uImage.\n")
 		return
 	}
 
@@ -109,7 +130,8 @@ func cmd_build(args []string, config *Config) {
 
 func cmd_config(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("{name | index}. Configure kernel using menuconfig\n")
+		fmt.Printf("[name | index]. Configure kernel using menuconfig\n")
+		fmt.Printf("\t\t  Same as '$ kbdashboard make menuconfig'.\n")
 		return
 	}
 

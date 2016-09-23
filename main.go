@@ -50,6 +50,8 @@ func main() {
 	case 2:
 		cmd = os.Args[1]
 	case 3:
+		fallthrough
+	case 4:
 		cmd = os.Args[1]
 		args = os.Args[2:len(os.Args)]
 	default:
