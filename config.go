@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -18,13 +19,13 @@ const DefaultConfig = `
 	"profile": [
 	{
 		"name":"demo",
-		"thread_num":4,
-		"output_dir":"./_build",
-		"cross_compile":"arm-eabi-",
+		"src_dir":"/home/user/kernel"
 		"arch":"arm",
 		"target":"uImage",
+		"cross_compile":"arm-eabi-",
+		"output_dir":"./_build",
 		"mod_install_dir":"./_build/mod",
-		"src_dir":"/home/user/kernel"
+		"thread_num":4,
 	}
 	]
 }
@@ -46,6 +47,13 @@ type Config struct {
 	Current    int        `json:"current"`
 	Profiles   []*Profile `json:"profile"`
 	configFile string
+}
+
+func (p *Profile) String() string {
+	return fmt.Sprintf("name = %s\n  arch = %s, CC = %s, target = %s\n"+
+		"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
+		p.Name, p.Arch, p.CrossComile, p.Target, p.SrcDir, p.OutputDir, p.ModInstallDir,
+		p.ThreadNum)
 }
 
 func checkConfigDir(path string) {
