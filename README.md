@@ -228,3 +228,7 @@ Or other profiles' installation script:
 ```sh
 $ kbdashboard install edit anotherProfile
 ```
+
+# LICENSE
+The GPLv3 License. See `LICENSE.md` file for more details.
+
