@@ -12,21 +12,31 @@ import (
 )
 
 func makeKernelOpt(p *Profile, target string) []string {
-	j := []string{"-j", strconv.Itoa(p.ThreadNum)}
-	output := []string{"O", p.OutputDir}
-	cc := []string{"CROSS_COMPILE", p.CrossComile}
-	arch := []string{"ARCH", p.Arch}
-	installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
+	cmdArgs := []string{target}
 
-	fmt.Println(p)
+	if p.ThreadNum > 0 {
+		j := []string{"-j", strconv.Itoa(p.ThreadNum)}
+		cmdArgs = append(cmdArgs, strings.Join(j, ""))
+	}
 
-	cmdArgs := []string{
-		strings.Join(j, ""),
-		strings.Join(output, "="),
-		strings.Join(cc, "="),
-		strings.Join(arch, "="),
-		strings.Join(installModPath, "="),
-		target,
+	if p.OutputDir != "" {
+		output := []string{"O", p.OutputDir}
+		cmdArgs = append(cmdArgs, strings.Join(output, "="))
+	}
+
+	if p.CrossComile != "" {
+		cc := []string{"CROSS_COMPILE", p.CrossComile}
+		cmdArgs = append(cmdArgs, strings.Join(cc, "="))
+	}
+
+	if p.Arch != "" {
+		arch := []string{"ARCH", p.Arch}
+		cmdArgs = append(cmdArgs, strings.Join(arch, "="))
+	}
+
+	if p.ModInstallDir != "" {
+		installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
+		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
 	}
 
 	return cmdArgs
