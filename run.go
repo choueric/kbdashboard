@@ -18,6 +18,8 @@ func makeKernelOpt(p *Profile, target string) []string {
 	arch := []string{"ARCH", p.Arch}
 	installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
 
+	fmt.Println(p)
+
 	cmdArgs := []string{
 		strings.Join(j, ""),
 		strings.Join(output, "="),
