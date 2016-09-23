@@ -55,7 +55,7 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 
 var handerMap = map[string]CmdHandler{
 	"list":   cmd_list,
-	"make":   cmd_make,
+	"build":  cmd_build,
 	"edit":   cmd_edit,
 	"config": cmd_config,
 	"choose": cmd_choose,
@@ -92,7 +92,7 @@ func cmd_list(args []string, config *Config) {
 	}
 }
 
-func cmd_make(args []string, config *Config) {
+func cmd_build(args []string, config *Config) {
 	if config == nil {
 		fmt.Printf("{name | index}. Build kernel specified by name or index\n")
 		return
@@ -103,7 +103,7 @@ func cmd_make(args []string, config *Config) {
 		log.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'make'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	fmt.Printf("cmd %s'build'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
 	makeKernel(p, p.Target)
 }
 

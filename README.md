@@ -42,7 +42,7 @@ A sample is shown below:
 The options below are globel:
 ```
 editor  : Specify text editor which will be invoked when 'edit' command is executed.
-current : Current profile index. If no speficy profile in 'make' and 'config' command,
+current : Current profile index. If no speficy profile in 'build' and 'config' command,
           this index profile will be used.
 ``` 
 
@@ -55,7 +55,7 @@ src_dir : directory path of kernel source.
 Values below are optional:
 ```
 arch            : architecture, corresponding to `ARCH` of kernel build command.
-target          : target of the make command.
+target          : target of the build command.
 cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel 
                   build command.
 output_dir      : output build directory, corresponding to `O` of kernel build 
@@ -80,12 +80,12 @@ Usage:
   - config      : [name | index]. Configure kernel using menuconfig
   - choose      : {name | index}. Choose current profile.
   - list        : List all profiles
-  - make        : [name | index]. Build kernel specified by name or index
+  - build       : [name | index]. Build kernel specified by name or index
   - help        : Display this message.
 ```
 
 ## list
-List the profiles. The current profile is marked by the red '*'.
+List the profiles. The current profile is marked by the red asterisk symbol.
 
 ## edit
 Edit the configuration file using editor specified by the "editor" option.
@@ -95,8 +95,8 @@ Invoke menuconfig to the specified kernel profile. The profile is specified by
 the name or index of profile in the command line, or by the current index in
 the configuration file if no option in the command line.
 
-## make
-Make the target for specified kernel profile. The way to specify profile is as
+## build
+Build the target for specified kernel profile. The way to specify profile is as
 same as command 'config'.
 
 ## choose
