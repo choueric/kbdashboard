@@ -21,12 +21,23 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"strconv"
 	"strings"
 	"syscall"
 
 	"github.com/choueric/clog"
 )
+
+func createDir(p string, pre string) {
+	if !path.IsAbs(p) {
+		p = path.Join(pre, p)
+	}
+	err := os.MkdirAll(p, os.ModeDir|0777)
+	if err != nil {
+		clog.Printf("mkdir %s failed: %v\n", p, err)
+	}
+}
 
 func makeKernelOpt(p *Profile, target string) []string {
 	cmdArgs := []string{}
@@ -43,6 +54,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	if p.OutputDir != "" {
 		output := []string{"O", p.OutputDir}
 		cmdArgs = append(cmdArgs, strings.Join(output, "="))
+		createDir(p.OutputDir, p.SrcDir)
 	}
 
 	if p.CrossComile != "" {
@@ -58,6 +70,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	if p.ModInstallDir != "" {
 		installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
 		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
+		createDir(p.ModInstallDir, p.SrcDir)
 	}
 
 	return cmdArgs
