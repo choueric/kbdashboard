@@ -18,18 +18,19 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
+
+	"github.com/choueric/clog"
 )
 
 type CmdHandler func(args []string, config *Config)
 
 func checkError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 }
 
@@ -47,7 +48,7 @@ func getProfile(arg string, config *Config) (*Profile, int) {
 	if isNumber(arg) {
 		n, _ := strconv.Atoi(arg)
 		if n >= len(config.Profiles) || n < 0 {
-			log.Fatalf("invalid index of profile: [%d]\n", n)
+			clog.Fatalf("invalid index of profile: [%d]\n", n)
 		}
 		p = config.Profiles[n]
 		index = n
@@ -130,7 +131,7 @@ func cmd_make(args []string, config *Config) {
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
-		log.Fatalf("can not find profile [%s]\n", args[0])
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	fmt.Printf("cmd %s'build %s'%s for %s[%s]%s\n", CGREEN, target, CEND, CGREEN, p.Name, CEND)
@@ -146,7 +147,7 @@ func cmd_build(args []string, config *Config) {
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
-		log.Fatalf("can not find profile [%s]\n", args[0])
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	fmt.Printf("cmd %s'build'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
@@ -162,7 +163,7 @@ func cmd_config(args []string, config *Config) {
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
-		log.Fatalf("can not find profile [%s]\n", args[0])
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	fmt.Printf("cmd %s'config'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
@@ -186,11 +187,11 @@ func cmd_choose(args []string, config *Config) {
 	}
 
 	if len(args) == 0 {
-		log.Fatal("Choose need profile's name or index")
+		clog.Fatal("Choose need profile's name or index")
 	}
 	p, index := getProfile(args[0], config)
 	if p == nil {
-		log.Fatalf("can not find profile [%s]\n", args[0])
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	fmt.Printf("cmd %s'choose'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
@@ -218,7 +219,7 @@ func cmd_install(args []string, config *Config) {
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
-		log.Fatalf("can not find profile [%s]\n", args[0])
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	script := getInstallFilename(p)

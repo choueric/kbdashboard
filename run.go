@@ -19,12 +19,13 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"syscall"
+
+	"github.com/choueric/clog"
 )
 
 func makeKernelOpt(p *Profile, target string) []string {
@@ -85,13 +86,13 @@ func configKernel(p *Profile, target string) {
 func runCmd(cmd *exec.Cmd) error {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
-		log.Println("Error creating StdoutPipe for Cmd:", err)
+		clog.Println("Error creating StdoutPipe for Cmd:", err)
 		return err
 	}
 
 	stderrReader, err := cmd.StderrPipe()
 	if err != nil {
-		log.Println("create stderrPipe:", err)
+		clog.Println("create stderrPipe:", err)
 		return err
 	}
 
@@ -111,13 +112,13 @@ func runCmd(cmd *exec.Cmd) error {
 
 	err = cmd.Start()
 	if err != nil {
-		log.Println("Error starting Cmd:", err)
+		clog.Println("Error starting Cmd:", err)
 		return err
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		log.Println("Error waiting for Cmd:", err)
+		clog.Println("Error waiting for Cmd:", err)
 		return err
 	}
 
@@ -127,13 +128,13 @@ func runCmd(cmd *exec.Cmd) error {
 func execCmd(name string, argv []string) {
 	binary, err := exec.LookPath(name)
 	if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 
 	env := os.Environ()
 
 	err = syscall.Exec(binary, argv, env)
 	if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 }

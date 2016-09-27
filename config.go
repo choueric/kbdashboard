@@ -20,8 +20,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
+
+	"github.com/choueric/clog"
 )
 
 const (
@@ -76,7 +77,7 @@ func checkConfigDir(path string) {
 	homeDir := os.Getenv("HOME")
 	err := os.MkdirAll(homeDir+"/"+path, os.ModeDir|0777)
 	if err != nil {
-		log.Println("mkdir:", err)
+		clog.Println("mkdir:", err)
 	}
 }
 
@@ -86,15 +87,15 @@ func checkConfigFile(path string) string {
 	}
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
-		log.Println("create an empty config file.")
+		clog.Println("create an empty config file.")
 		file, err := os.Create(path)
 		_, err = file.Write([]byte(DefaultConfig))
 		if err != nil {
-			log.Fatal(err)
+			clog.Fatal(err)
 		}
 		file.Close()
 	} else if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 
 	return path
@@ -109,7 +110,7 @@ func checkFileExsit(path string) bool {
 	if err != nil && os.IsNotExist(err) {
 		return false
 	} else if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 
 	return true
@@ -121,7 +122,7 @@ func ParseConfig(path string) (*Config, error) {
 
 	file, err := os.Open(path)
 	if err != nil {
-		log.Println(err)
+		clog.Println(err)
 		return nil, err
 	}
 	defer file.Close()
@@ -138,7 +139,7 @@ func ParseConfig(path string) (*Config, error) {
 	}
 
 	if config.Current >= len(config.Profiles) {
-		log.Fatal("Current in config.json is invalid: ", config.Current)
+		clog.Fatal("Current in config.json is invalid: ", config.Current)
 	}
 
 	return config, nil
@@ -147,12 +148,12 @@ func ParseConfig(path string) (*Config, error) {
 func writeConfigFile(config *Config) {
 	data, err := json.MarshalIndent(config, "  ", "  ")
 	if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 
 	file, err := os.Create(config.configFile)
 	if err != nil {
-		log.Fatal(err)
+		clog.Fatal(err)
 	}
 	defer file.Close()
 
