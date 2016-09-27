@@ -31,7 +31,7 @@ const (
 func parseConfig() *Config {
 	config, err := ParseConfig("")
 	if err != nil {
-		clog.Fatal(err)
+		clog.Fatal("[ "+checkConfigFile("")+" ]: ", err)
 	}
 	if config == nil {
 		clog.Fatal("config is nil.")
