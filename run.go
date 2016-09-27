@@ -119,7 +119,7 @@ func runCmd(cmd *exec.Cmd) error {
 	errScanner := bufio.NewScanner(stderrReader)
 	go func() {
 		for errScanner.Scan() {
-			fmt.Printf("%s**%s %s\n", CRED, CEND, errScanner.Text())
+			fmt.Printf("%s!!%s %s\n", CRED, CEND, errScanner.Text())
 		}
 	}()
 
