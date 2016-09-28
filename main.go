@@ -70,7 +70,7 @@ func main() {
 		fallthrough
 	case 4:
 		cmd = os.Args[1]
-		args = os.Args[2:len(os.Args)]
+		args = os.Args[2:]
 	default:
 		cmd_help(nil, nil)
 		return

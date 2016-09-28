@@ -128,7 +128,7 @@ func cmd_make(args []string, config *Config) {
 	}
 
 	target := args[0]
-	args = args[1:len(args)]
+	args = args[1:]
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
@@ -215,7 +215,7 @@ func cmd_install(args []string, config *Config) {
 	argc := len(args)
 	if argc != 0 && args[0] == "edit" {
 		doEdit = true
-		args = args[1:len(args)]
+		args = args[1:]
 	}
 
 	p, _ := getProfileByCurrent(args, config)
