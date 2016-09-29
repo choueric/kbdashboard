@@ -78,7 +78,7 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var handerMap = map[string]CmdHandler{
+var handlerMap = map[string]CmdHandler{
 	"list":    cmd_list,
 	"choose":  cmd_choose,
 	"edit":    cmd_edit,
@@ -89,11 +89,15 @@ var handerMap = map[string]CmdHandler{
 }
 
 func cmd_help(args []string, config *Config) {
+	order := []string{
+		"list", "choose", "edit", "make", "config",
+		"build", "install",
+	}
 	fmt.Printf("cmd %s'help'%s:\n", CGREEN, CEND)
 	fmt.Printf("Usage: \n")
-	for k, h := range handerMap {
-		fmt.Printf("  - %s\t: ", k)
-		h(nil, nil)
+	for _, v := range order {
+		fmt.Printf("  - %s\t: ", v)
+		handlerMap[v](nil, nil)
 	}
 	fmt.Println("  - help\t: Display this message.")
 }
