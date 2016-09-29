@@ -28,7 +28,7 @@ A sample is shown below:
 		"target":"uImage",
 		"cross_compile":"arm-eabi-",
 		"output_dir":"./_build",
-		"mod_install_dir":"./_build/mod",
+		"mod_install_dir":"./mod",
 		"thread_num":4,
 	},
 	{
@@ -60,7 +60,7 @@ cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel
 target          : target of the build command.
 output_dir      : output build directory, corresponding to `O` of kernel build 
                   command.
-mod_install_dir : module install directory, corresponding to `INSTALL_MODE_PATH`
+mod_install_dir : module install directory, corresponding to `INSTALL_MOD_PATH`
                   of kernel build command.
 thread_num      : number of thread used to compile, corresponding to `-j` option.
 ```
@@ -121,7 +121,9 @@ The command uses the chosen profile. Or to specify the first profile:
 $ kbdashboard make bcm_defconfig 0
 ```
 
-Another useful targets are `install` and `modules_install`. 
+Another useful targets are `modules`, `install` and `modules_install`. 
+
+`modules` is used to compile kernel modules.
 
 `install` is one target belonged to kernel's make system, and it's different 
 from the command `install`. The target invokes an install sript for specified 
