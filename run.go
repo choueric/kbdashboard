@@ -68,7 +68,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	}
 
 	if p.ModInstallDir != "" {
-		installModPath := []string{"INSTALL_MODE_PATH", p.ModInstallDir}
+		installModPath := []string{"INSTALL_MOD_PATH", p.ModInstallDir}
 		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
 		createDir(p.ModInstallDir, p.SrcDir)
 	}
