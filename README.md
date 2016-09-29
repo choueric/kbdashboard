@@ -121,6 +121,17 @@ The command uses the chosen profile. Or to specify the first profile:
 $ kbdashboard make bcm_defconfig 0
 ```
 
+Another useful targets are `install` and `modules_install`. 
+
+`install` is one target of kernel's make system, which is different from the 
+command `install`. The target will invoke arch's install script. For example, 
+build a kernel for a Debian host, `install` will invoke `arch/x86/boot/install.sh`
+to do the installation.
+
+`modules_install` is used to install driver modules to the directory which is 
+`$(mod_install_dir)/lib/modules/$(KERNELRELEASE)`. The directory would be in
+`/lib/modules` if the `mod_install_dir` is empty in configuration.
+
 ## config
 Invoke menuconfig to the specified kernel profile. The profile is specified by
 the name or index of profile in the command line, or by the current index in
