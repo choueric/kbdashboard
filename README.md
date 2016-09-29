@@ -123,14 +123,15 @@ $ kbdashboard make bcm_defconfig 0
 
 Another useful targets are `install` and `modules_install`. 
 
-`install` is one target of kernel's make system, which is different from the 
-command `install`. The target will invoke arch's install script. For example, 
-build a kernel for a Debian host, `install` will invoke `arch/x86/boot/install.sh`
-to do the installation.
+`install` is one target belonged to kernel's make system, and it's different 
+from the command `install`. The target invokes an install sript for specified 
+architecture. For example, building a kernel for a Debian host. In this case, 
+the architecture is x86, script `arch/x86/boot/install.sh` is invoked.
 
-`modules_install` is used to install driver modules to the directory which is 
-`$(mod_install_dir)/lib/modules/$(KERNELRELEASE)`. The directory would be in
-`/lib/modules` if the `mod_install_dir` is empty in configuration.
+`modules_install` installs driver modules to a directory whose path is
+`$(mod_install_dir)/lib/modules/$(KERNELRELEASE)`. The path would be in
+`/lib/modules` if the `mod_install_dir` is empty in configuration, and it is 
+the common path for building a kernel for PC.
 
 ## config
 Invoke menuconfig to the specified kernel profile. The profile is specified by
@@ -239,6 +240,10 @@ Or other profiles' installation script:
 ```sh
 $ kbdashboard install edit anotherProfile
 ```
+
+An user-defined install script is common in embedded development. But for
+building kernel for PC, using `make` command with `install` and `modules_install`
+targets is more useful.
 
 # LICENSE
 The GPLv3 License. See `LICENSE.md` file for more details.
