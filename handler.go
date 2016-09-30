@@ -34,6 +34,11 @@ func checkError(err error) {
 	}
 }
 
+func printCmd(cmd string, m string) {
+	fmt.Printf("cmd %s'%s'%s for %s[%s]%s\n", CGREEN, cmd, CEND,
+		CGREEN, m, CEND)
+}
+
 func isNumber(str string) bool {
 	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
 		return false
@@ -166,7 +171,7 @@ func cmd_choose(args []string, config *Config) {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'choose'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	printCmd("choose", p.Name)
 	config.Current = index
 
 	writeConfigFile(config)
@@ -197,7 +202,7 @@ func cmd_make(args []string, config *Config) {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'build %s'%s for %s[%s]%s\n", CGREEN, target, CEND, CGREEN, p.Name, CEND)
+	printCmd("build", p.Name)
 	makeKernel(p, target)
 }
 
@@ -213,7 +218,7 @@ func cmd_config(args []string, config *Config) {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'config'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	printCmd("config", p.Name)
 	configKernel(p, "menuconfig")
 }
 
@@ -229,7 +234,7 @@ func cmd_build(args []string, config *Config) {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'build'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	printCmd("build", p.Name)
 	makeKernel(p, p.Target)
 }
 
@@ -274,7 +279,7 @@ func cmd_install(args []string, config *Config) {
 		return
 	}
 
-	fmt.Printf("cmd %s'install'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	printCmd("install", p.Name)
 	if create {
 		// edit script
 		var argv = []string{config.Editor, script}
@@ -300,7 +305,7 @@ func cmd_module(args []string, config *Config) {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'module'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	printCmd("module", p.Name)
 	if makeKernel(p, "modules") != nil {
 		clog.Fatalf("make modules failed.\n")
 	}
