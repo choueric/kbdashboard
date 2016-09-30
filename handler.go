@@ -86,12 +86,13 @@ var handlerMap = map[string]CmdHandler{
 	"config":  cmd_config,
 	"build":   cmd_build,
 	"install": cmd_install,
+	"module":  cmd_module,
 }
 
 func cmd_help(args []string, config *Config) {
 	order := []string{
 		"list", "choose", "edit", "make", "config",
-		"build", "install",
+		"build", "install", "module",
 	}
 	fmt.Printf("cmd %s'help'%s:\n", CGREEN, CEND)
 	fmt.Printf("Usage: \n")
@@ -256,5 +257,27 @@ func cmd_install(args []string, config *Config) {
 		cmd.Dir = p.SrcDir
 		fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
 		runCmd(cmd)
+	}
+}
+
+func cmd_module(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("[name | index]. Build and install modules.\n")
+		fmt.Printf("\t\t  Same as '$ kbdashboard make modules' follwing\n")
+		fmt.Printf("\t\t  '$ kbdashboard make modules_install'.\n")
+		return
+	}
+
+	p, _ := getProfileByCurrent(args, config)
+	if p == nil {
+		clog.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	fmt.Printf("cmd %s'module'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	if makeKernel(p, "modules") != nil {
+		clog.Fatalf("make modules failed.\n")
+	}
+	if makeKernel(p, "modules_install") != nil {
+		clog.Fatalf("make modules_install faild.\n")
 	}
 }

@@ -72,7 +72,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	return cmdArgs
 }
 
-func makeKernel(p *Profile, target string) {
+func makeKernel(p *Profile, target string) error {
 	cmdArgs := makeKernelOpt(p, target)
 
 	cmd := exec.Command("make", cmdArgs...)
@@ -80,7 +80,7 @@ func makeKernel(p *Profile, target string) {
 
 	fmt.Printf("    %s%v%s\n", CGREEN, cmdArgs, CEND)
 
-	runCmd(cmd)
+	return runCmd(cmd)
 }
 
 func configKernel(p *Profile, target string) {
