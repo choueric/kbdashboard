@@ -254,6 +254,9 @@ An user-defined install script is common in embedded development. But for
 building kernel for PC, using `make` command with `install` and `modules_install`
 targets is more useful.
 
+Command `module` is used to compile kernel modules and then install them into
+the `mod_install_dir` directory.
+
 # LICENSE
 The GPLv3 License. See `LICENSE.md` file for more details.
 
