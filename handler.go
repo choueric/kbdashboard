@@ -103,25 +103,52 @@ func cmd_help(args []string, config *Config) {
 	fmt.Println("  - help\t: Display this message.")
 }
 
-func cmd_list(args []string, config *Config) {
-	if config == nil {
-		fmt.Printf("List all profiles.\n")
-		return
-	}
-
-	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
-	for i, p := range config.Profiles {
-		if config.Current == i {
+func listProfile(p *Profile, verbose bool, current bool, i int) {
+	if verbose {
+		if current {
 			fmt.Printf("\n%s*%s ", CRED, CEND)
 			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
 		} else {
-			fmt.Printf("\n%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
 		}
 		fmt.Printf("  SrcDir\t\t: %s\n", p.SrcDir)
 		fmt.Printf("  Arch\t\t\t: %s\n", p.Arch)
 		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
 		fmt.Printf("  Target\t\t: %s\n", p.Target)
 		fmt.Printf("  BuildDir\t\t: %s\n", p.OutputDir)
+		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
+		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
+	} else {
+		if current {
+			fmt.Printf("\n%s*%s ", CRED, CEND)
+			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		} else {
+			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		}
+		fmt.Printf("  SrcDir: %s\n", p.SrcDir)
+		fmt.Printf("  Arch\t: %s\n", p.Arch)
+		fmt.Printf("  CC\t: %s\n", p.CrossComile)
+	}
+}
+
+func cmd_list(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("[-v]. List all profiles. '-v' means verbose.\n")
+		return
+	}
+
+	verbose := false
+	if len(args) == 1 && args[0] == "-v" {
+		verbose = true
+	}
+
+	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
+	for i, p := range config.Profiles {
+		if config.Current == i {
+			listProfile(p, verbose, true, i)
+		} else {
+			listProfile(p, verbose, false, i)
+		}
 	}
 }
 
