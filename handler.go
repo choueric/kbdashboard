@@ -125,6 +125,36 @@ func cmd_list(args []string, config *Config) {
 	}
 }
 
+func cmd_choose(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("Choose current profile.\n")
+		return
+	}
+
+	if len(args) == 0 {
+		clog.Fatal("Choose need profile's name or index")
+	}
+	p, index := getProfile(args[0], config)
+	if p == nil {
+		clog.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	fmt.Printf("cmd %s'choose'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	config.Current = index
+
+	writeConfigFile(config)
+}
+
+func cmd_edit(args []string, config *Config) {
+	if config == nil {
+		fmt.Printf("Edit the config file using editor specified in config file.\n")
+		return
+	}
+
+	var argv = []string{config.Editor, config.configFile}
+	execCmd(config.Editor, argv)
+}
+
 func cmd_make(args []string, config *Config) {
 	argc := len(args)
 	if config == nil || argc == 0 {
@@ -144,22 +174,6 @@ func cmd_make(args []string, config *Config) {
 	makeKernel(p, target)
 }
 
-func cmd_build(args []string, config *Config) {
-	if config == nil {
-		fmt.Printf("[name | index]. Build kernel specified by name or index.\n")
-		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
-		return
-	}
-
-	p, _ := getProfileByCurrent(args, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
-	fmt.Printf("cmd %s'build'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
-	makeKernel(p, p.Target)
-}
-
 func cmd_config(args []string, config *Config) {
 	if config == nil {
 		fmt.Printf("[name | index]. Configure kernel using menuconfig.\n")
@@ -176,34 +190,20 @@ func cmd_config(args []string, config *Config) {
 	configKernel(p, "menuconfig")
 }
 
-func cmd_edit(args []string, config *Config) {
+func cmd_build(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("Edit the config file using editor specified in config file.\n")
+		fmt.Printf("[name | index]. Build kernel specified by name or index.\n")
+		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
 		return
 	}
 
-	var argv = []string{config.Editor, config.configFile}
-	execCmd(config.Editor, argv)
-}
-
-func cmd_choose(args []string, config *Config) {
-	if config == nil {
-		fmt.Printf("Choose current profile.\n")
-		return
-	}
-
-	if len(args) == 0 {
-		clog.Fatal("Choose need profile's name or index")
-	}
-	p, index := getProfile(args[0], config)
+	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	fmt.Printf("cmd %s'choose'%s profile %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
-	config.Current = index
-
-	writeConfigFile(config)
+	fmt.Printf("cmd %s'build'%s for %s[%s]%s\n", CGREEN, CEND, CGREEN, p.Name, CEND)
+	makeKernel(p, p.Target)
 }
 
 func cmd_install(args []string, config *Config) {
