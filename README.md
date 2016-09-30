@@ -77,7 +77,7 @@ Now there are 6 commands which are shown via command `help` command:
 ```
 $ kbdashboard help
 Usage:
-  - list        : List all profiles.
+  - list        : [-v]. List all profiles. '-v' means verbose.
   - choose      : {name | index}. Choose current profile.
   - edit        : Edit the config file using editor specified in config file.
   - make        : <target> [name | index]. Execute `make` with specify target.
@@ -88,6 +88,9 @@ Usage:
   - install     : [edit] [name | index]. Execute or edit install script.
                   If use sub-cmd 'edit', open the install script with editor.
                   If no sub-cmd 'edit', execute the install script.
+  - module      : [name | index]. Build and install modules.
+                  Same as '$ kbdashboard make modules' follwing
+                  '$ kbdashboard make modules_install'.
   - help        : Display this message.
 ```
 
@@ -155,6 +158,9 @@ initial script.
 
 The users can also use the sub-cmd `edit` to call the editor and modify this
 script explicitly.
+
+## module
+This command is a combination of `make modules` and `make modules_install`.
 
 # How to Use this Tool
 
