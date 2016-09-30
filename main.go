@@ -49,8 +49,8 @@ func handleCmd(cmd string, args []string, config *Config) {
 
 	h, ok := handlerMap[cmd]
 	if !ok {
-		clog.Fatalf("[%s] is not supported\n", cmd)
 		cmd_help(nil, nil)
+		clog.Fatalf("[%s] is not supported\n", cmd)
 	}
 	h(args, config)
 }
