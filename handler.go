@@ -138,12 +138,12 @@ func listProfile(p *Profile, verbose bool, current bool, i int) {
 
 func cmd_list(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[-v]. List all profiles. '-v' means verbose.\n")
+		fmt.Printf("[verbose]. List all profiles. 'verbose' with more details\n")
 		return
 	}
 
 	verbose := false
-	if len(args) == 1 && args[0] == "-v" {
+	if len(args) == 1 && args[0] == "verbose" {
 		verbose = true
 	}
 

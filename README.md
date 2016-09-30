@@ -77,7 +77,7 @@ Now there are 6 commands which are shown via command `help` command:
 ```
 $ kbdashboard help
 Usage:
-  - list        : [-v]. List all profiles. '-v' means verbose.
+  - list        : [verbose]. List all profiles. 'verbose' with more details.
   - choose      : {name | index}. Choose current profile.
   - edit        : Edit the config file using editor specified in config file.
   - make        : <target> [name | index]. Execute `make` with specify target.
