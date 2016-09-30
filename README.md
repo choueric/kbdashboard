@@ -59,9 +59,10 @@ cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel
                   build command.
 target          : target of the build command.
 output_dir      : output build directory, corresponding to `O` of kernel build 
-                  command.
+                  command. It is relative to the `src_dir` if not absolute.
 mod_install_dir : module install directory, corresponding to `INSTALL_MOD_PATH`
-                  of kernel build command.
+                  of kernel build command. It is relative to the `src_dir` if
+				  not absolute.
 thread_num      : number of thread used to compile, corresponding to `-j` option.
 ```
 

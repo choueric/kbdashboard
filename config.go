@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 
 	"github.com/choueric/clog"
 )
@@ -73,22 +74,22 @@ func (p *Profile) String() string {
 		p.ThreadNum)
 }
 
-func checkConfigDir(path string) {
+func checkConfigDir(p string) {
 	homeDir := os.Getenv("HOME")
-	err := os.MkdirAll(homeDir+"/"+path, os.ModeDir|0777)
+	err := os.MkdirAll(homeDir+"/"+p, os.ModeDir|0777)
 	if err != nil {
 		clog.Println("mkdir:", err)
 	}
 }
 
-func checkConfigFile(path string) string {
-	if path == "" {
-		path = os.Getenv("HOME") + "/" + ConfigDir + "/config.json"
+func checkConfigFile(p string) string {
+	if p == "" {
+		p = os.Getenv("HOME") + "/" + ConfigDir + "/config.json"
 	}
-	_, err := os.Stat(path)
+	_, err := os.Stat(p)
 	if err != nil && os.IsNotExist(err) {
 		clog.Println("create an empty config file.")
-		file, err := os.Create(path)
+		file, err := os.Create(p)
 		_, err = file.Write([]byte(DefaultConfig))
 		if err != nil {
 			clog.Fatal(err)
@@ -98,15 +99,15 @@ func checkConfigFile(path string) string {
 		clog.Fatal(err)
 	}
 
-	return path
+	return p
 }
 
 func getInstallFilename(p *Profile) string {
 	return os.Getenv("HOME") + "/" + ConfigDir + "/" + p.Name + "_install.sh"
 }
 
-func checkFileExsit(path string) bool {
-	_, err := os.Stat(path)
+func checkFileExsit(p string) bool {
+	_, err := os.Stat(p)
 	if err != nil && os.IsNotExist(err) {
 		return false
 	} else if err != nil {
@@ -116,11 +117,20 @@ func checkFileExsit(path string) bool {
 	return true
 }
 
-func ParseConfig(path string) (*Config, error) {
-	checkConfigDir(ConfigDir)
-	path = checkConfigFile(path)
+// if OutputDir and ModInstallDir is relative, change it to absolute
+// by adding SrcDir prefix.
+func fixRelativeDir(p string, pre string) string {
+	if !path.IsAbs(p) {
+		p = path.Join(pre, p)
+	}
+	return p
+}
 
-	file, err := os.Open(path)
+func ParseConfig(p string) (*Config, error) {
+	checkConfigDir(ConfigDir)
+	p = checkConfigFile(p)
+
+	file, err := os.Open(p)
 	if err != nil {
 		clog.Println(err)
 		return nil, err
@@ -132,17 +142,22 @@ func ParseConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
-	config := &Config{}
-	config.configFile = path
-	if err = json.Unmarshal(data, config); err != nil {
+	c := &Config{}
+	c.configFile = p
+	if err = json.Unmarshal(data, c); err != nil {
 		return nil, err
 	}
 
-	if config.Current >= len(config.Profiles) {
-		clog.Fatal("Current in config.json is invalid: ", config.Current)
+	if c.Current >= len(c.Profiles) {
+		clog.Fatal("Current in config.json is invalid: ", c.Current)
 	}
 
-	return config, nil
+	for _, p := range c.Profiles {
+		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
+		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
+	}
+
+	return c, nil
 }
 
 func writeConfigFile(config *Config) {
