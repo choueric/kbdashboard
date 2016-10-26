@@ -100,12 +100,12 @@ func cmd_help(args []string, config *Config) {
 		"build", "install", "module",
 	}
 	fmt.Printf("cmd %s'help'%s:\n", CGREEN, CEND)
-	fmt.Printf("Usage: \n")
+	fmt.Printf("Usage: \n\n")
 	for _, v := range order {
-		fmt.Printf("  - %s\t: ", v)
 		handlerMap[v](nil, nil)
+		fmt.Printf("\n")
 	}
-	fmt.Println("  - help\t: Display this message.")
+	fmt.Println("- help\n  Display this message.")
 }
 
 func listProfile(p *Profile, verbose bool, current bool, i int) {
@@ -138,7 +138,9 @@ func listProfile(p *Profile, verbose bool, current bool, i int) {
 
 func cmd_list(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[verbose]. List all profiles. 'verbose' with more details\n")
+		fmt.Printf("- list [verbose]\n")
+		fmt.Printf("  List all profiles.\n")
+		fmt.Printf("  [verbose]: Print with more information\n")
 		return
 	}
 
@@ -159,7 +161,8 @@ func cmd_list(args []string, config *Config) {
 
 func cmd_choose(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("Choose current profile.\n")
+		fmt.Printf("- choose <profile>\n")
+		fmt.Printf("  Choose <profile> as the current one.\n")
 		return
 	}
 
@@ -179,7 +182,8 @@ func cmd_choose(args []string, config *Config) {
 
 func cmd_edit(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("Edit the config file using editor specified in config file.\n")
+		fmt.Printf("- edit [profile]\n")
+		fmt.Printf("  Edit [profile]'s config using the specified editor.\n")
 		return
 	}
 
@@ -190,7 +194,8 @@ func cmd_edit(args []string, config *Config) {
 func cmd_make(args []string, config *Config) {
 	argc := len(args)
 	if config == nil || argc == 0 {
-		fmt.Printf("<target> [name | index]. Execute 'make' with specify target.\n")
+		fmt.Printf("- make <target> [profile]\n")
+		fmt.Printf("  Execute 'make' <target> on [profile].\n")
 		return
 	}
 
@@ -208,8 +213,9 @@ func cmd_make(args []string, config *Config) {
 
 func cmd_config(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[name | index]. Configure kernel using menuconfig.\n")
-		fmt.Printf("\t\t  Same as '$ kbdashboard make menuconfig'.\n")
+		fmt.Printf("- config [profile]\n")
+		fmt.Printf("  Configure [profile] using menuconfig.")
+		fmt.Printf(" Same as '$ kbdashboard make menuconfig'.\n")
 		return
 	}
 
@@ -224,8 +230,9 @@ func cmd_config(args []string, config *Config) {
 
 func cmd_build(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[name | index]. Build kernel specified by name or index.\n")
-		fmt.Printf("\t\t  Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
+		fmt.Printf("- build [profile]\n")
+		fmt.Printf("  Build kernel image.")
+		fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
 		return
 	}
 
@@ -240,9 +247,9 @@ func cmd_build(args []string, config *Config) {
 
 func cmd_install(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[edit] [name | index]. Execute or edit install script.\n")
-		fmt.Printf("\t\t  If use sub-cmd 'edit', open the install script with editor.\n")
-		fmt.Printf("\t\t  If no sub-cmd 'edit', execute the install script.\n")
+		fmt.Printf("- install [edit] [profile]\n")
+		fmt.Printf("  Execute the install script of [profile].\n")
+		fmt.Printf("  [edit]: Open the install script with editor.\n")
 		return
 	}
 
@@ -294,9 +301,10 @@ func cmd_install(args []string, config *Config) {
 
 func cmd_module(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("[name | index]. Build and install modules.\n")
-		fmt.Printf("\t\t  Same as '$ kbdashboard make modules' follwing\n")
-		fmt.Printf("\t\t  '$ kbdashboard make modules_install'.\n")
+		fmt.Printf("- module [profile]\n")
+		fmt.Printf("  Build and install modules.")
+		fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
+		fmt.Printf("  '$ kbdashboard make modules_install'.\n")
 		return
 	}
 
