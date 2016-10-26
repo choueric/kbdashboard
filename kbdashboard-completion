@@ -7,7 +7,7 @@ _kbdashboard()
     opts="list choose edit help make build config install module"
 
     case "$prev" in
-    choose | edit | help | make | build | config | module)
+    choose | edit | help | make | build | module)
         COMPREPLY=()
         return 0
         ;;
@@ -17,6 +17,10 @@ _kbdashboard()
         ;;
 	install )
         COMPREPLY=( $(compgen -W "edit" -- $cur) )
+        return 0
+        ;;
+	config )
+        COMPREPLY=( $(compgen -W "def" -- $cur) )
         return 0
         ;;
     *)

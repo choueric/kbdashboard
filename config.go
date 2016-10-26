@@ -40,6 +40,7 @@ const DefaultConfig = `
 		"src_dir":"/home/user/kernel"
 		"arch":"arm",
 		"target":"uImage",
+		"defconfig":"at91rm9200_defconfig",
 		"cross_compile":"arm-eabi-",
 		"output_dir":"./_build",
 		"mod_install_dir":"./_build/mod",
@@ -54,6 +55,7 @@ type Profile struct {
 	SrcDir        string `json:"src_dir"`
 	Arch          string `json:"arch"`
 	Target        string `json:"target"`
+	Defconfig     string `json:"defconfig"`
 	CrossComile   string `json:"cross_compile"`
 	OutputDir     string `json:"output_dir"`
 	ModInstallDir string `json:"mod_install_dir"`
@@ -68,10 +70,11 @@ type Config struct {
 }
 
 func (p *Profile) String() string {
-	return fmt.Sprintf("name = %s\n  arch = %s, CC = %s, target = %s\n"+
-		"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
-		p.Name, p.Arch, p.CrossComile, p.Target, p.SrcDir, p.OutputDir, p.ModInstallDir,
-		p.ThreadNum)
+	return fmt.Sprintf(
+		"name = %s\n  arch = %s, CC = %s, target = %s, defconfig = %s\n"+
+			"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
+		p.Name, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.SrcDir,
+		p.OutputDir, p.ModInstallDir, p.ThreadNum)
 }
 
 func checkConfigDir(p string) {
@@ -155,6 +158,9 @@ func ParseConfig(p string) (*Config, error) {
 	for _, p := range c.Profiles {
 		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
 		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
+		if p.Defconfig == "" {
+			p.Defconfig = "defconfig"
+		}
 	}
 
 	return c, nil

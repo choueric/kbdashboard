@@ -120,6 +120,7 @@ func listProfile(p *Profile, verbose bool, current bool, i int) {
 		fmt.Printf("  Arch\t\t\t: %s\n", p.Arch)
 		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
 		fmt.Printf("  Target\t\t: %s\n", p.Target)
+		fmt.Printf("  Defconfig\t\t: %s\n", p.Defconfig)
 		fmt.Printf("  BuildDir\t\t: %s\n", p.OutputDir)
 		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
 		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
@@ -213,15 +214,31 @@ func cmd_make(args []string, config *Config) {
 
 func cmd_config(args []string, config *Config) {
 	if config == nil {
-		fmt.Printf("- config [profile]\n")
+		fmt.Printf("- config [def] [profile]\n")
 		fmt.Printf("  Configure [profile] using menuconfig.")
 		fmt.Printf(" Same as '$ kbdashboard make menuconfig'.\n")
+		fmt.Printf("  [def]: Use default config specified in config file.\n")
 		return
+	}
+
+	var defConfig bool
+
+	argc := len(args)
+	if argc != 0 && args[0] == "def" {
+		defConfig = true
+		args = args[1:]
 	}
 
 	p, _ := getProfileByCurrent(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
+	}
+
+	if defConfig {
+		fmt.Printf("cmd %s'config def'%s profile %s[%s]%s\n",
+			CGREEN, CEND, CGREEN, p.Name, CEND)
+		makeKernel(p, p.Defconfig)
+		return
 	}
 
 	printCmd("config", p.Name)
