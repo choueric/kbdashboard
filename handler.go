@@ -47,7 +47,11 @@ func isNumber(str string) bool {
 	}
 }
 
-func getProfile(arg string, config *Config) (*Profile, int) {
+/*
+ * get profile from @config by @arg.
+ * @arg may be numberic index or name of profile, it cannot be empty.
+ */
+func doGetProfile(arg string, config *Config) (*Profile, int) {
 	var p *Profile
 	var index int
 	if isNumber(arg) {
@@ -70,7 +74,7 @@ func getProfile(arg string, config *Config) (*Profile, int) {
 	return p, index
 }
 
-func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
+func getProfile(args []string, config *Config) (*Profile, int) {
 	var arg string
 	if len(args) == 0 {
 		arg = strconv.Itoa(config.Current)
@@ -78,7 +82,7 @@ func getProfileByCurrent(args []string, config *Config) (*Profile, int) {
 		arg = args[0]
 	}
 
-	return getProfile(arg, config)
+	return doGetProfile(arg, config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,7 +174,7 @@ func cmd_choose(args []string, config *Config) {
 	if len(args) == 0 {
 		clog.Fatal("Choose need profile's name or index")
 	}
-	p, index := getProfile(args[0], config)
+	p, index := doGetProfile(args[0], config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -203,7 +207,7 @@ func cmd_make(args []string, config *Config) {
 	target := args[0]
 	args = args[1:]
 
-	p, _ := getProfileByCurrent(args, config)
+	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -229,7 +233,7 @@ func cmd_config(args []string, config *Config) {
 		args = args[1:]
 	}
 
-	p, _ := getProfileByCurrent(args, config)
+	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -253,7 +257,7 @@ func cmd_build(args []string, config *Config) {
 		return
 	}
 
-	p, _ := getProfileByCurrent(args, config)
+	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -279,7 +283,7 @@ func cmd_install(args []string, config *Config) {
 		args = args[1:]
 	}
 
-	p, _ := getProfileByCurrent(args, config)
+	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -325,7 +329,7 @@ func cmd_module(args []string, config *Config) {
 		return
 	}
 
-	p, _ := getProfileByCurrent(args, config)
+	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
