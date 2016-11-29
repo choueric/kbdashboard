@@ -33,7 +33,6 @@ type Handler struct {
 type HandlerPool []*Handler
 
 func (p HandlerPool) PrintUsage() {
-	fmt.Printf("Usage: \n\n")
 	for _, v := range p {
 		v.usage()
 		fmt.Printf("\n")

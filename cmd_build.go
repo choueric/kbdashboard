@@ -34,10 +34,7 @@ func build_usage() {
 	printTitle("- build [image|modules|dtb] [profile]")
 	fmt.Printf("  Build various targets.")
 	fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
-	for _, v := range buildHandlerPool {
-		fmt.Printf("\n")
-		v.usage()
-	}
+	buildHandlerPool.PrintUsage()
 }
 
 func handler_build(args []string, config *Config) int {

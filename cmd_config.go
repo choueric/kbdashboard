@@ -33,10 +33,7 @@ var configHandlerPool = HandlerPool{
 func config_usage() {
 	printTitle("- config [menu|def|save] [profile]")
 	fmt.Printf("  Configure [profile] and save it.\n")
-	for _, v := range configHandlerPool {
-		fmt.Printf("\n")
-		v.usage()
-	}
+	configHandlerPool.PrintUsage()
 }
 
 func handler_config(args []string, config *Config) int {
