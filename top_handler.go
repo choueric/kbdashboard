@@ -31,8 +31,13 @@ func checkError(err error) {
 }
 
 func printCmd(cmd string, m string) {
-	fmt.Printf("cmd %s'%s'%s for %s[%s]%s\n", CGREEN, cmd, CEND,
+	fmt.Printf("execute command %s'%s'%s for %s[%s]%s\n", CGREEN, cmd, CEND,
 		CGREEN, m, CEND)
+}
+
+func printDefOption(cmd string) {
+	fmt.Printf("    %s*%s This is the default option for %s'%s'%s command.\n",
+		CRED, CEND, CGREEN, cmd, CEND)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,39 +120,6 @@ func handler_make(args []string, config *Config) int {
 
 	printCmd("build", p.Name)
 	return makeKernel(p, target)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func config_usage() {
-	printTitle("- config [def] [profile]")
-	fmt.Printf("  Configure [profile] using menuconfig.")
-	fmt.Printf(" Same as '$ kbdashboard make menuconfig'.\n")
-	fmt.Printf("  [def]: Use default config specified in config file.\n")
-}
-
-func handler_config(args []string, config *Config) int {
-	var defConfig bool
-
-	argc := len(args)
-	if argc != 0 && args[0] == "def" {
-		defConfig = true
-		args = args[1:]
-	}
-
-	p, _ := getProfile(args, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
-	if defConfig {
-		fmt.Printf("cmd %s'config def'%s profile %s[%s]%s\n",
-			CGREEN, CEND, CGREEN, p.Name, CEND)
-		return makeKernel(p, p.Defconfig)
-	}
-
-	printCmd("config", p.Name)
-	return configKernel(p, "menuconfig")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
