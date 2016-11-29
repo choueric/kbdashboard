@@ -72,7 +72,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	return cmdArgs
 }
 
-func makeKernel(p *Profile, target string) error {
+func makeKernel(p *Profile, target string) int {
 	cmdArgs := makeKernelOpt(p, target)
 
 	cmd := exec.Command("make", cmdArgs...)
@@ -83,26 +83,26 @@ func makeKernel(p *Profile, target string) error {
 	return runCmd(cmd)
 }
 
-func configKernel(p *Profile, target string) {
+func configKernel(p *Profile, target string) int {
 	cmdArgs := makeKernelOpt(p, target)
 	args := []string{"make"}
 	args = append(args, cmdArgs...)
 
 	os.Chdir(p.SrcDir)
-	execCmd("make", args)
+	return execCmd("make", args)
 }
 
-func runCmd(cmd *exec.Cmd) error {
+func runCmd(cmd *exec.Cmd) int {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
 		clog.Println("Error creating StdoutPipe for Cmd:", err)
-		return err
+		return 1
 	}
 
 	stderrReader, err := cmd.StderrPipe()
 	if err != nil {
 		clog.Println("create stderrPipe:", err)
-		return err
+		return 2
 	}
 
 	scanner := bufio.NewScanner(stdoutReader)
@@ -122,19 +122,19 @@ func runCmd(cmd *exec.Cmd) error {
 	err = cmd.Start()
 	if err != nil {
 		clog.Println("Error starting Cmd:", err)
-		return err
+		return 3
 	}
 
 	err = cmd.Wait()
 	if err != nil {
 		clog.Println("Error waiting for Cmd:", err)
-		return err
+		return 4
 	}
 
-	return nil
+	return 0
 }
 
-func execCmd(name string, argv []string) {
+func execCmd(name string, argv []string) int {
 	binary, err := exec.LookPath(name)
 	if err != nil {
 		clog.Fatal(err)
@@ -146,4 +146,6 @@ func execCmd(name string, argv []string) {
 	if err != nil {
 		clog.Fatal(err)
 	}
+
+	return 0
 }

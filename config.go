@@ -22,6 +22,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"regexp"
+	"strconv"
 
 	"github.com/choueric/clog"
 )
@@ -179,4 +181,84 @@ func writeConfigFile(config *Config) {
 	defer file.Close()
 
 	file.Write(data)
+}
+
+func isNumber(str string) bool {
+	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
+		return false
+	} else {
+		return true
+	}
+}
+
+/*
+ * get profile from @config by @arg.
+ * @arg may be numberic index or name of profile, it cannot be empty.
+ */
+func doGetProfile(arg string, config *Config) (*Profile, int) {
+	var p *Profile
+	var index int
+	if isNumber(arg) {
+		n, _ := strconv.Atoi(arg)
+		if n >= len(config.Profiles) || n < 0 {
+			clog.Fatalf("invalid index of profile: [%d]\n", n)
+		}
+		p = config.Profiles[n]
+		index = n
+	} else {
+		for i, v := range config.Profiles {
+			if v.Name == arg {
+				p = v
+				index = i
+				break
+			}
+		}
+	}
+
+	return p, index
+}
+
+/*
+ * get profile specified by @arg from @config.
+ * @arg may be numberic index or name of profile.
+ *      If it is empty, then return the chosen profile.
+ */
+func getProfile(args []string, config *Config) (*Profile, int) {
+	var arg string
+	if len(args) == 0 {
+		arg = strconv.Itoa(config.Current)
+	} else {
+		arg = args[0]
+	}
+
+	return doGetProfile(arg, config)
+}
+
+func printProfile(p *Profile, verbose bool, current bool, i int) {
+	if verbose {
+		if current {
+			fmt.Printf("\n%s*%s ", CRED, CEND)
+			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		} else {
+			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		}
+		fmt.Printf("  SrcDir\t\t: %s\n", p.SrcDir)
+		fmt.Printf("  Arch\t\t\t: %s\n", p.Arch)
+		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
+		fmt.Printf("  Target\t\t: %s\n", p.Target)
+		fmt.Printf("  Defconfig\t\t: %s\n", p.Defconfig)
+		fmt.Printf("  BuildDir\t\t: %s\n", p.OutputDir)
+		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
+		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
+	} else {
+		if current {
+			fmt.Printf("\n%s*%s ", CRED, CEND)
+			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		} else {
+			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+		}
+		fmt.Printf("  SrcDir: %s\n", p.SrcDir)
+		fmt.Printf("  Arch\t: %s\n", p.Arch)
+		fmt.Printf("  CC\t: %s\n", p.CrossComile)
+	}
 }

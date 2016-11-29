@@ -41,41 +41,26 @@ func parseConfig() *Config {
 	return config
 }
 
-func handleCmd(cmd string, args []string, config *Config) {
-	if cmd == "help" {
-		cmd_help(nil, nil)
-		return
-	}
-
-	h, ok := handlerMap[cmd]
-	if !ok {
-		cmd_help(nil, nil)
-		clog.Fatalf("[%s] is not supported\n", cmd)
-	}
-	h(args, config)
-}
-
 func main() {
+	var cmd string
+	maps := topHandlerMap
+
 	clog.SetFlags(clog.Lshortfile | clog.LstdFlags)
 
-	var (
-		args []string
-		cmd  string
-	)
+	// strip program name
+	args := os.Args[1:]
 
-	switch len(os.Args) {
-	case 2:
-		cmd = os.Args[1]
-	case 3:
-		fallthrough
-	case 4:
-		cmd = os.Args[1]
-		args = os.Args[2:]
-	default:
-		cmd_help(nil, nil)
-		return
+	argc := len(args)
+	if argc >= 1 {
+		cmd = args[0]
+		args = args[1:]
+	} else {
+		maps.PrintUsage()
+		os.Exit(1)
 	}
 
 	config := parseConfig()
-	handleCmd(cmd, args, config)
+
+	ret := HandleCmd(cmd, maps, args, config)
+	os.Exit(ret)
 }
