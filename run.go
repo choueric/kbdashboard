@@ -102,7 +102,7 @@ func runCmd(cmd *exec.Cmd) int {
 	stderrReader, err := cmd.StderrPipe()
 	if err != nil {
 		clog.Println("create stderrPipe:", err)
-		return 2
+		return 1
 	}
 
 	scanner := bufio.NewScanner(stdoutReader)
@@ -122,13 +122,13 @@ func runCmd(cmd *exec.Cmd) int {
 	err = cmd.Start()
 	if err != nil {
 		clog.Println("Error starting Cmd:", err)
-		return 3
+		return 1
 	}
 
 	err = cmd.Wait()
 	if err != nil {
 		clog.Println("Error waiting for Cmd:", err)
-		return 4
+		return 2
 	}
 
 	return 0
