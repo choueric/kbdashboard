@@ -68,6 +68,8 @@ func main() {
 		args = args[1:]
 	} else {
 		pool.PrintUsage()
+		printTitle("- help")
+		fmt.Println("  Display this message.")
 		os.Exit(1)
 	}
 
