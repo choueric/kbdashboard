@@ -17,6 +17,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/choueric/clog"
@@ -27,6 +28,10 @@ const (
 	CGREEN = "\x1b[32;1m"
 	CEND   = "\x1b[0;m"
 )
+
+func printTitle(format string, v ...interface{}) {
+	fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+}
 
 func parseConfig() *Config {
 	config, err := ParseConfig("")

@@ -38,7 +38,7 @@ func printCmd(cmd string, m string) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func list_usage() {
-	fmt.Printf("- list [verbose]\n")
+	printTitle("- list [verbose]")
 	fmt.Printf("  List all profiles.\n")
 	fmt.Printf("  [verbose]: Print with more information\n")
 }
@@ -64,7 +64,7 @@ func handler_list(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func choose_usage() {
-	fmt.Printf("- choose <profile>\n")
+	printTitle("- choose <profile>")
 	fmt.Printf("  Choose <profile> as the current one.\n")
 }
 
@@ -88,7 +88,7 @@ func handler_choose(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func edit_usage() {
-	fmt.Printf("- edit [profile]\n")
+	printTitle("- edit [profile]")
 	fmt.Printf("  Edit [profile]'s config using the specified editor.\n")
 }
 
@@ -100,7 +100,7 @@ func handler_edit(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func make_usage() {
-	fmt.Printf("- make <target> [profile]\n")
+	printTitle("- make <target> [profile]")
 	fmt.Printf("  Execute 'make' <target> on [profile].\n")
 }
 
@@ -120,7 +120,7 @@ func handler_make(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func config_usage() {
-	fmt.Printf("- config [def] [profile]\n")
+	printTitle("- config [def] [profile]")
 	fmt.Printf("  Configure [profile] using menuconfig.")
 	fmt.Printf(" Same as '$ kbdashboard make menuconfig'.\n")
 	fmt.Printf("  [def]: Use default config specified in config file.\n")
@@ -153,7 +153,7 @@ func handler_config(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func install_usage() {
-	fmt.Printf("- install [edit] [profile]\n")
+	printTitle("- install [edit] [profile]")
 	fmt.Printf("  Execute the install script of [profile].\n")
 	fmt.Printf("  [edit]: Open the install script with editor.\n")
 }
@@ -210,8 +210,8 @@ var topHandlerPool = HandlerPool{
 	&Handler{"list", handler_list, list_usage},
 	&Handler{"choose", handler_choose, choose_usage},
 	&Handler{"edit", handler_edit, edit_usage},
-	&Handler{"make", handler_make, make_usage},
 	&Handler{"config", handler_config, config_usage},
 	&Handler{"build", handler_build, build_usage},
 	&Handler{"install", handler_install, install_usage},
+	&Handler{"make", handler_make, make_usage},
 }

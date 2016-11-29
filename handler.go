@@ -38,7 +38,8 @@ func (p HandlerPool) PrintUsage() {
 		v.usage()
 		fmt.Printf("\n")
 	}
-	fmt.Println("- help\n  Display this message.")
+	printTitle("- help")
+	fmt.Println("  Display this message.")
 }
 
 func HandleCmd(cmd string, pool HandlerPool, args []string, config *Config) int {

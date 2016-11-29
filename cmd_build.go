@@ -31,7 +31,7 @@ var buildHandlerPool = HandlerPool{
 ////////////////////////////////////////////////////////////////////////////////
 
 func build_usage() {
-	fmt.Printf("- build [image|modules|dtb] [profile]\n")
+	printTitle("- build [image|modules|dtb] [profile]")
 	fmt.Printf("  Build various targets.")
 	fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
 }
@@ -53,10 +53,10 @@ func handler_build(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func image_usage() {
-	fmt.Printf("- build image [profile]\n")
+	printTitle("- build image [profile]")
 	fmt.Printf("  Build kernel images of [profile].\n")
-	fmt.Printf("  %s*%s It is the default option for 'build' command.\n",
-		CGREEN, CEND)
+	fmt.Printf("  %s*%s This is the default option for 'build' command.\n",
+		CRED, CEND)
 }
 
 func build_image(args []string, config *Config) int {
@@ -71,7 +71,7 @@ func build_image(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func modules_usage() {
-	fmt.Printf("- build modules [profile]\n")
+	printTitle("- build modules [profile]")
 	fmt.Printf("  Build and install modules of [profile].")
 	fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
 	fmt.Printf("  '$ kbdashboard make modules_install'.\n")
@@ -96,7 +96,7 @@ func build_modules(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func dtb_usage() {
-	fmt.Printf("- build dtb [profile]\n")
+	printTitle("- build dtb [profile]")
 	fmt.Printf("  Build dtb file specified in config.\n")
 }
 
