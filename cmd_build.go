@@ -83,7 +83,7 @@ func build_modules(args []string, config *Config) int {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	printCmd("module", p.Name)
+	printCmd("modules", p.Name)
 
 	ret := makeKernel(p, "modules")
 	if ret != 0 {
@@ -101,5 +101,10 @@ func dtb_usage() {
 }
 
 func build_dtb(args []string, config *Config) int {
-	return 0
+	p, _ := getProfile(args, config)
+	if p == nil {
+		clog.Fatalf("can not find profile [%s]\n", args[0])
+	}
+	printCmd("build DTB", p.Name)
+	return makeKernel(p, p.DTB)
 }

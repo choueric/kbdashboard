@@ -43,6 +43,7 @@ const DefaultConfig = `
 		"arch":"arm",
 		"target":"uImage",
 		"defconfig":"at91rm9200_defconfig",
+		"dtb":"at91rm9200ek.dtb",
 		"cross_compile":"arm-eabi-",
 		"output_dir":"./_build",
 		"mod_install_dir":"./_build/mod",
@@ -58,6 +59,7 @@ type Profile struct {
 	Arch          string `json:"arch"`
 	Target        string `json:"target"`
 	Defconfig     string `json:"defconfig"`
+	DTB           string `json:"dtb"`
 	CrossComile   string `json:"cross_compile"`
 	OutputDir     string `json:"output_dir"`
 	ModInstallDir string `json:"mod_install_dir"`
@@ -73,10 +75,11 @@ type Config struct {
 
 func (p *Profile) String() string {
 	return fmt.Sprintf(
-		"name = %s%s%s\n  arch = %s, CC = %s, target = %s, defconfig = %s\n"+
+		"name = %s%s%s\n"+
+			"  arch = %s, CC = %s, target = %s, defconfig = %s, DTB = %s\n"+
 			"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
-		CGREEN, p.Name, CEND, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.SrcDir,
-		p.OutputDir, p.ModInstallDir, p.ThreadNum)
+		CGREEN, p.Name, CEND, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.DTB,
+		p.SrcDir, p.OutputDir, p.ModInstallDir, p.ThreadNum)
 }
 
 func (c *Config) String() string {
@@ -252,6 +255,7 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
 		fmt.Printf("  Target\t\t: %s\n", p.Target)
 		fmt.Printf("  Defconfig\t\t: %s\n", p.Defconfig)
+		fmt.Printf("  DTB\t\t\t: %s\n", p.DTB)
 		fmt.Printf("  BuildDir\t\t: %s\n", p.OutputDir)
 		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
 		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
