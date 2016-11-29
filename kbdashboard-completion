@@ -4,15 +4,19 @@ _kbdashboard()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="list choose edit help make build config install module"
+    opts="list choose edit help make build config install"
 
     case "$prev" in
-    choose | edit | help | make | build | module)
+    choose | edit | help | make)
         COMPREPLY=()
         return 0
         ;;
 	list )
         COMPREPLY=( $(compgen -W "verbose" -- $cur) )
+        return 0
+        ;;
+	build )
+        COMPREPLY=( $(compgen -W "image modules dtb" -- $cur) )
         return 0
         ;;
 	install )
