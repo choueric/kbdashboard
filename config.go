@@ -73,10 +73,15 @@ type Config struct {
 
 func (p *Profile) String() string {
 	return fmt.Sprintf(
-		"name = %s\n  arch = %s, CC = %s, target = %s, defconfig = %s\n"+
+		"name = %s%s%s\n  arch = %s, CC = %s, target = %s, defconfig = %s\n"+
 			"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
-		p.Name, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.SrcDir,
+		CGREEN, p.Name, CEND, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.SrcDir,
 		p.OutputDir, p.ModInstallDir, p.ThreadNum)
+}
+
+func (c *Config) String() string {
+	return fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n%v\n",
+		c.configFile, c.Editor, c.Current, c.Profiles)
 }
 
 func checkConfigDir(p string) {

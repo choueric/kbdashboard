@@ -33,7 +33,7 @@ func printTitle(format string, v ...interface{}) {
 	fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
 }
 
-func parseConfig() *Config {
+func parseConfig(dump bool) *Config {
 	config, err := ParseConfig("")
 	if err != nil {
 		clog.Fatal("[ "+checkConfigFile("")+" ]: ", err)
@@ -42,7 +42,9 @@ func parseConfig() *Config {
 		clog.Fatal("config is nil.")
 	}
 
-	//clog.Println(config)
+	if dump {
+		fmt.Println(config)
+	}
 	return config
 }
 
@@ -54,8 +56,13 @@ func main() {
 
 	// strip program name
 	args := os.Args[1:]
-
 	argc := len(args)
+
+	if argc >= 1 && args[0] == "dump" {
+		parseConfig(true)
+		return
+	}
+
 	if argc >= 1 {
 		cmd = args[0]
 		args = args[1:]
@@ -64,7 +71,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	config := parseConfig()
+	config := parseConfig(false)
 
 	ret := HandleCmd(cmd, pool, args, config)
 	os.Exit(ret)
