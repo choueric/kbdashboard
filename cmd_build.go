@@ -100,7 +100,7 @@ func build_modules(args []string, config *Config) int {
 
 func dtb_usage() {
 	printTitle("  - build dtb [profile]")
-	fmt.Printf("    Build dtb file specified in configration.\n")
+	fmt.Printf("    Build dtb file specified in configration and install to 'BuildDir'.\n")
 }
 
 func build_dtb(args []string, config *Config) int {
@@ -109,5 +109,16 @@ func build_dtb(args []string, config *Config) int {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 	printCmd("build DTB", p.Name)
-	return makeKernel(p, p.DTB)
+	if makeKernel(p, p.DTB) != 0 {
+		clog.Fatalf("build DTB failed.\n")
+	}
+
+	src := p.OutputDir + "/arch/" + p.Arch + "/boot/dts/" + p.DTB
+	dst := p.OutputDir + "/" + p.DTB
+
+	if copyFileContents(src, dst) != nil {
+		return 1
+	} else {
+		return 0
+	}
 }
