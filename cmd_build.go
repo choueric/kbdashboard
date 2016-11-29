@@ -53,7 +53,10 @@ func handler_build(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func image_usage() {
-	fmt.Printf("build image usage\n")
+	fmt.Printf("- build image [profile]\n")
+	fmt.Printf("  Build kernel images of [profile].\n")
+	fmt.Printf("  %s*%s It is the default option for 'build' command.\n",
+		CGREEN, CEND)
 }
 
 func build_image(args []string, config *Config) int {
@@ -68,8 +71,8 @@ func build_image(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func modules_usage() {
-	fmt.Printf("- module [profile]\n")
-	fmt.Printf("  Build and install modules.")
+	fmt.Printf("- build modules [profile]\n")
+	fmt.Printf("  Build and install modules of [profile].")
 	fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
 	fmt.Printf("  '$ kbdashboard make modules_install'.\n")
 }
@@ -93,7 +96,8 @@ func build_modules(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func dtb_usage() {
-	fmt.Printf("build dtb usage\n")
+	fmt.Printf("- build dtb [profile]\n")
+	fmt.Printf("  Build dtb file specified in config.\n")
 }
 
 func build_dtb(args []string, config *Config) int {
