@@ -111,18 +111,6 @@ func handler_choose(args []string, config *Config) int {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func edit_usage() {
-	printTitle("- edit [profile]")
-	fmt.Printf("  Edit [profile]'s config using the specified editor.\n")
-}
-
-func handler_edit(args []string, config *Config) int {
-	var argv = []string{config.Editor, config.configFile}
-	return execCmd(config.Editor, argv)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 func make_usage() {
 	printTitle("- make <target> [profile]")
 	fmt.Printf("  Execute 'make' <target> on [profile].\n")
@@ -146,7 +134,7 @@ func handler_make(args []string, config *Config) int {
 func install_usage() {
 	printTitle("- install [edit] [profile]")
 	fmt.Printf("  Execute the install script of [profile].\n")
-	fmt.Printf("  [edit]: Open the install script with editor.\n")
+	printTitle("  - [edit]: Open the install script with editor.\n")
 }
 
 func handler_install(args []string, config *Config) int {
