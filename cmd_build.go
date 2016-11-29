@@ -22,10 +22,10 @@ import (
 	"github.com/choueric/clog"
 )
 
-var buildHandlerMap = HandlerMap{
-	"image":   {build_image, image_usage},
-	"modules": {build_modules, modules_usage},
-	"dtb":     {build_dtb, dtb_usage},
+var buildHandlerPool = HandlerPool{
+	&Handler{"image", build_image, image_usage},
+	&Handler{"modules", build_modules, modules_usage},
+	&Handler{"dtb", build_dtb, dtb_usage},
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ func handler_build(args []string, config *Config) int {
 		args = args[1:]
 	}
 
-	return HandleCmd(cmd, buildHandlerMap, args, config)
+	return HandleCmd(cmd, buildHandlerPool, args, config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

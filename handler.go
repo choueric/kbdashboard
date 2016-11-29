@@ -25,31 +25,38 @@ import (
 type HandlerFunc func(args []string, config *Config) int
 
 type Handler struct {
+	cmd    string
 	handle HandlerFunc
 	usage  func()
 }
 
-type HandlerMap map[string]Handler
+type HandlerPool []*Handler
 
-func (m HandlerMap) PrintUsage() {
-	fmt.Printf("cmd %s'help'%s:\n", CGREEN, CEND)
+func (p HandlerPool) PrintUsage() {
 	fmt.Printf("Usage: \n\n")
-	for _, v := range m {
+	for _, v := range p {
 		v.usage()
 		fmt.Printf("\n")
 	}
 	fmt.Println("- help\n  Display this message.")
 }
 
-func HandleCmd(cmd string, maps HandlerMap, args []string, config *Config) int {
+func HandleCmd(cmd string, pool HandlerPool, args []string, config *Config) int {
 	if cmd == "help" {
-		maps.PrintUsage()
+		pool.PrintUsage()
 		return 0
 	}
 
-	h, ok := maps[cmd]
-	if !ok {
-		maps.PrintUsage()
+	var h *Handler = nil
+	for _, v := range pool {
+		if v.cmd == cmd {
+			h = v
+			break
+		}
+	}
+
+	if h == nil {
+		pool.PrintUsage()
 		clog.Fatalf("[%s] is not supported\n", cmd)
 	}
 	return h.handle(args, config)

@@ -206,12 +206,12 @@ func handler_install(args []string, config *Config) int {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var topHandlerMap = HandlerMap{
-	"list":    {handler_list, list_usage},
-	"choose":  {handler_choose, choose_usage},
-	"edit":    {handler_edit, edit_usage},
-	"make":    {handler_make, make_usage},
-	"config":  {handler_config, config_usage},
-	"build":   {handler_build, build_usage},
-	"install": {handler_install, install_usage},
+var topHandlerPool = HandlerPool{
+	&Handler{"list", handler_list, list_usage},
+	&Handler{"choose", handler_choose, choose_usage},
+	&Handler{"edit", handler_edit, edit_usage},
+	&Handler{"make", handler_make, make_usage},
+	&Handler{"config", handler_config, config_usage},
+	&Handler{"build", handler_build, build_usage},
+	&Handler{"install", handler_install, install_usage},
 }

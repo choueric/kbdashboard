@@ -43,7 +43,7 @@ func parseConfig() *Config {
 
 func main() {
 	var cmd string
-	maps := topHandlerMap
+	pool := topHandlerPool
 
 	clog.SetFlags(clog.Lshortfile | clog.LstdFlags)
 
@@ -55,12 +55,12 @@ func main() {
 		cmd = args[0]
 		args = args[1:]
 	} else {
-		maps.PrintUsage()
+		pool.PrintUsage()
 		os.Exit(1)
 	}
 
 	config := parseConfig()
 
-	ret := HandleCmd(cmd, maps, args, config)
+	ret := HandleCmd(cmd, pool, args, config)
 	os.Exit(ret)
 }
