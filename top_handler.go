@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 
@@ -38,6 +39,24 @@ func printCmd(cmd string, m string) {
 func printDefOption(cmd string) {
 	fmt.Printf("    %s*%s This is the default option for %s'%s'%s command.\n",
 		CRED, CEND, CGREEN, cmd, CEND)
+}
+
+func copyFileContents(src, dst string) (err error) {
+	fmt.Printf("copy %s'%s'%s -> %s'%s'%s\n", CGREEN, src, CEND,
+		CGREEN, dst, CEND)
+	in, err := os.Open(src)
+	checkError(err)
+	defer in.Close()
+
+	out, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	checkError(err)
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	checkError(err)
+
+	err = out.Sync()
+	return
 }
 
 ////////////////////////////////////////////////////////////////////////////////
