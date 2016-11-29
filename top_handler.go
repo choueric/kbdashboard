@@ -132,21 +132,11 @@ func handler_make(args []string, config *Config) int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func install_usage() {
-	printTitle("- install [edit] [profile]")
+	printTitle("- install [profile]")
 	fmt.Printf("  Execute the install script of [profile].\n")
-	printTitle("  - [edit]: Open the install script with editor.\n")
 }
 
 func handler_install(args []string, config *Config) int {
-	var doEdit bool
-	var create bool
-
-	argc := len(args)
-	if argc != 0 && args[0] == "edit" {
-		doEdit = true
-		args = args[1:]
-	}
-
 	p, _ := getProfile(args, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
@@ -154,33 +144,22 @@ func handler_install(args []string, config *Config) int {
 
 	script := getInstallFilename(p)
 	if checkFileExsit(script) == false {
-		// create script
+		// create and edit script
+		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
 		file, err := os.OpenFile(script, os.O_RDWR|os.O_CREATE, 0775)
 		checkError(err)
-		_, err = file.Write([]byte("#!/bin/sh"))
+		str := fmt.Sprintf("#!/bin/sh\n# install script for profile '%s'", p.Name)
+		_, err = file.Write([]byte(str))
 		checkError(err)
 		file.Close()
-		create = true
-	}
-
-	if doEdit {
-		fmt.Printf("cmd %s'install edit'%s profile %s[%s]%s\n",
-			CGREEN, CEND, CGREEN, p.Name, CEND)
-		var argv = []string{config.Editor, script}
-		return execCmd(config.Editor, argv)
+		return execCmd(config.Editor, []string{config.Editor, script})
 	}
 
 	printCmd("install", p.Name)
-	if create {
-		// edit script
-		var argv = []string{config.Editor, script}
-		return execCmd(config.Editor, argv)
-	} else {
-		cmd := exec.Command(script)
-		cmd.Dir = p.SrcDir
-		fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
-		return runCmd(cmd)
-	}
+	cmd := exec.Command(script)
+	cmd.Dir = p.SrcDir
+	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
+	return runCmd(cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
