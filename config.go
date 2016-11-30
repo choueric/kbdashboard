@@ -35,17 +35,17 @@ const (
 const DefaultConfig = `
 {
 	"editor": "vim",
-	"current": 1,
+	"current": 0,
 	"profile": [
 	{
 		"name":"demo",
 		"src_dir":"/home/user/kernel"
 		"arch":"arm",
+		"cross_compile":"arm-eabi-",
 		"target":"uImage",
+		"output_dir":"./_build",
 		"defconfig":"at91rm9200_defconfig",
 		"dtb":"at91rm9200ek.dtb",
-		"cross_compile":"arm-eabi-",
-		"output_dir":"./_build",
 		"mod_install_dir":"./_build/mod",
 		"thread_num":4,
 	}

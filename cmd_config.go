@@ -90,8 +90,8 @@ func config_def(args []string, config *Config) int {
 func save_usage() {
 	printTitle("  - config save [profile]")
 	fmt.Printf("    Save current config to default config.\n")
-	fmt.Printf("    First execute 'make savedefconfig', then substitute the " +
-		"config file specified by 'DefConfig'\n")
+	fmt.Printf("    First execute 'make savedefconfig', then replace the " +
+		"config file specified by 'DefConfig'.\n")
 }
 
 func config_save(args []string, config *Config) int {

@@ -1,20 +1,45 @@
 # Kernel Build Dashboard
-Dashboard for configuring, managing build process of multiple linux kernels.
+This tool, i.e. `kbdashboard`, is a dashboard used to configure and manage build
+process of multiple linux kernels. It is written in Golang.
+
+Developpers, especially in embedded system, may usually need to modify, build 
+and test more than one linux kernels. Some may handle different kernel versions
+using different toolchains, some may handle one kernel version but use different
+build directories based on different configuratios. In these cases, users have
+to remember various configurations and use all kinds of commands.
+
+In order to simplify this matter, `kbdashboard` acts as the wrapper to handle
+all these complicated details. It has some advantages as below:
+
+- Run in any directory without changing to the direcotry of kernel sources.
+- Use individual building directory without affecting the kernel source tree.
+- Simple commands to perform various actions from starting up to installing.
+- Configure easily by using the json format configuration file.
+- Colorful shell output.
 
 # Build this Tool
 ```
 $ cd kernelBuildDashboard
 $ make
+$ sudo make install
 ```
 
-the result executable is `kbdashboard`.
+Then user will get the executable `kbdashboard`. It will be installed into the
+direcotry `/usr/local/bin`. And the bash completion script will be installed
+into `/etc/bash_completion.d`. The Makefile is very simple and can be modified
+easily.
 
-# Configuration this Tool
-Configuration file is in json format. It can contains multiple kernel
-configurations; each one is a profile. The program finds configuration file 
-`~/.config/kbdashboard/config.json`.
+# How to Use this Tool
 
-A sample is shown below:
+## Create a Profile
+
+The configuration file of `kbdashboard` is the core. Use command:
+```sh
+$ kbdashboard edit
+```
+to edit the json format configuration file. If it is the first time to execute
+this tool, there is no configuration file `$HOME/.config/kbdashboard/config.json`.
+The tool will create a template and open it using `vim`. The template is:
 
 ```json
 {
@@ -25,83 +50,204 @@ A sample is shown below:
 		"name":"demo",
 		"src_dir":"/home/user/kernel"
 		"arch":"arm",
-		"target":"uImage",
 		"cross_compile":"arm-eabi-",
+		"target":"uImage",
 		"output_dir":"./_build",
-		"mod_install_dir":"./mod",
+		"defconfig":"at91rm9200_defconfig",
+		"dtb":"at91rm9200ek.dtb",
+		"mod_install_dir":"./_build/mod",
 		"thread_num":4,
-	},
-	{
-		"name":"demo2",
-		"src_dir":"/home/user/kernel2"
 	}
 	]
 }
 ```
 
-Below are global options:
+There are some global options and only one profile with the name `demo`.
+
 ```
-editor  : Specify text editor which will be invoked when `edit` command is executed.
-current : Current profile index. If no speficy profile in `build` and `config` command,
-          this index profile will be used.
+- editor  : Specify text editor which will be invoked when `edit` command is executed.
+- current : Current profile index. If no speficy profile in `build` and `config` command,
+            this index profile will be used.
 ``` 
 
-One profile must include following values:
+The `profile` array can contain many profiles, each one is a build object. A 
+profile has many options, which can be seen in the `demo` profile, but only two
+are mandatory:
+
 ```
-name    : profile name.
-src_dir : directory path of kernel source.
+- name    : profile name.
+- src_dir : directory path of kernel source.
 ```
 
-Values below are optional:
+Others can be empty and will be the default value during building kernel.
+
 ```
 arch            : architecture, corresponding to `ARCH` of kernel build command.
 cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel 
                   build command.
-target          : target of the build command.
+target          : target of building kernel image.
 output_dir      : output build directory, corresponding to `O` of kernel build 
                   command. It is relative to the `src_dir` if not absolute.
+defconfig       : default configuration when start up.
+dtb             : the name of target DTB file.
 mod_install_dir : module install directory, corresponding to `INSTALL_MOD_PATH`
                   of kernel build command. It is relative to the `src_dir` if
 				  not absolute.
 thread_num      : number of thread used to compile, corresponding to `-j` option.
 ```
 
-If these options are not specified in configuration file, programe just ignores
-them.
+After the editing, use command `list` to see the result:
 
-# Commands of this Tool
+```sh
+$ kbdashboard list
+```
+
+Since `demo` is listed, use command `choose` to set it as the default
+profile:
+
+```sh
+$ kbdashboard choose demo
+```
+
+Use `list` command to see whether `demo` is marked by red asterisk.
+From now on, it is no need to append profile's name or index in commands.
+
+## Configure Kernel
+
+Before comiling the kernel, it has to do the default configuration:
+
+```sh
+$ kbdashboard config def
+```
+
+It will use `defconfig` in profile to generate `.config` file in the buiding
+directory.
+
+To do manually in menuconfig, use command:
+
+```sh
+$ kbdashboard config
+or
+$ kbdashboard config menu
+```
+
+To save configuration, use command:
+
+```sh
+$ kbdashboard config save
+```
+
+It will execute `savedefconfig`.
+
+## Compile Kernel
+
+To get the kernel image, use command:
+
+```sh
+$ kbdashboard build
+or
+$ kbdashboard build image
+```
+
+To compile driver modules and install to `mod_install_dir`, use command:
+
+```sh
+$ kbdashboard build modules
+```
+
+To get DTB file and install to `output_dir`, use command:
+
+```sh
+$ kbdashboard build dtb
+```
+
+## Install
+
+Use `install` command to execute installation script which is writted by users:
+
+```sh
+$ kbdashboard install
+```
+
+At first, because there must be no installation script for this profile, the
+above command will create an empty script and open it using the specified editor.
+
+After user writting the new script, execute it by using the command again.
+
+If user want to modify the script, use the command:
+
+```sh
+$ kbdashboard edit install
+```
+
+Using an user-defined install script is common in embedded development. But for
+building kernel for PC, using `make` command with `install` and `modules_install`
+targets is more useful.
+
+# Details of Tool Commands
 
 ## help
-Now there are 6 commands which are shown via command `help` command:
+Use command `help` or do not use any command to show the help message:
 
-```
+```sh
 $ kbdashboard help
-Usage:
-  - list        : [verbose]. List all profiles. 'verbose' with more details.
-  - choose      : {name | index}. Choose current profile.
-  - edit        : Edit the config file using editor specified in config file.
-  - make        : <target> [name | index]. Execute `make` with specify target.
-  - config      : [name | index]. Configure kernel using menuconfig.
-                  Same as `$ kbdashboard make menuconfig`.
-  - build       : [name | index]. Build kernel specified by name or index.
-                  Same as `$ kbdashboard make uImage` if target in config is uImage.
-  - install     : [edit] [name | index]. Execute or edit install script.
-                  If use sub-cmd 'edit', open the install script with editor.
-                  If no sub-cmd 'edit', execute the install script.
-  - module      : [name | index]. Build and install modules.
-                  Same as '$ kbdashboard make modules' follwing
-                  '$ kbdashboard make modules_install'.
-  - help        : Display this message.
+or
+$ kbdashboard
+```
+
+`help` can also be used as sub-command in some commands. For example:
+
+```sh
+$ kbdashboard build help
 ```
 
 ## list
 List the profiles. The current profile is marked by the red asterisk symbol.
 
+sub-command:
+
+- `verbose`: show all information of profiles.
+
 ## choose
 Choose the current profile by name or index.
 
 ## edit
-Edit the configuration file using editor specified by the `editor` option.
+Edit the configuration file using editor specified by the `editor` configuration.
+
+sub-command:
+
+- `config` : edit the tool's configuration file. It is the default sub-command.
+- `install`: edit one profile's installation script.
+
+## config
+Operate the configurations. The profile is specified by the name or index of
+profile in the command line, or by the current index in the configuration file
+if no option in the command line.
+
+sub-command:
+
+- `menu`: invoke `menuconfig`. It is the default sub-command.
+- `def` : invoke `xxxx_defcofig` which specified by `defcofig` of the profile 
+          configuration.
+- `save`: invoke `savedefconfig`.
+
+## build
+Build the target for specified kernel profile. 
+
+- `image`  : build kernel image. It is the default sub-command.
+- `modules`: build and install driver modules.
+- `dtb`    : build DTB file.
+
+## install
+This command is used to call the install script of specified profile. The script
+is in the directory of configuration file. 
+
+If there is no such script, a new script will be created and opened by the 
+editor which is specified by `editor` config. In this way, users can write a 
+initial script.
+
+The users can also use the command `edit install` to call the editor and modify
+this script explicitly.
 
 ## make
 This command is used to execute original targets of kernel.
@@ -139,124 +285,6 @@ the architecture is x86, script `arch/x86/boot/install.sh` is invoked.
 `/lib/modules` if the `mod_install_dir` is empty in configuration, and it is 
 the common path for building a kernel for PC.
 
-## config
-Invoke menuconfig to the specified kernel profile. The profile is specified by
-the name or index of profile in the command line, or by the current index in
-the configuration file if no option in the command line.
-
-## build
-Build the target for specified kernel profile. The way to specify profile is as
-same as command `config`.
-
-## install
-This command is used to call the install script of specified profile. The script
-is in the directory of configuration file. 
-
-If there is no such script, a new script will be created and opened by the 
-editor which is specified by `editor` config. In this way, users can write a 
-initial script.
-
-The users can also use the sub-cmd `edit` to call the editor and modify this
-script explicitly.
-
-## module
-This command is a combination of `make modules` and `make modules_install`.
-
-# How to Use this Tool
-
-After knowing the configuraion and commands this tool supported, here is the
-typical flow to use it.
-
-## Create a Profile
-
-First, use command `edit` to create a profile for you kernel. For example, the
-name is `testKernel`:
-
-```sh
-$ kbdashboard edit
-```
-
-For example, add profile like below:
-```json
-{
-    "name": "pc",
-    "src_dir": "/home/user/workspace/kernel/linux-4.3"
-}
-```
-
-This profile just has mandatory configurations. Others will be default values
-which are just like execute make in ther kernel source.
-
-Second, use command `list` to see if the profile is correctly created:
-
-```sh
-$ kbdashboard list
-```
-
-Since `testKernel` is listed, use command `choose` to set it as the default
-profile:
-
-```sh
-$ kbdashboard choose testKernel
-```
-
-Use `list` command to see whether `teseKernel` is marked by red asterisk.
-From now on, it is no need to append profile's name or index in commands.
-
-## Compile Kernel
-
-Before comiling the kernel, it usually has to do the default configuration:
-
-```sh
-$ kbdashboard make x86_64_defconfig
-```
-
-To do the detailed configuration, use `config` command :
-
-```sh
-$ kbdashboard config
-```
-
-After all the preparation, compile the kernel use `build` command:
-
-```sh
-$ kbdashboard build
-```
-
-At last, you will find the kernel image.
-
-## Install
-
-Use `install` command to execute installation script which is writted by users:
-
-```sh
-$ kbdashboard install
-```
-
-At first, because there must be no installation script for this profile, the
-above command will create an empty script and open it using the specified editor.
-
-After user writting the new script, execute it by using the command again.
-
-If user want to modify the script, use the `edit` sub-cmd:
-
-```sh
-$ kbdashboard install edit
-```
-
-Or other profiles' installation script:
-
-```sh
-$ kbdashboard install edit anotherProfile
-```
-
-An user-defined install script is common in embedded development. But for
-building kernel for PC, using `make` command with `install` and `modules_install`
-targets is more useful.
-
-Command `module` is used to compile kernel modules and then install them into
-the `mod_install_dir` directory.
 
 # LICENSE
 The GPLv3 License. See `LICENSE.md` file for more details.
-
