@@ -43,7 +43,7 @@ func HandleCmd(cmd string, pool HandlerPool, args []string, config *Config) int 
 	if cmd == "help" {
 		pool.PrintUsage()
 		printTitle("- help")
-		fmt.Println("  Display this message.")
+		fmt.Printf("  Display this message. Version: %s\n", VERSION)
 		return 0
 	}
 
