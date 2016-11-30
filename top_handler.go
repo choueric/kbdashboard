@@ -136,6 +136,7 @@ func install_usage() {
 	fmt.Printf("  Execute the install script of [profile].\n")
 }
 
+// TODO: add arguments into the script.
 func handler_install(args []string, config *Config) int {
 	p, _ := getProfile(args, config)
 	if p == nil {
@@ -148,7 +149,7 @@ func handler_install(args []string, config *Config) int {
 		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
 		file, err := os.OpenFile(script, os.O_RDWR|os.O_CREATE, 0775)
 		checkError(err)
-		str := fmt.Sprintf("#!/bin/sh\n# install script for profile '%s'", p.Name)
+		str := fmt.Sprintf("#!/bin/sh\n\n# install script for profile '%s'", p.Name)
 		_, err = file.Write([]byte(str))
 		checkError(err)
 		file.Close()
@@ -156,10 +157,12 @@ func handler_install(args []string, config *Config) int {
 	}
 
 	printCmd("install", p.Name)
-	cmd := exec.Command(script)
-	cmd.Dir = p.SrcDir
 	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
-	return runCmd(cmd)
+	// 1. cmd := exec.Command(script, "1", "2")
+	cmd := exec.Command(script)
+	// 2. cmd.Args = []string{script, "a", "b"}
+	cmd.Dir = p.SrcDir
+	return pipeCmd(cmd)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

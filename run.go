@@ -80,7 +80,7 @@ func makeKernel(p *Profile, target string) int {
 
 	fmt.Printf("    %s%v%s\n", CGREEN, cmdArgs, CEND)
 
-	return runCmd(cmd)
+	return pipeCmd(cmd)
 }
 
 func configKernel(p *Profile, target string) int {
@@ -92,7 +92,8 @@ func configKernel(p *Profile, target string) int {
 	return execCmd("make", args)
 }
 
-func runCmd(cmd *exec.Cmd) int {
+// execute command with Stdout and Stderr being piped in a new process.
+func pipeCmd(cmd *exec.Cmd) int {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
 		clog.Println("Error creating StdoutPipe for Cmd:", err)
@@ -134,6 +135,7 @@ func runCmd(cmd *exec.Cmd) int {
 	return 0
 }
 
+// execute command directly.
 func execCmd(name string, argv []string) int {
 	binary, err := exec.LookPath(name)
 	if err != nil {
