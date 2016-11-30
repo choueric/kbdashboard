@@ -82,18 +82,18 @@ are mandatory:
 Others can be empty and will be the default value during building kernel.
 
 ```
-arch            : architecture, corresponding to `ARCH` of kernel build command.
-cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel 
-                  build command.
-target          : target of building kernel image.
-output_dir      : output build directory, corresponding to `O` of kernel build 
-                  command. It is relative to the `src_dir` if not absolute.
-defconfig       : default configuration when start up.
-dtb             : the name of target DTB file.
-mod_install_dir : module install directory, corresponding to `INSTALL_MOD_PATH`
-                  of kernel build command. It is relative to the `src_dir` if
-				  not absolute.
-thread_num      : number of thread used to compile, corresponding to `-j` option.
+- arch            : architecture, corresponding to `ARCH` of kernel build command.
+- cross_compile   : cross compiler, corresponding to `CROSS_COMPILE` of kernel 
+                    build command.
+- target          : target of building kernel image.
+- output_dir      : output build directory, corresponding to `O` of kernel build 
+                    command. It is relative to the `src_dir` if not absolute.
+- defconfig       : default configuration when start up.
+- dtb             : the name of target DTB file.
+- mod_install_dir : module install directory, corresponding to `INSTALL_MOD_PATH`
+                    of kernel build command. It is relative to the `src_dir` if
+		    not absolute.
+- thread_num      : number of thread used to compile, corresponding to `-j` option.
 ```
 
 After the editing, use command `list` to see the result:
