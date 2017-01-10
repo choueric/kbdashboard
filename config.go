@@ -47,7 +47,6 @@ const DefaultConfig = `
 `
 
 var (
-	gJConfig     *jconfig.JConfig
 	defConfigDir = os.Getenv("HOME") + "/.config/kbdashboard"
 )
 
@@ -69,6 +68,7 @@ type Config struct {
 	Current  int        `json:"current"`
 	Profiles []*Profile `json:"profile"`
 	filepath string
+	jc       interface{}
 }
 
 func (p *Profile) String() string {
@@ -99,6 +99,19 @@ func (c *Config) fix() {
 			p.Defconfig = "defconfig"
 		}
 	}
+}
+
+func (c *Config) save() {
+	jc := c.getJc()
+	if jc == nil {
+		clog.Warn("jconfig is nil")
+		return
+	}
+	jc.Save()
+}
+
+func (c *Config) getJc() *jconfig.JConfig {
+	return c.jc.(*jconfig.JConfig)
 }
 
 /*
@@ -179,26 +192,19 @@ func getInstallFilename(p *Profile) string {
 }
 
 func getConfig(dump bool) *Config {
-	gJConfig = jconfig.New(defConfigDir, "config.json", Config{})
+	jc := jconfig.New(defConfigDir, "config.json", Config{})
 
-	if _, err := gJConfig.Load(DefaultConfig); err != nil {
+	if _, err := jc.Load(DefaultConfig); err != nil {
 		clog.Fatal("load config error:", err)
 	}
 
-	config := gJConfig.Data().(*Config)
-	config.filepath = gJConfig.FilePath()
+	config := jc.Data().(*Config)
+	config.jc = jc
+	config.filepath = jc.FilePath()
 	config.fix()
 
 	if dump {
 		fmt.Println(config)
 	}
 	return config
-}
-
-func saveConfig() {
-	if gJConfig == nil {
-		clog.Warn("gJConfig is nil")
-		return
-	}
-	gJConfig.Save()
 }

@@ -104,7 +104,7 @@ func handler_choose(args []string, config *Config) int {
 	printCmd("choose", p.Name)
 	config.Current = index
 
-	saveConfig()
+	config.save()
 
 	return 0
 }
