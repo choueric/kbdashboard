@@ -180,7 +180,7 @@ func (c *Config) save() {
 }
 
 func (c *Config) getInstallFilename(p *Profile) string {
-	return c.getJc().Path() + "/" + p.Name + "_install.sh"
+	return c.getJc().Dir() + "/" + p.Name + "_install.sh"
 }
 
 func (c *Config) getJc() *jconfig.JConfig {
@@ -188,8 +188,8 @@ func (c *Config) getJc() *jconfig.JConfig {
 }
 
 func getConfig(dump bool) *Config {
-	dir := os.Getenv("HOME") + "/.config/kbdashboard"
-	jc := jconfig.New(dir, "config.json", Config{})
+	filepath := os.Getenv("HOME") + "/.config/kbdashboard/config.json"
+	jc := jconfig.New(filepath, Config{})
 
 	if _, err := jc.Load(DefaultConfig); err != nil {
 		clog.Fatal("load config error:", err)
