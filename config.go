@@ -85,7 +85,7 @@ func (c *Config) String() string {
 		c.filepath, c.Editor, c.Current, c.Profiles)
 }
 
-func FixConfig(c *Config) {
+func (c *Config) fix() {
 	// validate config
 	if c.Current >= len(c.Profiles) {
 		clog.Fatal("Current in config.json is invalid: ", c.Current)
@@ -187,7 +187,7 @@ func getConfig(dump bool) *Config {
 
 	config := gJConfig.Data().(*Config)
 	config.filepath = gJConfig.FilePath()
-	FixConfig(config)
+	config.fix()
 
 	if dump {
 		fmt.Println(config)
