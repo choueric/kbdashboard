@@ -78,7 +78,7 @@ func doGetProfile(arg string, config *Config) (*Profile, int) {
 	if isNumber(arg) {
 		n, _ := strconv.Atoi(arg)
 		if n >= len(config.Profiles) || n < 0 {
-			clog.Fatalf("invalid index of profile: [%d]\n", n)
+			clog.Fatalf("invalid profile index: [%d/%d]\n", n, len(config.Profiles))
 		}
 		p = &config.Profiles[n]
 		index = n
