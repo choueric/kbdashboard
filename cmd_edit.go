@@ -58,7 +58,7 @@ func edit_config_usage() {
 }
 
 func edit_config(args []string, config *Config) int {
-	var argv = []string{config.Editor, config.configFile}
+	var argv = []string{config.Editor, config.filepath}
 	return execCmd(config.Editor, argv)
 }
 

@@ -39,6 +39,11 @@ func (p HandlerPool) PrintUsage() {
 	}
 }
 
+func PrintHelpMessage() {
+	printTitle("- help")
+	fmt.Printf("  Display this message. Version: %s\n", VERSION)
+}
+
 func HandleCmd(cmd string, pool HandlerPool, args []string, config *Config) int {
 	if cmd == "help" {
 		pool.PrintUsage()

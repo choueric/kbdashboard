@@ -17,37 +17,10 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/choueric/clog"
 )
-
-const (
-	CRED    = "\x1b[31;1m"
-	CGREEN  = "\x1b[32;1m"
-	CEND    = "\x1b[0;m"
-	VERSION = "0.1"
-)
-
-func printTitle(format string, v ...interface{}) {
-	fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
-}
-
-func parseConfig(dump bool) *Config {
-	config, err := ParseConfig("")
-	if err != nil {
-		clog.Fatal("[ "+checkConfigFile("")+" ]: ", err)
-	}
-	if config == nil {
-		clog.Fatal("config is nil.")
-	}
-
-	if dump {
-		fmt.Println(config)
-	}
-	return config
-}
 
 func main() {
 	var cmd string
@@ -60,7 +33,7 @@ func main() {
 	argc := len(args)
 
 	if argc >= 1 && args[0] == "dump" {
-		parseConfig(true)
+		getConfig(true)
 		return
 	}
 
@@ -69,12 +42,11 @@ func main() {
 		args = args[1:]
 	} else {
 		pool.PrintUsage()
-		printTitle("- help")
-		fmt.Println("  Display this message.")
+		PrintHelpMessage()
 		os.Exit(1)
 	}
 
-	config := parseConfig(false)
+	config := getConfig(false)
 
 	ret := HandleCmd(cmd, pool, args, config)
 	os.Exit(ret)

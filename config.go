@@ -17,19 +17,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path"
-	"regexp"
 	"strconv"
 
 	"github.com/choueric/clog"
-)
-
-const (
-	ConfigDir = ".config/kbdashboard"
+	"github.com/choueric/jconfig"
 )
 
 const DefaultConfig = `
@@ -39,7 +32,7 @@ const DefaultConfig = `
 	"profile": [
 	{
 		"name":"demo",
-		"src_dir":"/home/user/kernel"
+		"src_dir":"/home/user/kernel",
 		"arch":"arm",
 		"cross_compile":"arm-eabi-",
 		"target":"uImage",
@@ -47,11 +40,16 @@ const DefaultConfig = `
 		"defconfig":"at91rm9200_defconfig",
 		"dtb":"at91rm9200ek.dtb",
 		"mod_install_dir":"./_build/mod",
-		"thread_num":4,
+		"thread_num":4
 	}
 	]
 }
 `
+
+var (
+	gJConfig     *jconfig.JConfig
+	defConfigDir = os.Getenv("HOME") + "/.config/kbdashboard"
+)
 
 type Profile struct {
 	Name          string `json:"name"`
@@ -67,10 +65,10 @@ type Profile struct {
 }
 
 type Config struct {
-	Editor     string     `json:"editor"`
-	Current    int        `json:"current"`
-	Profiles   []*Profile `json:"profile"`
-	configFile string
+	Editor   string     `json:"editor"`
+	Current  int        `json:"current"`
+	Profiles []*Profile `json:"profile"`
+	filepath string
 }
 
 func (p *Profile) String() string {
@@ -84,118 +82,22 @@ func (p *Profile) String() string {
 
 func (c *Config) String() string {
 	return fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n%v\n",
-		c.configFile, c.Editor, c.Current, c.Profiles)
+		c.filepath, c.Editor, c.Current, c.Profiles)
 }
 
-func checkConfigDir(p string) {
-	homeDir := os.Getenv("HOME")
-	err := os.MkdirAll(homeDir+"/"+p, os.ModeDir|0777)
-	if err != nil {
-		clog.Println("mkdir:", err)
-	}
-}
-
-func checkConfigFile(p string) string {
-	if p == "" {
-		p = os.Getenv("HOME") + "/" + ConfigDir + "/config.json"
-	}
-	_, err := os.Stat(p)
-	if err != nil && os.IsNotExist(err) {
-		clog.Println("create an empty config file.")
-		file, err := os.Create(p)
-		_, err = file.Write([]byte(DefaultConfig))
-		if err != nil {
-			clog.Fatal(err)
-		}
-		file.Close()
-	} else if err != nil {
-		clog.Fatal(err)
-	}
-
-	return p
-}
-
-func getInstallFilename(p *Profile) string {
-	return os.Getenv("HOME") + "/" + ConfigDir + "/" + p.Name + "_install.sh"
-}
-
-func checkFileExsit(p string) bool {
-	_, err := os.Stat(p)
-	if err != nil && os.IsNotExist(err) {
-		return false
-	} else if err != nil {
-		clog.Fatal(err)
-	}
-
-	return true
-}
-
-// if OutputDir and ModInstallDir is relative, change it to absolute
-// by adding SrcDir prefix.
-func fixRelativeDir(p string, pre string) string {
-	if !path.IsAbs(p) {
-		p = path.Join(pre, p)
-	}
-	return p
-}
-
-func ParseConfig(p string) (*Config, error) {
-	checkConfigDir(ConfigDir)
-	p = checkConfigFile(p)
-
-	file, err := os.Open(p)
-	if err != nil {
-		clog.Println(err)
-		return nil, err
-	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	c := &Config{}
-	c.configFile = p
-	if err = json.Unmarshal(data, c); err != nil {
-		return nil, err
-	}
-
+func FixConfig(c *Config) {
+	// validate config
 	if c.Current >= len(c.Profiles) {
 		clog.Fatal("Current in config.json is invalid: ", c.Current)
 	}
 
+	// fix invaid configurations
 	for _, p := range c.Profiles {
 		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
 		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
 		if p.Defconfig == "" {
 			p.Defconfig = "defconfig"
 		}
-	}
-
-	return c, nil
-}
-
-func writeConfigFile(config *Config) {
-	data, err := json.MarshalIndent(config, "  ", "  ")
-	if err != nil {
-		clog.Fatal(err)
-	}
-
-	file, err := os.Create(config.configFile)
-	if err != nil {
-		clog.Fatal(err)
-	}
-	defer file.Close()
-
-	file.Write(data)
-}
-
-func isNumber(str string) bool {
-	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
-		return false
-	} else {
-		return true
 	}
 }
 
@@ -270,4 +172,33 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 		fmt.Printf("  Arch\t: %s\n", p.Arch)
 		fmt.Printf("  CC\t: %s\n", p.CrossComile)
 	}
+}
+
+func getInstallFilename(p *Profile) string {
+	return defConfigDir + "/" + p.Name + "_install.sh"
+}
+
+func getConfig(dump bool) *Config {
+	gJConfig = jconfig.New(defConfigDir, "config.json", Config{})
+
+	if _, err := gJConfig.Load(DefaultConfig); err != nil {
+		clog.Fatal("load config error:", err)
+	}
+
+	config := gJConfig.Data().(*Config)
+	config.filepath = gJConfig.FilePath()
+	FixConfig(config)
+
+	if dump {
+		fmt.Println(config)
+	}
+	return config
+}
+
+func saveConfig() {
+	if gJConfig == nil {
+		clog.Warn("gJConfig is nil")
+		return
+	}
+	gJConfig.Save()
 }

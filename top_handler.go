@@ -104,7 +104,7 @@ func handler_choose(args []string, config *Config) int {
 	printCmd("choose", p.Name)
 	config.Current = index
 
-	writeConfigFile(config)
+	saveConfig()
 
 	return 0
 }
@@ -117,6 +117,10 @@ func make_usage() {
 }
 
 func handler_make(args []string, config *Config) int {
+	if len(args) <= 1 {
+		clog.Error("need more arguments")
+		return -1
+	}
 	target := args[0]
 	args = args[1:]
 
