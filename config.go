@@ -59,14 +59,6 @@ type Profile struct {
 	ThreadNum     int    `json:"thread_num"`
 }
 
-type Config struct {
-	Editor   string     `json:"editor"`
-	Current  int        `json:"current"`
-	Profiles []*Profile `json:"profile"`
-	filepath string
-	jc       interface{}
-}
-
 func (p *Profile) String() string {
 	return fmt.Sprintf(
 		"name = %s%s%s\n"+
@@ -74,40 +66,6 @@ func (p *Profile) String() string {
 			"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
 		CGREEN, p.Name, CEND, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.DTB,
 		p.SrcDir, p.OutputDir, p.ModInstallDir, p.ThreadNum)
-}
-
-func (c *Config) String() string {
-	return fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n%v\n",
-		c.filepath, c.Editor, c.Current, c.Profiles)
-}
-
-func (c *Config) fix() {
-	// validate config
-	if c.Current >= len(c.Profiles) {
-		clog.Fatal("Current in config.json is invalid: ", c.Current)
-	}
-
-	// fix invaid configurations
-	for _, p := range c.Profiles {
-		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
-		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
-		if p.Defconfig == "" {
-			p.Defconfig = "defconfig"
-		}
-	}
-}
-
-func (c *Config) save() {
-	jc := c.getJc()
-	if jc == nil {
-		clog.Warn("jconfig is nil")
-		return
-	}
-	jc.Save()
-}
-
-func (c *Config) getJc() *jconfig.JConfig {
-	return c.jc.(*jconfig.JConfig)
 }
 
 /*
@@ -183,8 +141,50 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 	}
 }
 
+type Config struct {
+	Editor   string     `json:"editor"`
+	Current  int        `json:"current"`
+	Profiles []*Profile `json:"profile"`
+	filepath string
+	jc       interface{}
+}
+
+func (c *Config) String() string {
+	return fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n%v\n",
+		c.filepath, c.Editor, c.Current, c.Profiles)
+}
+
+func (c *Config) fix() {
+	// validate config
+	if c.Current >= len(c.Profiles) {
+		clog.Fatal("Current in config.json is invalid: ", c.Current)
+	}
+
+	// fix invaid configurations
+	for _, p := range c.Profiles {
+		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
+		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
+		if p.Defconfig == "" {
+			p.Defconfig = "defconfig"
+		}
+	}
+}
+
+func (c *Config) save() {
+	jc := c.getJc()
+	if jc == nil {
+		clog.Warn("jconfig is nil")
+		return
+	}
+	jc.Save()
+}
+
 func (c *Config) getInstallFilename(p *Profile) string {
 	return c.getJc().Path() + "/" + p.Name + "_install.sh"
+}
+
+func (c *Config) getJc() *jconfig.JConfig {
+	return c.jc.(*jconfig.JConfig)
 }
 
 func getConfig(dump bool) *Config {
