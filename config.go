@@ -80,12 +80,12 @@ func doGetProfile(arg string, config *Config) (*Profile, int) {
 		if n >= len(config.Profiles) || n < 0 {
 			clog.Fatalf("invalid index of profile: [%d]\n", n)
 		}
-		p = config.Profiles[n]
+		p = &config.Profiles[n]
 		index = n
 	} else {
 		for i, v := range config.Profiles {
 			if v.Name == arg {
-				p = v
+				p = &v
 				index = i
 				break
 			}
@@ -142,9 +142,9 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 }
 
 type Config struct {
-	Editor   string     `json:"editor"`
-	Current  int        `json:"current"`
-	Profiles []*Profile `json:"profile"`
+	Editor   string    `json:"editor"`
+	Current  int       `json:"current"`
+	Profiles []Profile `json:"profile"`
 	filepath string
 	jc       interface{}
 }

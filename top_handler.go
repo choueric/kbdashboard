@@ -76,9 +76,9 @@ func handler_list(args []string, config *Config) int {
 	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
 	for i, p := range config.Profiles {
 		if config.Current == i {
-			printProfile(p, verbose, true, i)
+			printProfile(&p, verbose, true, i)
 		} else {
-			printProfile(p, verbose, false, i)
+			printProfile(&p, verbose, false, i)
 		}
 	}
 
