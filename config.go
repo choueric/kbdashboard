@@ -46,10 +46,6 @@ const DefaultConfig = `
 }
 `
 
-var (
-	defConfigDir = os.Getenv("HOME") + "/.config/kbdashboard"
-)
-
 type Profile struct {
 	Name          string `json:"name"`
 	SrcDir        string `json:"src_dir"`
@@ -187,12 +183,13 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 	}
 }
 
-func getInstallFilename(p *Profile) string {
-	return defConfigDir + "/" + p.Name + "_install.sh"
+func (c *Config) getInstallFilename(p *Profile) string {
+	return c.getJc().Path() + "/" + p.Name + "_install.sh"
 }
 
 func getConfig(dump bool) *Config {
-	jc := jconfig.New(defConfigDir, "config.json", Config{})
+	dir := os.Getenv("HOME") + "/.config/kbdashboard"
+	jc := jconfig.New(dir, "config.json", Config{})
 
 	if _, err := jc.Load(DefaultConfig); err != nil {
 		clog.Fatal("load config error:", err)

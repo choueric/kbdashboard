@@ -75,6 +75,6 @@ func edit_install(args []string, config *Config) int {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	var argv = []string{config.Editor, getInstallFilename(p)}
+	var argv = []string{config.Editor, config.getInstallFilename(p)}
 	return execCmd(config.Editor, argv)
 }

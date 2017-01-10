@@ -147,7 +147,7 @@ func handler_install(args []string, config *Config) int {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	script := getInstallFilename(p)
+	script := config.getInstallFilename(p)
 	if checkFileExsit(script) == false {
 		// create and edit script
 		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
