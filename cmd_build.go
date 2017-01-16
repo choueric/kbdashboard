@@ -22,33 +22,12 @@ import (
 	"github.com/choueric/clog"
 )
 
-var buildHandlerPool = HandlerPool{
-	&Handler{"image", build_image, image_usage},
-	&Handler{"modules", build_modules, modules_usage},
-	&Handler{"dtb", build_dtb, dtb_usage},
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
 func build_usage() {
 	printTitle("- build [image|modules|dtb] [profile]")
 	fmt.Printf("  Build various targets.")
 	fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
-	buildHandlerPool.PrintUsage()
-}
-
-func handler_build(args []string, config *Config) int {
-	var cmd string
-
-	argc := len(args)
-	if argc == 0 {
-		cmd = "image"
-	} else {
-		cmd = args[0]
-		args = args[1:]
-	}
-
-	return HandleCmd(cmd, buildHandlerPool, args, config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +36,10 @@ func image_usage() {
 	printTitle("  - build image [profile]")
 	fmt.Printf("    Build kernel images of [profile].\n")
 	printDefOption("build")
+}
+
+func buildImageHandler(args []string, data interface{}) (int, error) {
+	return wrap(build_image, args, data)
 }
 
 func build_image(args []string, config *Config) int {
@@ -75,6 +58,10 @@ func modules_usage() {
 	fmt.Printf("    Build and install modules of [profile].")
 	fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
 	fmt.Printf("    '$ kbdashboard make modules_install'.\n")
+}
+
+func buildModulesHandler(args []string, data interface{}) (int, error) {
+	return wrap(build_modules, args, data)
 }
 
 func build_modules(args []string, config *Config) int {
@@ -118,4 +105,8 @@ func build_dtb(args []string, config *Config) int {
 	} else {
 		return 0
 	}
+}
+
+func buildDtbHandler(args []string, data interface{}) (int, error) {
+	return wrap(build_dtb, args, data)
 }

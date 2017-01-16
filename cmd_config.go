@@ -22,32 +22,9 @@ import (
 	"github.com/choueric/clog"
 )
 
-var configHandlerPool = HandlerPool{
-	&Handler{"menu", config_menu, menu_usage},
-	&Handler{"def", config_def, def_usage},
-	&Handler{"save", config_save, save_usage},
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 func config_usage() {
 	printTitle("- config [menu|def|save] [profile]")
 	fmt.Printf("  Configure [profile] and save it.\n")
-	configHandlerPool.PrintUsage()
-}
-
-func handler_config(args []string, config *Config) int {
-	var cmd string
-
-	argc := len(args)
-	if argc == 0 {
-		cmd = "menu"
-	} else {
-		cmd = args[0]
-		args = args[1:]
-	}
-
-	return HandleCmd(cmd, configHandlerPool, args, config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +33,10 @@ func menu_usage() {
 	printTitle("  - config menu [profile]")
 	fmt.Printf("    Use menuconfig of kernel.\n")
 	printDefOption("config")
+}
+
+func configMenuHandler(args []string, data interface{}) (int, error) {
+	return wrap(config_menu, args, data)
 }
 
 func config_menu(args []string, config *Config) int {
@@ -75,6 +56,10 @@ func def_usage() {
 	fmt.Printf("    Use default config specified in config file.\n")
 }
 
+func configDefHandler(args []string, data interface{}) (int, error) {
+	return wrap(config_def, args, data)
+}
+
 func config_def(args []string, config *Config) int {
 	p, _ := getProfile(args, config)
 	if p == nil {
@@ -92,6 +77,10 @@ func save_usage() {
 	fmt.Printf("    Save current config to default config.\n")
 	fmt.Printf("    First execute 'make savedefconfig', then replace the " +
 		"config file specified by 'DefConfig'.\n")
+}
+
+func configSaveHandler(args []string, data interface{}) (int, error) {
+	return wrap(config_save, args, data)
 }
 
 func config_save(args []string, config *Config) int {

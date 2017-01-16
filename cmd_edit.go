@@ -22,31 +22,9 @@ import (
 	"github.com/choueric/clog"
 )
 
-var editHandlerPool = HandlerPool{
-	&Handler{"config", edit_config, edit_config_usage},
-	&Handler{"install", edit_install, edit_install_usage},
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 func edit_usage() {
 	printTitle("- edit [config|install] [profile]")
 	fmt.Printf("  Edit various configuraion or scripts using the 'Editor'.\n")
-	editHandlerPool.PrintUsage()
-}
-
-func handler_edit(args []string, config *Config) int {
-	var cmd string
-
-	argc := len(args)
-	if argc == 0 {
-		cmd = "config"
-	} else {
-		cmd = args[0]
-		args = args[1:]
-	}
-
-	return HandleCmd(cmd, editHandlerPool, args, config)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +33,10 @@ func edit_config_usage() {
 	printTitle("  - edit config")
 	fmt.Printf("    Edit the kbdashboard's configuration file.\n")
 	printDefOption("edit")
+}
+
+func editConfigHandler(args []string, data interface{}) (int, error) {
+	return wrap(edit_config, args, data)
 }
 
 func edit_config(args []string, config *Config) int {
@@ -67,6 +49,10 @@ func edit_config(args []string, config *Config) int {
 func edit_install_usage() {
 	printTitle("  - edit install [profile]")
 	fmt.Printf("    Edit [profile]'s installation script.\n")
+}
+
+func editInstallHandler(args []string, data interface{}) (int, error) {
+	return wrap(edit_install, args, data)
 }
 
 func edit_install(args []string, config *Config) int {

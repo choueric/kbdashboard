@@ -18,46 +18,11 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 
 	"github.com/choueric/clog"
 )
-
-func checkError(err error) {
-	if err != nil {
-		clog.Fatal(err)
-	}
-}
-
-func printCmd(cmd string, m string) {
-	fmt.Printf("execute command %s'%s'%s for %s[%s]%s\n", CGREEN, cmd, CEND,
-		CGREEN, m, CEND)
-}
-
-func printDefOption(cmd string) {
-	fmt.Printf("    %s*%s This is the default option for %s'%s'%s command.\n",
-		CRED, CEND, CGREEN, cmd, CEND)
-}
-
-func copyFileContents(src, dst string) (err error) {
-	fmt.Printf("copy %s'%s'%s -> %s'%s'%s\n", CGREEN, src, CEND,
-		CGREEN, dst, CEND)
-	in, err := os.Open(src)
-	checkError(err)
-	defer in.Close()
-
-	out, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	checkError(err)
-	defer out.Close()
-
-	_, err = io.Copy(out, in)
-	checkError(err)
-
-	err = out.Sync()
-	return
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +30,10 @@ func list_usage() {
 	printTitle("- list [verbose]")
 	fmt.Printf("  List all profiles.\n")
 	fmt.Printf("  [verbose]: Print with more information\n")
+}
+
+func listHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_list, args, data)
 }
 
 func handler_list(args []string, config *Config) int {
@@ -92,6 +61,10 @@ func choose_usage() {
 	fmt.Printf("  Choose <profile> as the current one.\n")
 }
 
+func chooseHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_choose, args, data)
+}
+
 func handler_choose(args []string, config *Config) int {
 	if len(args) == 0 {
 		clog.Fatal("Choose need profile's name or index")
@@ -116,6 +89,10 @@ func make_usage() {
 	fmt.Printf("  Execute 'make' <target> on [profile].\n")
 }
 
+func makeHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_make, args, data)
+}
+
 func handler_make(args []string, config *Config) int {
 	if len(args) <= 1 {
 		clog.Error("need more arguments")
@@ -138,6 +115,10 @@ func handler_make(args []string, config *Config) int {
 func install_usage() {
 	printTitle("- install [profile]")
 	fmt.Printf("  Execute the install script of [profile].\n")
+}
+
+func installHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_install, args, data)
 }
 
 // TODO: add arguments into the script.
@@ -171,12 +152,8 @@ func handler_install(args []string, config *Config) int {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var topHandlerPool = HandlerPool{
-	&Handler{"list", handler_list, list_usage},
-	&Handler{"choose", handler_choose, choose_usage},
-	&Handler{"edit", handler_edit, edit_usage},
-	&Handler{"config", handler_config, config_usage},
-	&Handler{"build", handler_build, build_usage},
-	&Handler{"install", handler_install, install_usage},
-	&Handler{"make", handler_make, make_usage},
+func wrap(f func([]string, *Config) int, args []string, data interface{}) (int, error) {
+	config := data.(*Config)
+	ret := f(args, config)
+	return ret, nil
 }

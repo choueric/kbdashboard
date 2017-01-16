@@ -17,37 +17,55 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/choueric/clog"
+	"github.com/choueric/cmdmux"
 )
 
+func usageHandler(args []string, data interface{}) (int, error) {
+	fmt.Printf("Usage:\n")
+	return 1, nil
+}
+
 func main() {
-	var cmd string
-	pool := topHandlerPool
+	clog.SetFlags(clog.Lshortfile | clog.LstdFlags | clog.Lcolor)
 
-	clog.SetFlags(clog.Lshortfile | clog.LstdFlags)
-
-	// strip program name
-	args := os.Args[1:]
-	argc := len(args)
-
-	if argc >= 1 && args[0] == "dump" {
+	if len(os.Args) >= 2 && os.Args[1] == "dump" {
 		getConfig(true)
 		return
 	}
 
-	if argc >= 1 {
-		cmd = args[0]
-		args = args[1:]
-	} else {
-		pool.PrintUsage()
-		PrintHelpMessage()
-		os.Exit(1)
-	}
-
 	config := getConfig(false)
 
-	ret := HandleCmd(cmd, pool, args, config)
+	// TODO: use wrap
+	cmdmux.HandleFunc("/", usageHandler)
+	cmdmux.HandleFunc("/list", listHandler)
+	cmdmux.HandleFunc("/choose", chooseHandler)
+
+	cmdmux.HandleFunc("/edit", editConfigHandler)
+	cmdmux.HandleFunc("/edit/config", editConfigHandler)
+	cmdmux.HandleFunc("/edit/install", editInstallHandler)
+
+	cmdmux.HandleFunc("/config", configMenuHandler)
+	cmdmux.HandleFunc("/config/menu", configMenuHandler)
+	cmdmux.HandleFunc("/config/def", configDefHandler)
+	cmdmux.HandleFunc("/config/save", configSaveHandler)
+
+	cmdmux.HandleFunc("/build", buildImageHandler)
+	cmdmux.HandleFunc("/build/image", buildImageHandler)
+	cmdmux.HandleFunc("/build/modules", buildModulesHandler)
+	cmdmux.HandleFunc("/build/dtb", buildDtbHandler)
+
+	cmdmux.HandleFunc("/install", installHandler)
+	cmdmux.HandleFunc("/make", makeHandler)
+	cmdmux.HandleFunc("/help", usageHandler)
+
+	ret, err := cmdmux.Execute(config)
+	if err != nil {
+		clog.Warn("Execute error:", err)
+		os.Exit(0)
+	}
 	os.Exit(ret)
 }
