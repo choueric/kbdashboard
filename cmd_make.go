@@ -18,45 +18,42 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/choueric/clog"
 	"github.com/choueric/cmdmux"
 )
 
-func usageHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Usage:\n")
-	usageList()
-	return 1, nil
+var makeProfile string
+
+func initMakeCmd() {
+	cmdmux.HandleFunc("/make", makeHandler)
+	if flagSet, err := cmdmux.FlagSet("/make"); err == nil {
+		flagSet.StringVar(&makeProfile, "p", "", "Specify profile by name or index.")
+	}
 }
 
-func main() {
-	clog.SetFlags(clog.Lshortfile | clog.LstdFlags | clog.Lcolor)
+func make_usage() {
+	printTitle("- make <target> [profile]")
+	fmt.Printf("  Execute 'make' <target> on [profile].\n")
+}
 
-	if len(os.Args) >= 2 && os.Args[1] == "dump" {
-		getConfig(true)
-		return
+func makeHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_make, args, data)
+}
+
+func handler_make(args []string, config *Config) int {
+	if len(args) <= 1 {
+		clog.Error("need more arguments")
+		return -1
+	}
+	target := args[0]
+	args = args[1:]
+
+	p, _ := getProfile(makeProfile, config)
+	if p == nil {
+		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
-	config := getConfig(false)
-
-	// TODO: use wrap
-	cmdmux.HandleFunc("/", usageHandler)
-
-	initListCmd()
-	initChooseCmd()
-	initEditCmd()
-	initConfigCmd()
-	initBuldCmd()
-	initInstallCmd()
-	initMakeCmd()
-
-	cmdmux.HandleFunc("/help", usageHandler)
-
-	ret, err := cmdmux.Execute(config)
-	if err != nil {
-		clog.Warn("Execute error:", err)
-		os.Exit(0)
-	}
-	os.Exit(ret)
+	printCmd("build", p.Name)
+	return makeKernel(p, target)
 }

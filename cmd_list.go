@@ -18,45 +18,40 @@ package main
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/choueric/clog"
 	"github.com/choueric/cmdmux"
 )
 
-func usageHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Usage:\n")
-	usageList()
-	return 1, nil
+var (
+	listVerbose bool
+)
+
+func initListCmd() {
+	cmdmux.HandleFunc("/list", listHandler)
+	if flagSet, err := cmdmux.FlagSet("/list"); err == nil {
+		flagSet.BoolVar(&listVerbose, "v", false, "Print more information")
+	}
 }
 
-func main() {
-	clog.SetFlags(clog.Lshortfile | clog.LstdFlags | clog.Lcolor)
+func usageList() {
+	printTitle("- list [-v]")
+	fmt.Printf("  List all profiles.\n")
+	fmt.Printf("  -v: Print with more information\n")
+}
 
-	if len(os.Args) >= 2 && os.Args[1] == "dump" {
-		getConfig(true)
-		return
+func handler_list(args []string, config *Config) int {
+	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
+	for i, p := range config.Profiles {
+		if config.Current == i {
+			printProfile(&p, listVerbose, true, i)
+		} else {
+			printProfile(&p, listVerbose, false, i)
+		}
 	}
 
-	config := getConfig(false)
+	return 0
+}
 
-	// TODO: use wrap
-	cmdmux.HandleFunc("/", usageHandler)
-
-	initListCmd()
-	initChooseCmd()
-	initEditCmd()
-	initConfigCmd()
-	initBuldCmd()
-	initInstallCmd()
-	initMakeCmd()
-
-	cmdmux.HandleFunc("/help", usageHandler)
-
-	ret, err := cmdmux.Execute(config)
-	if err != nil {
-		clog.Warn("Execute error:", err)
-		os.Exit(0)
-	}
-	os.Exit(ret)
+func listHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_list, args, data)
 }

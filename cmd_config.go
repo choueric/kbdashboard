@@ -20,7 +20,28 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
+	"github.com/choueric/cmdmux"
 )
+
+var configProfile string
+
+func initConfigCmd() {
+	cmdmux.HandleFunc("/config", configMenuHandler)
+	flagSet, err := cmdmux.FlagSet("/config")
+	if err != nil {
+		clog.Fatal(err)
+	}
+	flagSet.StringVar(&configProfile, "p", "", "Specify profile by name or index.")
+
+	cmdmux.HandleFunc("/config/menu", configMenuHandler)
+	cmdmux.SetFlagSet("/config/menu", flagSet)
+
+	cmdmux.HandleFunc("/config/def", configDefHandler)
+	cmdmux.SetFlagSet("/config/def", flagSet)
+
+	cmdmux.HandleFunc("/config/save", configSaveHandler)
+	cmdmux.SetFlagSet("/config/save", flagSet)
+}
 
 func config_usage() {
 	printTitle("- config [menu|def|save] [profile]")
@@ -40,7 +61,7 @@ func configMenuHandler(args []string, data interface{}) (int, error) {
 }
 
 func config_menu(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(editProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -61,7 +82,7 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 }
 
 func config_def(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(editProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -84,7 +105,7 @@ func configSaveHandler(args []string, data interface{}) (int, error) {
 }
 
 func config_save(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(editProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}

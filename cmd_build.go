@@ -20,7 +20,30 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
+	"github.com/choueric/cmdmux"
 )
+
+var (
+	buildProfile string
+)
+
+func initBuldCmd() {
+	cmdmux.HandleFunc("/build", buildImageHandler)
+	flagSet, err := cmdmux.FlagSet("/build")
+	if err != nil {
+		clog.Fatal(err)
+	}
+	flagSet.StringVar(&buildProfile, "p", "", "Specify profile by name or index.")
+
+	cmdmux.HandleFunc("/build/image", buildImageHandler)
+	cmdmux.SetFlagSet("/build/image", flagSet)
+
+	cmdmux.HandleFunc("/build/modules", buildModulesHandler)
+	cmdmux.SetFlagSet("/build/modules", flagSet)
+
+	cmdmux.HandleFunc("/build/dtb", buildDtbHandler)
+	cmdmux.SetFlagSet("/build/dtb", flagSet)
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +66,7 @@ func buildImageHandler(args []string, data interface{}) (int, error) {
 }
 
 func build_image(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(buildProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -65,7 +88,7 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 }
 
 func build_modules(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(buildProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
@@ -88,7 +111,7 @@ func dtb_usage() {
 }
 
 func build_dtb(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(buildProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}

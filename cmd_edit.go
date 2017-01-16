@@ -20,7 +20,24 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
+	"github.com/choueric/cmdmux"
 )
+
+var (
+	editProfile string
+)
+
+func initEditCmd() {
+	cmdmux.HandleFunc("/edit", editConfigHandler)
+	cmdmux.HandleFunc("/edit/config", editConfigHandler)
+
+	cmdmux.HandleFunc("/edit/install", editInstallHandler)
+	flagSet, err := cmdmux.FlagSet("/edit/install")
+	if err != nil {
+		clog.Fatal(err)
+	}
+	flagSet.StringVar(&editProfile, "p", "", "Specify profile by name or index.")
+}
 
 func edit_usage() {
 	printTitle("- edit [config|install] [profile]")
@@ -56,7 +73,7 @@ func editInstallHandler(args []string, data interface{}) (int, error) {
 }
 
 func edit_install(args []string, config *Config) int {
-	p, _ := getProfile(args, config)
+	p, _ := getProfile(editProfile, config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}

@@ -100,15 +100,12 @@ func doGetProfile(arg string, config *Config) (*Profile, int) {
  * @arg may be numberic index or name of profile.
  *      If it is empty, then return the chosen profile.
  */
-func getProfile(args []string, config *Config) (*Profile, int) {
-	var arg string
-	if len(args) == 0 {
-		arg = strconv.Itoa(config.Current)
-	} else {
-		arg = args[0]
+func getProfile(profile string, config *Config) (*Profile, int) {
+	if profile == "" {
+		profile = strconv.Itoa(config.Current)
 	}
 
-	return doGetProfile(arg, config)
+	return doGetProfile(profile, config)
 }
 
 func printProfile(p *Profile, verbose bool, current bool, i int) {
