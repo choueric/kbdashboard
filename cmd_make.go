@@ -27,7 +27,7 @@ func makeUsage() {
 	fmt.Printf("  Execute 'make' <target> on [profile].\n")
 }
 
-func handler_make(args []string, config *Config) int {
+func doMake(args []string, config *Config) int {
 	if len(args) <= 1 {
 		clog.Error("'make' needs <target> and its parameters.")
 		return -1
@@ -45,5 +45,5 @@ func handler_make(args []string, config *Config) int {
 }
 
 func makeHandler(args []string, data interface{}) (int, error) {
-	return wrap(handler_make, args, data)
+	return wrap(doMake, args, data)
 }
