@@ -26,6 +26,8 @@ func configUsage() {
 	printTitle("- config [menu|def|save]", false)
 	fmt.Printf("  Configure kernel of current profile or save it.\n")
 	configMenuUsage()
+	configDefUsage()
+	configSaveUsage()
 	fmt.Printf("\n")
 }
 

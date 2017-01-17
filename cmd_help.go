@@ -41,7 +41,7 @@ var cmdHelpMap = []helpMap{
 }
 
 func helpUsage() {
-	printTitle("- help", false)
+	printTitle("- help [command]", false)
 	fmt.Printf("  Print help message for one or all commands.\n\n")
 }
 
