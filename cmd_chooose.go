@@ -17,29 +17,22 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 
 	"github.com/choueric/clog"
 )
 
-var chooseProfile string
-
 func chooseUsage() {
-	printTitle("- choose <-p profile>", false)
+	printTitle("- choose <profile>", false)
 	fmt.Printf("  Choose one <profile> as the current one.\n")
-	fmt.Printf("  -p: %s\n", profileUsage)
 }
 
+// args[0] is the profile to be choosen
 func doChoose(args []string, config *Config) int {
-	flagSet := flag.NewFlagSet("choose", flag.ExitOnError)
-	flagSet.StringVar(&chooseProfile, "p", "", profileUsage)
-	flagSet.Parse(args)
-
-	if chooseProfile == "" {
-		clog.Fatal("use -p to specify profile's name or index.")
+	if len(args) == 0 || args[0] == "" {
+		clog.Fatal("Must specify profile's name or index.")
 	}
-	p, index := doGetProfile(chooseProfile, config)
+	p, index := doGetProfile(args[0], config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
