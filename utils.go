@@ -27,18 +27,35 @@ import (
 )
 
 const (
-	CRED   = "\x1b[31;1m"
-	CGREEN = "\x1b[32;1m"
-	CEND   = "\x1b[0;m"
+	CRED    = "\x1b[31;1m"
+	CGREEN  = "\x1b[32;1m"
+	CYELLOW = "\x1b[33;1m"
+	CEND    = "\x1b[0;m"
 )
 
-func printTitle(format string, def bool, v ...interface{}) {
+func cmdTitle(format string, def bool, v ...interface{}) {
 	if def {
-		fmt.Printf("%s%s%s %s*%s\n", CGREEN, fmt.Sprintf(format, v...), CEND,
+		fmt.Printf("  %s%s%s %s*%s\n", CGREEN, fmt.Sprintf(format, v...), CEND,
 			CRED, CEND)
 	} else {
-		fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+		fmt.Printf("  %s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
 	}
+}
+
+func cmdInfo(format string, v ...interface{}) {
+	fmt.Printf("    %s", fmt.Sprintf(format, v...))
+}
+
+func subcmdTitle(format string, def bool, v ...interface{}) {
+	if def {
+		fmt.Printf("  %s*%s %s%s%s\n", CRED, CEND, CGREEN, fmt.Sprintf(format, v...), CEND)
+	} else {
+		fmt.Printf("    %s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+	}
+}
+
+func subcmdInfo(format string, v ...interface{}) {
+	fmt.Printf("      %s", fmt.Sprintf(format, v...))
 }
 
 func printCmd(cmd string, profile string) {

@@ -41,13 +41,13 @@ var cmdHelpMap = []helpMap{
 }
 
 func helpUsage() {
-	printTitle("- help [command]", false)
-	fmt.Printf("  Print help message for one or all commands.\n\n")
+	cmdTitle("help [command]", false)
+	cmdInfo("Print help message for one or all commands.\n\n")
 }
 
 func helpHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 {
-		fmt.Printf("Usage of %s:\n", os.Args[0])
+		fmt.Printf("Usage of %s'%s'%s:\n\n", CYELLOW, os.Args[0], CEND)
 		for _, v := range cmdHelpMap {
 			v.f()
 		}
@@ -66,7 +66,7 @@ func helpHandler(args []string, data interface{}) (int, error) {
 		clog.Fatalf("invalid command name '%s'\n", cmd)
 	}
 
-	fmt.Printf("Usage of %s:\n", cmd)
+	fmt.Printf("Usage of comamnd %s'%s'%s:\n\n", CYELLOW, cmd, CEND)
 	f()
 
 	return 1, nil

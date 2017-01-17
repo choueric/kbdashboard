@@ -23,8 +23,8 @@ import (
 )
 
 func configUsage() {
-	printTitle("- config [menu|def|save]", false)
-	fmt.Printf("  Configure kernel of current profile or save it.\n")
+	cmdTitle("config [menu|def|save]", false)
+	cmdInfo("Handle kernel's configuration.\n")
 	configMenuUsage()
 	configDefUsage()
 	configSaveUsage()
@@ -34,8 +34,8 @@ func configUsage() {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configMenuUsage() {
-	printTitle("  - config menu", true)
-	fmt.Printf("    Invoke 'make menuconfig' on the current kernel.\n")
+	subcmdTitle("config menu", true)
+	subcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
 }
 
 func doConfigMenu(args []string, config *Config) int {
@@ -51,8 +51,8 @@ func configMenuHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configDefUsage() {
-	printTitle("  - config def", false)
-	fmt.Printf("    Invoke 'make defconfig' on the current kernel.\n")
+	subcmdTitle("config def", false)
+	subcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
 }
 
 func doConfigDef(args []string, config *Config) int {
@@ -68,10 +68,9 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configSaveUsage() {
-	printTitle("  - config save", false)
-	fmt.Printf("    Save current config as the default config.\n")
-	fmt.Printf("    First execute 'make savedefconfig', then replace the " +
-		"config file specified by 'DefConfig'.\n")
+	subcmdTitle("config save", false)
+	subcmdInfo("Save current config as the default config.\n")
+	subcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
 }
 
 func doConfigSave(args []string, config *Config) int {

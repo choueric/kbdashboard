@@ -21,8 +21,8 @@ import "fmt"
 const VERSION = "0.2"
 
 func versionUsage() {
-	printTitle("- version", false)
-	fmt.Printf("  Print the version.\n\n")
+	cmdTitle("version", false)
+	cmdInfo("Print the version.\n\n")
 }
 
 func versionHandler(args []string, data interface{}) (int, error) {

@@ -23,9 +23,8 @@ import (
 )
 
 func buildUsage() {
-	printTitle("- build [image|modules|dtb]", false)
-	fmt.Printf("  Build various targets.")
-	fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
+	cmdTitle("build [image|modules|dtb]", false)
+	cmdInfo("Build various targets of kernel.\n")
 	buildImageUsage()
 	buildModulesUsage()
 	buildDtbUsage()
@@ -35,8 +34,9 @@ func buildUsage() {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildImageUsage() {
-	printTitle("  - build image", true)
-	fmt.Printf("    Build kernel images for current profile.\n")
+	subcmdTitle("build image", true)
+	subcmdInfo("Build kernel images for current profile.\n")
+	subcmdInfo("Equal to '$kbdashboard make uImage'.\n")
 }
 
 func doBuildImage(args []string, config *Config) int {
@@ -52,10 +52,9 @@ func buildImageHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildModulesUsage() {
-	printTitle("  - build modules", false)
-	fmt.Printf("    Build and install modules for current profile.")
-	fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
-	fmt.Printf("    '$ kbdashboard make modules_install'.\n")
+	subcmdTitle("build modules", false)
+	subcmdInfo("Build and install modules for current profile.\n")
+	subcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
 }
 
 func doBuildModules(args []string, config *Config) int {
@@ -77,8 +76,8 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildDtbUsage() {
-	printTitle("  - build dtb", false)
-	fmt.Printf("    Build dtb file specified in configration and install to 'BuildDir'.\n")
+	subcmdTitle("build dtb", false)
+	subcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
 }
 
 func doBuildDtb(args []string, config *Config) int {

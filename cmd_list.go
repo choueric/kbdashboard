@@ -24,9 +24,9 @@ import (
 var listVerbose bool
 
 func listUsage() {
-	printTitle("- list [-v]", false)
-	fmt.Printf("  List all profiles.\n")
-	fmt.Printf("  -v: Print with more information\n\n")
+	cmdTitle("list [-v]", false)
+	cmdInfo("List all profiles.\n")
+	cmdInfo("-v: Print with more information\n\n")
 }
 
 func doList(args []string, config *Config) int {

@@ -16,15 +16,11 @@
  */
 package main
 
-import (
-	"fmt"
-
-	"github.com/choueric/clog"
-)
+import "github.com/choueric/clog"
 
 func makeUsage() {
-	printTitle("- make <target>", false)
-	fmt.Printf("  Execute 'make' <target> on [profile].\n\n")
+	cmdTitle("make <target>", false)
+	cmdInfo("Execute '$ make <target>' on current kernel.\n\n")
 }
 
 func doMake(args []string, config *Config) int {

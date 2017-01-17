@@ -16,15 +16,11 @@
  */
 package main
 
-import (
-	"fmt"
-
-	"github.com/choueric/clog"
-)
+import "github.com/choueric/clog"
 
 func chooseUsage() {
-	printTitle("- choose <profile>", false)
-	fmt.Printf("  Choose one <profile> as the current one.\n\n")
+	cmdTitle("choose <profile>", false)
+	cmdInfo("Choose <profile> as the current profile.\n\n")
 }
 
 // args[0] is the profile to be choosen

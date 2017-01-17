@@ -19,8 +19,8 @@ package main
 import "fmt"
 
 func editUsage() {
-	printTitle("- edit [profile|install]", false)
-	fmt.Printf("  Edit profiles or scripts using the 'Editor'.\n")
+	cmdTitle("edit [profile|install]", false)
+	cmdInfo("Edit profiles or scripts with the config 'editor'.\n")
 	editProfileUsage()
 	editInstallUsage()
 	fmt.Printf("\n")
@@ -29,8 +29,8 @@ func editUsage() {
 ////////////////////////////////////////////////////////////////////////////////
 
 func editProfileUsage() {
-	printTitle("  - edit profile", true)
-	fmt.Printf("    Edit the kbdashboard's configuration file.\n")
+	subcmdTitle("edit profile", true)
+	subcmdInfo("Edit the kbdashboard's configuration file.\n")
 }
 
 func doEditProfile(args []string, config *Config) int {
@@ -45,8 +45,8 @@ func editProfileHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func editInstallUsage() {
-	printTitle("  - edit install", false)
-	fmt.Printf("    Edit current profile's installation script.\n")
+	subcmdTitle("edit install", false)
+	subcmdInfo("Edit current profile's installation script.\n")
 }
 
 func doEditInstall(args []string, config *Config) int {
