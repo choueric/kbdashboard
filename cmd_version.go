@@ -21,7 +21,7 @@ import (
 	"os"
 )
 
-const VERSION = "0.1"
+const VERSION = "0.2"
 
 func versionUsage() {
 	printTitle("- version", false)
