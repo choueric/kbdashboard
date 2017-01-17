@@ -18,7 +18,7 @@ package main
 
 import "fmt"
 
-const VERSION = "0.2"
+const VERSION = "0.3"
 
 func versionUsage() {
 	cmdTitle("version", false)
