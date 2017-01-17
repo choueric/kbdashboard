@@ -16,10 +16,7 @@
  */
 package main
 
-import (
-	"fmt"
-	"os"
-)
+import "fmt"
 
 const VERSION = "0.2"
 
@@ -29,6 +26,6 @@ func versionUsage() {
 }
 
 func versionHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Version: %s%s%s\n", os.Args[0], CGREEN, VERSION, CEND)
+	fmt.Printf("Version: %s%s%s\n", CGREEN, VERSION, CEND)
 	return 0, nil
 }
