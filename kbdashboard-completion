@@ -12,11 +12,15 @@ _kbdashboard()
         return 0
         ;;
 	list )
-        COMPREPLY=( $(compgen -W "verbose" -- $cur) )
+        COMPREPLY=( $(compgen -W "-v" -- $cur) )
+        return 0
+        ;;
+	list )
+        COMPREPLY=( $(compgen -W "-p" -- $cur) )
         return 0
         ;;
 	edit )
-        COMPREPLY=( $(compgen -W "config install help" -- $cur) )
+        COMPREPLY=( $(compgen -W "profile install help" -- $cur) )
         return 0
         ;;
 	build )
@@ -28,7 +32,7 @@ _kbdashboard()
         return 0
         ;;
 	config )
-        COMPREPLY=( $(compgen -W "menu def save help" -- $cur) )
+        COMPREPLY=( $(compgen -W "menu def save" -- $cur) )
         return 0
         ;;
     *)
