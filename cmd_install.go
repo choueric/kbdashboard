@@ -22,12 +22,13 @@ import (
 	"os/exec"
 )
 
+var installOption string
+
 func installUsage() {
-	printTitle("- install", false)
-	fmt.Printf("  Execute the install script of current profile.\n")
+	printTitle("- install [option]", false)
+	fmt.Printf("  Execute the install script of current profile with option.\n")
 }
 
-// TODO: add arguments into the script.
 func doInstall(args []string, config *Config) int {
 	p, _ := getCurrentProfile(config)
 
@@ -46,9 +47,7 @@ func doInstall(args []string, config *Config) int {
 
 	printCmd("install", p.Name)
 	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
-	// 1. cmd := exec.Command(script, "1", "2")
-	cmd := exec.Command(script)
-	// 2. cmd.Args = []string{script, "a", "b"}
+	cmd := exec.Command(script, args...) // args are the arguments for script.
 	cmd.Dir = p.SrcDir
 	return pipeCmd(cmd)
 }
