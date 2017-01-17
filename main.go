@@ -24,9 +24,17 @@ import (
 	"github.com/choueric/cmdmux"
 )
 
+const profileUsage = "Specify profile by name or index."
+
 func usageHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Usage:\n")
-	usageList()
+	fmt.Printf("Usage of %s:\n", os.Args[0])
+	listUsage()
+	chooseUsage()
+	editUsage()
+	configUsage()
+	buildUsage()
+	installUsage()
+	makeUsage()
 	return 1, nil
 }
 
@@ -40,18 +48,27 @@ func main() {
 
 	config := getConfig(false)
 
-	// TODO: use wrap
 	cmdmux.HandleFunc("/", usageHandler)
-
-	initListCmd()
-	initChooseCmd()
-	initEditCmd()
-	initConfigCmd()
-	initBuldCmd()
-	initInstallCmd()
-	initMakeCmd()
-
 	cmdmux.HandleFunc("/help", usageHandler)
+	cmdmux.HandleFunc("/list", listHandler)
+	cmdmux.HandleFunc("/choose", chooseHandler)
+
+	cmdmux.HandleFunc("/edit", editProfileHandler)
+	cmdmux.HandleFunc("/edit/profile", editProfileHandler)
+	cmdmux.HandleFunc("/edit/install", editInstallHandler)
+
+	cmdmux.HandleFunc("/config", configMenuHandler)
+	cmdmux.HandleFunc("/config/menu", configMenuHandler)
+	cmdmux.HandleFunc("/config/def", configDefHandler)
+	cmdmux.HandleFunc("/config/save", configSaveHandler)
+
+	cmdmux.HandleFunc("/build", buildImageHandler)
+	cmdmux.HandleFunc("/build/image", buildImageHandler)
+	cmdmux.HandleFunc("/build/modules", buildModulesHandler)
+	cmdmux.HandleFunc("/build/dtb", buildDtbHandler)
+
+	cmdmux.HandleFunc("/install", installHandler)
+	cmdmux.HandleFunc("/make", makeHandler)
 
 	ret, err := cmdmux.Execute(config)
 	if err != nil {

@@ -33,8 +33,13 @@ const (
 	VERSION = "0.1"
 )
 
-func printTitle(format string, v ...interface{}) {
-	fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+func printTitle(format string, def bool, v ...interface{}) {
+	if def {
+		fmt.Printf("%s%s%s %s*%s\n", CGREEN, fmt.Sprintf(format, v...), CEND,
+			CRED, CEND)
+	} else {
+		fmt.Printf("%s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+	}
 }
 
 func printCmd(cmd string, profile string) {
@@ -74,11 +79,6 @@ func checkError(err error) {
 	if err != nil {
 		clog.Fatal(err)
 	}
-}
-
-func printDefOption(cmd string) {
-	fmt.Printf("    %s*%s This is the default option for %s'%s'%s command.\n",
-		CRED, CEND, CGREEN, cmd, CEND)
 }
 
 func copyFileContents(src, dst string) (err error) {

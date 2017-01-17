@@ -20,95 +20,59 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
 )
 
-var configProfile string
-
-func initConfigCmd() {
-	cmdmux.HandleFunc("/config", configMenuHandler)
-	flagSet, err := cmdmux.FlagSet("/config")
-	if err != nil {
-		clog.Fatal(err)
-	}
-	flagSet.StringVar(&configProfile, "p", "", "Specify profile by name or index.")
-
-	cmdmux.HandleFunc("/config/menu", configMenuHandler)
-	cmdmux.SetFlagSet("/config/menu", flagSet)
-
-	cmdmux.HandleFunc("/config/def", configDefHandler)
-	cmdmux.SetFlagSet("/config/def", flagSet)
-
-	cmdmux.HandleFunc("/config/save", configSaveHandler)
-	cmdmux.SetFlagSet("/config/save", flagSet)
-}
-
-func config_usage() {
-	printTitle("- config [menu|def|save] [profile]")
-	fmt.Printf("  Configure [profile] and save it.\n")
+func configUsage() {
+	printTitle("- config [menu|def|save]", false)
+	fmt.Printf("  Configure kernel of current profile or save it.\n")
+	configMenuUsage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func menu_usage() {
-	printTitle("  - config menu [profile]")
-	fmt.Printf("    Use menuconfig of kernel.\n")
-	printDefOption("config")
+func configMenuUsage() {
+	printTitle("  - config menu", true)
+	fmt.Printf("    Invoke 'make menuconfig' on the current kernel.\n")
 }
 
-func configMenuHandler(args []string, data interface{}) (int, error) {
-	return wrap(config_menu, args, data)
-}
-
-func config_menu(args []string, config *Config) int {
-	p, _ := getProfile(editProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
+func doConfigMenu(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 	printCmd("config menu", p.Name)
 	return configKernel(p, "menuconfig")
 }
 
+func configMenuHandler(args []string, data interface{}) (int, error) {
+	return wrap(doConfigMenu, args, data)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-func def_usage() {
-	printTitle("  - config def [profile]")
-	fmt.Printf("    Use default config specified in config file.\n")
+func configDefUsage() {
+	printTitle("  - config def", false)
+	fmt.Printf("    Invoke 'make defconfig' on the current kernel.\n")
 }
 
-func configDefHandler(args []string, data interface{}) (int, error) {
-	return wrap(config_def, args, data)
-}
-
-func config_def(args []string, config *Config) int {
-	p, _ := getProfile(editProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
+func doConfigDef(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 	printCmd("config def", p.Name)
 	return makeKernel(p, p.Defconfig)
 }
 
+func configDefHandler(args []string, data interface{}) (int, error) {
+	return wrap(doConfigDef, args, data)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-func save_usage() {
-	printTitle("  - config save [profile]")
-	fmt.Printf("    Save current config to default config.\n")
+func configSaveUsage() {
+	printTitle("  - config save", false)
+	fmt.Printf("    Save current config as the default config.\n")
 	fmt.Printf("    First execute 'make savedefconfig', then replace the " +
 		"config file specified by 'DefConfig'.\n")
 }
 
-func configSaveHandler(args []string, data interface{}) (int, error) {
-	return wrap(config_save, args, data)
-}
-
-func config_save(args []string, config *Config) int {
-	p, _ := getProfile(editProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
+func doConfigSave(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 
 	printCmd("config save", p.Name)
 	if makeKernel(p, "savedefconfig") != 0 {
@@ -123,4 +87,8 @@ func config_save(args []string, config *Config) int {
 	} else {
 		return 0
 	}
+}
+
+func configSaveHandler(args []string, data interface{}) (int, error) {
+	return wrap(doConfigSave, args, data)
 }

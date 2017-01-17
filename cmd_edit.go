@@ -16,68 +16,44 @@
  */
 package main
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
-)
-
-var (
-	editProfile string
-)
-
-func initEditCmd() {
-	cmdmux.HandleFunc("/edit", editConfigHandler)
-	cmdmux.HandleFunc("/edit/config", editConfigHandler)
-
-	cmdmux.HandleFunc("/edit/install", editInstallHandler)
-	flagSet, err := cmdmux.FlagSet("/edit/install")
-	if err != nil {
-		clog.Fatal(err)
-	}
-	flagSet.StringVar(&editProfile, "p", "", "Specify profile by name or index.")
-}
-
-func edit_usage() {
-	printTitle("- edit [config|install] [profile]")
-	fmt.Printf("  Edit various configuraion or scripts using the 'Editor'.\n")
+func editUsage() {
+	printTitle("- edit [profile|install]", false)
+	fmt.Printf("  Edit profiles or scripts using the 'Editor'.\n")
+	editProfileUsage()
+	editInstallUsage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func edit_config_usage() {
-	printTitle("  - edit config")
+func editProfileUsage() {
+	printTitle("  - edit profile", true)
 	fmt.Printf("    Edit the kbdashboard's configuration file.\n")
-	printDefOption("edit")
 }
 
-func editConfigHandler(args []string, data interface{}) (int, error) {
-	return wrap(edit_config, args, data)
-}
-
-func edit_config(args []string, config *Config) int {
+func doEditProfile(args []string, config *Config) int {
 	var argv = []string{config.Editor, config.filepath}
 	return execCmd(config.Editor, argv)
 }
 
+func editProfileHandler(args []string, data interface{}) (int, error) {
+	return wrap(doEditProfile, args, data)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-func edit_install_usage() {
-	printTitle("  - edit install [profile]")
-	fmt.Printf("    Edit [profile]'s installation script.\n")
+func editInstallUsage() {
+	printTitle("  - edit install", false)
+	fmt.Printf("    Edit current profile's installation script.\n")
+}
+
+func doEditInstall(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
+	var argv = []string{config.Editor, config.getInstallFilename(p)}
+	return execCmd(config.Editor, argv)
 }
 
 func editInstallHandler(args []string, data interface{}) (int, error) {
-	return wrap(edit_install, args, data)
-}
-
-func edit_install(args []string, config *Config) int {
-	p, _ := getProfile(editProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
-	var argv = []string{config.Editor, config.getInstallFilename(p)}
-	return execCmd(config.Editor, argv)
+	return wrap(doEditInstall, args, data)
 }

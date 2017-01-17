@@ -20,79 +20,45 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
 )
 
-var (
-	buildProfile string
-)
-
-func initBuldCmd() {
-	cmdmux.HandleFunc("/build", buildImageHandler)
-	flagSet, err := cmdmux.FlagSet("/build")
-	if err != nil {
-		clog.Fatal(err)
-	}
-	flagSet.StringVar(&buildProfile, "p", "", "Specify profile by name or index.")
-
-	cmdmux.HandleFunc("/build/image", buildImageHandler)
-	cmdmux.SetFlagSet("/build/image", flagSet)
-
-	cmdmux.HandleFunc("/build/modules", buildModulesHandler)
-	cmdmux.SetFlagSet("/build/modules", flagSet)
-
-	cmdmux.HandleFunc("/build/dtb", buildDtbHandler)
-	cmdmux.SetFlagSet("/build/dtb", flagSet)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func build_usage() {
-	printTitle("- build [image|modules|dtb] [profile]")
+func buildUsage() {
+	printTitle("- build [image|modules|dtb]", false)
 	fmt.Printf("  Build various targets.")
 	fmt.Printf(" Same as '$ kbdashboard make uImage' if target in config is uImage.\n")
+	buildImageUsage()
+	buildModulesUsage()
+	buildDtbUsage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func image_usage() {
-	printTitle("  - build image [profile]")
-	fmt.Printf("    Build kernel images of [profile].\n")
-	printDefOption("build")
+func buildImageUsage() {
+	printTitle("  - build image", true)
+	fmt.Printf("    Build kernel images for current profile.\n")
 }
 
-func buildImageHandler(args []string, data interface{}) (int, error) {
-	return wrap(build_image, args, data)
-}
-
-func build_image(args []string, config *Config) int {
-	p, _ := getProfile(buildProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
+func doBuildImage(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 	printCmd("build image", p.Name)
 	return makeKernel(p, p.Target)
 }
 
+func buildImageHandler(args []string, data interface{}) (int, error) {
+	return wrap(doBuildImage, args, data)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-func modules_usage() {
-	printTitle("  - build modules [profile]")
-	fmt.Printf("    Build and install modules of [profile].")
+func buildModulesUsage() {
+	printTitle("  - build modules", false)
+	fmt.Printf("    Build and install modules for current profile.")
 	fmt.Printf(" Same as '$ kbdashboard make modules' follwing\n")
 	fmt.Printf("    '$ kbdashboard make modules_install'.\n")
 }
 
-func buildModulesHandler(args []string, data interface{}) (int, error) {
-	return wrap(build_modules, args, data)
-}
-
-func build_modules(args []string, config *Config) int {
-	p, _ := getProfile(buildProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
-
+func doBuildModules(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 	printCmd("modules", p.Name)
 
 	ret := makeKernel(p, "modules")
@@ -103,19 +69,21 @@ func build_modules(args []string, config *Config) int {
 	return makeKernel(p, "modules_install")
 }
 
+func buildModulesHandler(args []string, data interface{}) (int, error) {
+	return wrap(doBuildModules, args, data)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-func dtb_usage() {
-	printTitle("  - build dtb [profile]")
+func buildDtbUsage() {
+	printTitle("  - build dtb", false)
 	fmt.Printf("    Build dtb file specified in configration and install to 'BuildDir'.\n")
 }
 
-func build_dtb(args []string, config *Config) int {
-	p, _ := getProfile(buildProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
+func doBuildDtb(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 	printCmd("build DTB", p.Name)
+
 	if makeKernel(p, p.DTB) != 0 {
 		clog.Fatalf("build DTB failed.\n")
 	}
@@ -131,5 +99,5 @@ func build_dtb(args []string, config *Config) int {
 }
 
 func buildDtbHandler(args []string, data interface{}) (int, error) {
-	return wrap(build_dtb, args, data)
+	return wrap(doBuildDtb, args, data)
 }

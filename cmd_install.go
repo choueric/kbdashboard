@@ -20,35 +20,16 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-
-	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
 )
 
-var installProfile string
-
-func initInstallCmd() {
-	cmdmux.HandleFunc("/install", installHandler)
-	if flagSet, err := cmdmux.FlagSet("/install"); err == nil {
-		flagSet.StringVar(&installProfile, "p", "", "Specify profile by name or index.")
-	}
-}
-
-func install_usage() {
-	printTitle("- install [profile]")
-	fmt.Printf("  Execute the install script of [profile].\n")
-}
-
-func installHandler(args []string, data interface{}) (int, error) {
-	return wrap(handler_install, args, data)
+func installUsage() {
+	printTitle("- install", false)
+	fmt.Printf("  Execute the install script of current profile.\n")
 }
 
 // TODO: add arguments into the script.
-func handler_install(args []string, config *Config) int {
-	p, _ := getProfile(installProfile, config)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
-	}
+func doInstall(args []string, config *Config) int {
+	p, _ := getCurrentProfile(config)
 
 	script := config.getInstallFilename(p)
 	if checkFileExsit(script) == false {
@@ -70,4 +51,8 @@ func handler_install(args []string, config *Config) int {
 	// 2. cmd.Args = []string{script, "a", "b"}
 	cmd.Dir = p.SrcDir
 	return pipeCmd(cmd)
+}
+
+func installHandler(args []string, data interface{}) (int, error) {
+	return wrap(doInstall, args, data)
 }

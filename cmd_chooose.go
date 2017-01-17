@@ -17,33 +17,25 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
 )
 
-var (
-	chooseProfile string
-)
+var chooseProfile string
 
-func initChooseCmd() {
-	cmdmux.HandleFunc("/choose", chooseHandler)
-	if flagSet, err := cmdmux.FlagSet("/choose"); err == nil {
-		flagSet.StringVar(&chooseProfile, "p", "", "Specify profile by name or index.")
-	}
+func chooseUsage() {
+	printTitle("- choose <-p profile>", false)
+	fmt.Printf("  Choose one <profile> as the current one.\n")
+	fmt.Printf("  -p: %s\n", profileUsage)
 }
 
-func choose_usage() {
-	printTitle("- choose <-p profile>")
-	fmt.Printf("  Choose <profile> as the current one.\n")
-}
+func doChoose(args []string, config *Config) int {
+	flagSet := flag.NewFlagSet("choose", flag.ExitOnError)
+	flagSet.StringVar(&chooseProfile, "p", "", profileUsage)
+	flagSet.Parse(args)
 
-func chooseHandler(args []string, data interface{}) (int, error) {
-	return wrap(handler_choose, args, data)
-}
-
-func handler_choose(args []string, config *Config) int {
 	if chooseProfile == "" {
 		clog.Fatal("use -p to specify profile's name or index.")
 	}
@@ -54,8 +46,11 @@ func handler_choose(args []string, config *Config) int {
 
 	printCmd("choose", p.Name)
 	config.Current = index
-
 	config.save()
 
 	return 0
+}
+
+func chooseHandler(args []string, data interface{}) (int, error) {
+	return wrap(doChoose, args, data)
 }

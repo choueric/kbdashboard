@@ -17,30 +17,25 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-
-	"github.com/choueric/cmdmux"
 )
 
-var (
-	listVerbose bool
-)
+var listVerbose bool
 
-func initListCmd() {
-	cmdmux.HandleFunc("/list", listHandler)
-	if flagSet, err := cmdmux.FlagSet("/list"); err == nil {
-		flagSet.BoolVar(&listVerbose, "v", false, "Print more information")
-	}
-}
-
-func usageList() {
-	printTitle("- list [-v]")
+func listUsage() {
+	printTitle("- list [-v]", false)
 	fmt.Printf("  List all profiles.\n")
 	fmt.Printf("  -v: Print with more information\n")
 }
 
-func handler_list(args []string, config *Config) int {
+func doList(args []string, config *Config) int {
 	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
+
+	flagSet := flag.NewFlagSet("list", flag.ExitOnError)
+	flagSet.BoolVar(&listVerbose, "v", false, "print with more information")
+	flagSet.Parse(args)
+
 	for i, p := range config.Profiles {
 		if config.Current == i {
 			printProfile(&p, listVerbose, true, i)
@@ -53,5 +48,5 @@ func handler_list(args []string, config *Config) int {
 }
 
 func listHandler(args []string, data interface{}) (int, error) {
-	return wrap(handler_list, args, data)
+	return wrap(doList, args, data)
 }

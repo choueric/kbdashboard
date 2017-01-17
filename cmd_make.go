@@ -20,40 +20,30 @@ import (
 	"fmt"
 
 	"github.com/choueric/clog"
-	"github.com/choueric/cmdmux"
 )
 
-var makeProfile string
-
-func initMakeCmd() {
-	cmdmux.HandleFunc("/make", makeHandler)
-	if flagSet, err := cmdmux.FlagSet("/make"); err == nil {
-		flagSet.StringVar(&makeProfile, "p", "", "Specify profile by name or index.")
-	}
-}
-
-func make_usage() {
-	printTitle("- make <target> [profile]")
+func makeUsage() {
+	printTitle("- make <target>", false)
 	fmt.Printf("  Execute 'make' <target> on [profile].\n")
-}
-
-func makeHandler(args []string, data interface{}) (int, error) {
-	return wrap(handler_make, args, data)
 }
 
 func handler_make(args []string, config *Config) int {
 	if len(args) <= 1 {
-		clog.Error("need more arguments")
+		clog.Error("'make' needs <target> and its parameters.")
 		return -1
 	}
 	target := args[0]
 	args = args[1:]
 
-	p, _ := getProfile(makeProfile, config)
+	p, _ := getCurrentProfile(config)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	printCmd("build", p.Name)
 	return makeKernel(p, target)
+}
+
+func makeHandler(args []string, data interface{}) (int, error) {
+	return wrap(handler_make, args, data)
 }

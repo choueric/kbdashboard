@@ -96,15 +96,10 @@ func doGetProfile(arg string, config *Config) (*Profile, int) {
 }
 
 /*
- * get profile specified by @arg from @config.
- * @arg may be numberic index or name of profile.
- *      If it is empty, then return the chosen profile.
+ * get current profile in @config
  */
-func getProfile(profile string, config *Config) (*Profile, int) {
-	if profile == "" {
-		profile = strconv.Itoa(config.Current)
-	}
-
+func getCurrentProfile(config *Config) (*Profile, int) {
+	profile := strconv.Itoa(config.Current)
 	return doGetProfile(profile, config)
 }
 
