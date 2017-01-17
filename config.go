@@ -62,9 +62,10 @@ type Profile struct {
 func (p *Profile) String() string {
 	return fmt.Sprintf(
 		"name = %s%s%s\n"+
-			"  arch = %s, CC = %s, target = %s, defconfig = %s, DTB = %s\n"+
-			"  src_dir = %s\n  build_dir = %s, mod_dir = %s\n  thread num = %d\n",
-		CGREEN, p.Name, CEND, p.Arch, p.CrossComile, p.Target, p.Defconfig, p.DTB,
+			"  arch = %s, target = %s, defconfig = %s\n  DTB = %s\n"+
+			"  CC = %s\n"+
+			"  src_dir = %s\n  build_dir = %s\n  mod_dir = %s\n  thread num = %d\n",
+		CGREEN, p.Name, CEND, p.Arch, p.Target, p.Defconfig, p.DTB, p.CrossComile,
 		p.SrcDir, p.OutputDir, p.ModInstallDir, p.ThreadNum)
 }
 
@@ -142,8 +143,12 @@ type Config struct {
 }
 
 func (c *Config) String() string {
-	return fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n%v\n",
-		c.filepath, c.Editor, c.Current, c.Profiles)
+	line := fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n",
+		c.filepath, c.Editor, c.Current)
+	for _, v := range c.Profiles {
+		line += v.String()
+	}
+	return line
 }
 
 func (c *Config) fix() {

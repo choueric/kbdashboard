@@ -30,7 +30,6 @@ func main() {
 		getConfig(true)
 		return
 	}
-
 	config := getConfig(false)
 
 	cmdmux.HandleFunc("/", helpHandler)
