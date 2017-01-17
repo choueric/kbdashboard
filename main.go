@@ -69,6 +69,7 @@ func main() {
 
 	cmdmux.HandleFunc("/install", installHandler)
 	cmdmux.HandleFunc("/make", makeHandler)
+	cmdmux.HandleFunc("/version", versionHandler)
 
 	ret, err := cmdmux.Execute(config)
 	if err != nil {

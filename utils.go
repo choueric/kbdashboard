@@ -27,10 +27,9 @@ import (
 )
 
 const (
-	CRED    = "\x1b[31;1m"
-	CGREEN  = "\x1b[32;1m"
-	CEND    = "\x1b[0;m"
-	VERSION = "0.1"
+	CRED   = "\x1b[31;1m"
+	CGREEN = "\x1b[32;1m"
+	CEND   = "\x1b[0;m"
 )
 
 func printTitle(format string, def bool, v ...interface{}) {

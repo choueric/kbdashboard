@@ -4,10 +4,10 @@ _kbdashboard()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="list choose edit help make build config install"
+    opts="list choose edit help make build config install version"
 
     case "$prev" in
-    choose | help | make)
+    choose | help | make | version)
         COMPREPLY=()
         return 0
         ;;
