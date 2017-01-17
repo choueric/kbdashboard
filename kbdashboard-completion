@@ -12,7 +12,7 @@ _kbdashboard()
         return 0
         ;;
 	help )
-        COMPREPLY=( $(compgen -W "list choose edit make build config install version" -- $cur) )
+        COMPREPLY=( $(compgen -W "list choose edit make build config install version help" -- $cur) )
         return 0
         ;;
 	list )

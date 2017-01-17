@@ -37,11 +37,12 @@ var cmdHelpMap = []helpMap{
 	{"install", installUsage},
 	{"make", makeUsage},
 	{"version", versionUsage},
+	{"help", helpUsage},
 }
 
 func helpUsage() {
 	printTitle("- help", false)
-	fmt.Printf("  Print help message for one or all commands.\n")
+	fmt.Printf("  Print help message for one or all commands.\n\n")
 }
 
 func helpHandler(args []string, data interface{}) (int, error) {

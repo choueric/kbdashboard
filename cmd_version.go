@@ -25,7 +25,7 @@ const VERSION = "0.1"
 
 func versionUsage() {
 	printTitle("- version", false)
-	fmt.Printf("  Print the version.\n")
+	fmt.Printf("  Print the version.\n\n")
 }
 
 func versionHandler(args []string, data interface{}) (int, error) {
