@@ -29,6 +29,7 @@ func buildUsage() {
 	buildImageUsage()
 	buildModulesUsage()
 	buildDtbUsage()
+	fmt.Printf("\n")
 }
 
 ////////////////////////////////////////////////////////////////////////////////

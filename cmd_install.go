@@ -26,7 +26,7 @@ var installOption string
 
 func installUsage() {
 	printTitle("- install [option]", false)
-	fmt.Printf("  Execute the install script of current profile with option.\n")
+	fmt.Printf("  Execute the install script of current profile with option.\n\n")
 }
 
 func doInstall(args []string, config *Config) int {

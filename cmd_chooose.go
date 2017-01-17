@@ -24,7 +24,7 @@ import (
 
 func chooseUsage() {
 	printTitle("- choose <profile>", false)
-	fmt.Printf("  Choose one <profile> as the current one.\n")
+	fmt.Printf("  Choose one <profile> as the current one.\n\n")
 }
 
 // args[0] is the profile to be choosen

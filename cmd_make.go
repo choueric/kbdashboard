@@ -24,7 +24,7 @@ import (
 
 func makeUsage() {
 	printTitle("- make <target>", false)
-	fmt.Printf("  Execute 'make' <target> on [profile].\n")
+	fmt.Printf("  Execute 'make' <target> on [profile].\n\n")
 }
 
 func doMake(args []string, config *Config) int {

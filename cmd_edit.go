@@ -23,6 +23,7 @@ func editUsage() {
 	fmt.Printf("  Edit profiles or scripts using the 'Editor'.\n")
 	editProfileUsage()
 	editInstallUsage()
+	fmt.Printf("\n")
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -7,28 +7,24 @@ _kbdashboard()
     opts="list choose edit help make build config install version"
 
     case "$prev" in
-    choose | help | make | version)
+    choose | make | install | version)
         COMPREPLY=()
+        return 0
+        ;;
+	help )
+        COMPREPLY=( $(compgen -W "list choose edit make build config install version" -- $cur) )
         return 0
         ;;
 	list )
         COMPREPLY=( $(compgen -W "-v" -- $cur) )
         return 0
         ;;
-	list )
-        COMPREPLY=( $(compgen -W "-p" -- $cur) )
-        return 0
-        ;;
 	edit )
-        COMPREPLY=( $(compgen -W "profile install help" -- $cur) )
+        COMPREPLY=( $(compgen -W "profile install" -- $cur) )
         return 0
         ;;
 	build )
-        COMPREPLY=( $(compgen -W "image modules dtb help" -- $cur) )
-        return 0
-        ;;
-	install )
-        COMPREPLY=( $(compgen -W "edit" -- $cur) )
+        COMPREPLY=( $(compgen -W "image modules dtb" -- $cur) )
         return 0
         ;;
 	config )

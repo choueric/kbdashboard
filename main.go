@@ -17,26 +17,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/choueric/clog"
 	"github.com/choueric/cmdmux"
 )
-
-const profileUsage = "Specify profile by name or index."
-
-func usageHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Usage of %s:\n", os.Args[0])
-	listUsage()
-	chooseUsage()
-	editUsage()
-	configUsage()
-	buildUsage()
-	installUsage()
-	makeUsage()
-	return 1, nil
-}
 
 func main() {
 	clog.SetFlags(clog.Lshortfile | clog.LstdFlags | clog.Lcolor)
@@ -48,8 +33,8 @@ func main() {
 
 	config := getConfig(false)
 
-	cmdmux.HandleFunc("/", usageHandler)
-	cmdmux.HandleFunc("/help", usageHandler)
+	cmdmux.HandleFunc("/", helpHandler)
+	cmdmux.HandleFunc("/help", helpHandler)
 	cmdmux.HandleFunc("/list", listHandler)
 	cmdmux.HandleFunc("/choose", chooseHandler)
 
