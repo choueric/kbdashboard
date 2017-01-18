@@ -1,6 +1,6 @@
 # bash completion file for kbdashboard
 # Copy this file to somewhere (e.g. ~/.kbdashboard-completion)
-# and then '$ source ~/.kbdashboard-completion
+# and then '$ source ~/.kbdashboard-completion'
 
 _kbdashboard()
 {
