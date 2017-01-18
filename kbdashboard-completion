@@ -1,42 +1,34 @@
-_kbdashboard()  
+# bash completion file for kbdashboard
+# Copy this file to somewhere (e.g. ~/.kbdashboard-completion)
+# and then '$ source ~/.kbdashboard-completion
+
+_kbdashboard()
 {
-    local cur prev opts
-    COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
-    opts="list choose edit help make build config install version"
+  local cur prev opts
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  opts="help list choose edit config build install make version completion "
 
-    case "$prev" in
-    choose | make | install | version)
-        COMPREPLY=()
-        return 0
-        ;;
-	help )
-        COMPREPLY=( $(compgen -W "list choose edit make build config install version help" -- $cur) )
-        return 0
-        ;;
-	list )
-        COMPREPLY=( $(compgen -W "-v" -- $cur) )
-        return 0
-        ;;
-	edit )
-        COMPREPLY=( $(compgen -W "profile install" -- $cur) )
-        return 0
-        ;;
-	build )
-        COMPREPLY=( $(compgen -W "image modules dtb" -- $cur) )
-        return 0
-        ;;
-	config )
-        COMPREPLY=( $(compgen -W "menu def save" -- $cur) )
-        return 0
-        ;;
-    *)
-        local prev2="${COMP_WORDS[COMP_CWORD-2]}"
-        ;;
-    esac	
-
-    COMPREPLY=( $(compgen -W "$opts" -- $cur) )
+  case "$prev" in
+  edit )
+    COMPREPLY=( $(compgen -W "profile install " -- $cur) )
     return 0
+    ;;
+  config )
+    COMPREPLY=( $(compgen -W "menu def save " -- $cur) )
+    return 0
+    ;;
+  build )
+    COMPREPLY=( $(compgen -W "image modules dtb " -- $cur) )
+    return 0
+    ;;
+  *)
+    local prev2="${COMP_WORDS[COMP_CWORD-2]}"
+    ;;
+  esac
+
+  COMPREPLY=( $(compgen -W "$opts" -- $cur) )
+  return 0
 }
 complete -F _kbdashboard kbdashboard
