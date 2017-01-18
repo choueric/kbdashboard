@@ -21,6 +21,7 @@ import (
 	"os"
 
 	"github.com/choueric/clog"
+	"github.com/choueric/cmdmux"
 )
 
 type helpMap struct {
@@ -37,8 +38,11 @@ var cmdHelpMap = []helpMap{
 	{"install", installUsage},
 	{"make", makeUsage},
 	{"version", versionUsage},
+	{"completion", completionUsage},
 	{"help", helpUsage},
 }
+
+const completionFileName = "kbdashboard-completion"
 
 func helpUsage() {
 	cmdTitle("help [command]", false)
@@ -70,4 +74,24 @@ func helpHandler(args []string, data interface{}) (int, error) {
 	f()
 
 	return 1, nil
+}
+
+func completionUsage() {
+	cmdTitle("completion", false)
+	cmdInfo("Generate a shell completion file '%s'.\n\n", completionFileName)
+}
+
+func completionHandler(args []string, data interface{}) (int, error) {
+	file, err := os.Create(completionFileName)
+	if err != nil {
+		clog.Fatal(err)
+	}
+	defer file.Close()
+
+	if err = cmdmux.GenerateCompletion("kbdashboard", file); err != nil {
+		clog.Fatal(err)
+	}
+	clog.Printf("Create completion file '%s' OK.", completionFileName)
+
+	return 0, nil
 }
