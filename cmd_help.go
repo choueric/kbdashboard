@@ -42,7 +42,7 @@ var cmdHelpMap = []helpMap{
 	{"help", helpUsage},
 }
 
-const completionFileName = "kbdashboard-completion"
+var COMP_FILENAME = "kbdashboard.bash-completion"
 
 func helpUsage() {
 	cmdTitle("help [command]", false)
@@ -78,11 +78,11 @@ func helpHandler(args []string, data interface{}) (int, error) {
 
 func completionUsage() {
 	cmdTitle("completion", false)
-	cmdInfo("Generate a shell completion file '%s'.\n\n", completionFileName)
+	cmdInfo("Generate a shell completion file '%s'.\n\n", COMP_FILENAME)
 }
 
 func completionHandler(args []string, data interface{}) (int, error) {
-	file, err := os.Create(completionFileName)
+	file, err := os.Create(COMP_FILENAME)
 	if err != nil {
 		clog.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func completionHandler(args []string, data interface{}) (int, error) {
 	if err = cmdmux.GenerateCompletion("kbdashboard", file); err != nil {
 		clog.Fatal(err)
 	}
-	clog.Printf("Create completion file '%s' OK.", completionFileName)
+	clog.Printf("Create completion file '%s' OK.", COMP_FILENAME)
 
 	return 0, nil
 }

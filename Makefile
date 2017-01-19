@@ -1,27 +1,31 @@
-EXEC=kbdashboard
-SRCS=*.go
-COMP=$(EXEC)-completion
+EXEC = kbdashboard
+SRCS = *.go
+COMP = $(EXEC).bash-completion
 
-VER=`grep "const VERSION" cmd_version.go  | cut -d "=" -f 2 | cut -d '"' -f 2`
-TAR=$(EXEC)-$(VER).tar.gz
+VER = `grep "const VERSION" cmd_version.go  | cut -d "=" -f 2 | cut -d '"' -f 2`
+TAR = $(EXEC)-$(VER).tar.gz
 
-GIT_COMMIT=`git log --pretty=format:"%h" -1`
-GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-BUILD_TIME=`date +%Y-%m-%d:%H:%M:%S`
-X_ARGS="-X main.GIT_COMMIT=$(GIT_COMMIT) -X main.GIT_BRANCH=$(GIT_BRANCH) -X main.BUILD_TIME=$(BUILD_TIME)"
+BUILD_TIME = `date +%Y-%m-%d:%H:%M:%S`
 
-all:$(EXEC) $(COMP)
+X_ARGS += -X main.BUILD_TIME=$(BUILD_TIME)
+X_ARGS += -X main.COMP_FILENAME=$(COMP)
 
-$(EXEC): $(SRCS)
-	@echo "Build Version: $(VER)-$(GIT_COMMIT)-$(GIT_BRANCH)"
-	@go build -ldflags $(X_ARGS) -o $(EXEC) -v
+BIN = $(DESTDIR)/usr/bin
+COMP_DIR = $(DESTDIR)/etc/bash_completion.d
+
+all:bin $(COMP)
+
+bin:
+	@echo "Build Version: $(VER)"
+	@go build -ldflags "$(X_ARGS)" -o $(EXEC) -v
 
 $(COMP): $(EXEC)
 	@./$(EXEC) completion
 
 install:$(EXEC) $(COMP)
-	@cp -v $(EXEC) /usr/local/bin
-	@cp -v $(COMP) /etc/bash_completion.d/kbdashboard
+	install -d $(BIN) $(COMP_DIR)
+	install $(EXEC) $(BIN)
+	install $(COMP) $(COMP_DIR)/$(EXEC)
 
 clean:
 	@rm -rfv $(EXEC) $(COMP)
