@@ -18,7 +18,13 @@ package main
 
 import "fmt"
 
-const VERSION = "0.4"
+const VERSION = "0.1.0"
+
+var (
+	GIT_BRANCH = ""
+	GIT_COMMIT = ""
+	BUILD_TIME = ""
+)
 
 func versionUsage() {
 	cmdTitle("version", false)
@@ -26,6 +32,7 @@ func versionUsage() {
 }
 
 func versionHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Version: %s%s%s\n", CGREEN, VERSION, CEND)
+	fmt.Printf("Version    : %s%s-%s-%s%s\n", CGREEN, VERSION, GIT_COMMIT, GIT_BRANCH, CEND)
+	fmt.Printf("Build time : %s%s%s\n", CGREEN, BUILD_TIME, CEND)
 	return 0, nil
 }
