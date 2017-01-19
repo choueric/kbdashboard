@@ -139,7 +139,7 @@ type Config struct {
 	Current  int       `json:"current"`
 	Profiles []Profile `json:"profile"`
 	filepath string
-	jc       interface{}
+	jc       interface{} // must be interface{} or panic
 }
 
 func (c *Config) String() string {
@@ -185,7 +185,7 @@ func (c *Config) getJc() *jconfig.JConfig {
 }
 
 func getConfig(dump bool) *Config {
-	filepath := os.Getenv("HOME") + "/.config/kbdashboard/config.json"
+	filepath := os.Getenv("HOME") + "/.kbdashboard/config.json"
 	jc := jconfig.New(filepath, Config{})
 
 	if _, err := jc.Load(DefaultConfig); err != nil {
