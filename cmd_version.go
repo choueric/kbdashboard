@@ -21,7 +21,7 @@ import "fmt"
 
 const VERSION = "0.1.0"
 
-var BUILD_TIME = ""
+var BUILD_TIME = "nil"
 
 func versionUsage() {
 	cmdTitle("version", false)
@@ -30,6 +30,8 @@ func versionUsage() {
 
 func versionHandler(args []string, data interface{}) (int, error) {
 	fmt.Printf("Version    : %s%s%s\n", CGREEN, VERSION, CEND)
-	fmt.Printf("Build time : %s%s%s\n", CGREEN, BUILD_TIME, CEND)
+	if BUILD_TIME != "nil" {
+		fmt.Printf("Build time : %s%s%s\n", CGREEN, BUILD_TIME, CEND)
+	}
 	return 0, nil
 }

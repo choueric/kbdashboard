@@ -7,6 +7,7 @@ TAR = $(EXEC)-$(VER).tar.gz
 
 BUILD_TIME = `date +%Y-%m-%d:%H:%M:%S`
 
+# Comment this if do not want to include build-time-string in the executable file.
 X_ARGS += -X main.BUILD_TIME=$(BUILD_TIME)
 X_ARGS += -X main.COMP_FILENAME=$(COMP)
 
