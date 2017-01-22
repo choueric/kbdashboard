@@ -19,7 +19,7 @@ package main
 
 import "fmt"
 
-const VERSION = "0.1.0"
+const VERSION = "0.1.1"
 
 var BUILD_TIME = "nil"
 
