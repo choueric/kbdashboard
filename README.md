@@ -3,6 +3,10 @@
 This tool (i.e. `kbdashboard`) is used to configure and manage building process
 of multiple linux kernels. It is written in Golang.
 
+[![Build Status](https://travis-ci.org/choueric/kernelBuildDashboard.svg?branch=master)](https://travis-ci.org/choueric/kernelBuildDashboard)
+
+# Overview
+
 Developpers, especially in embedded system, may usually need to modify, build 
 and test more than one linux kernels in various projects. Some may handle
 different versions using different toolchains, some may one kernel version but 
