@@ -17,10 +17,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
-	"github.com/choueric/clog"
 	"github.com/choueric/cmdmux"
 )
 
@@ -67,7 +67,7 @@ func helpHandler(args []string, data interface{}) (int, error) {
 		}
 	}
 	if f == nil {
-		clog.Fatalf("invalid command name '%s'\n", cmd)
+		return 0, errors.New(fmt.Sprintf("invalid command '%s'.", cmd))
 	}
 
 	fmt.Printf("Usage of comamnd %s'%s'%s:\n\n", CYELLOW, cmd, CEND)
@@ -84,14 +84,14 @@ func completionUsage() {
 func completionHandler(args []string, data interface{}) (int, error) {
 	file, err := os.Create(COMP_FILENAME)
 	if err != nil {
-		clog.Fatal(err)
+		return 0, err
 	}
 	defer file.Close()
 
 	if err = cmdmux.GenerateCompletion("kbdashboard", file); err != nil {
-		clog.Fatal(err)
+		return 0, err
 	}
-	clog.Printf("Create completion file '%s' OK.", COMP_FILENAME)
+	fmt.Printf("Create completion file '%s' OK.", COMP_FILENAME)
 
 	return 0, nil
 }

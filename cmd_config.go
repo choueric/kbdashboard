@@ -16,11 +16,7 @@
  */
 package main
 
-import (
-	"fmt"
-
-	"github.com/choueric/clog"
-)
+import "fmt"
 
 func configUsage() {
 	cmdTitle("config [menu|def|save]", false)
@@ -39,9 +35,12 @@ func configMenuUsage() {
 }
 
 func configMenuHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	printCmd("config menu", p.Name)
-	return configKernel(p, "menuconfig"), nil
+	return 0, configKernel(p, "menuconfig")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,9 +51,12 @@ func configDefUsage() {
 }
 
 func configDefHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	printCmd("config def", p.Name)
-	return makeKernel(p, p.Defconfig), nil
+	return 0, makeKernel(p, p.Defconfig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,19 +68,21 @@ func configSaveUsage() {
 }
 
 func configSaveHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 
 	printCmd("config save", p.Name)
-	if makeKernel(p, "savedefconfig") != 0 {
-		clog.Fatalf("config save failed.\n")
+	if err := makeKernel(p, "savedefconfig"); err != nil {
+		return 0, err
 	}
 
 	src := p.OutputDir + "/defconfig"
 	dst := p.SrcDir + "/arch/" + p.Arch + "/configs/" + p.Defconfig
 
-	if copyFileContents(src, dst) != nil {
-		return 1, nil
-	} else {
-		return 0, nil
+	if err := copyFileContents(src, dst); err != nil {
+		return 0, err
 	}
+	return 0, nil
 }

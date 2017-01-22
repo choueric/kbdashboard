@@ -17,11 +17,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 
-	"github.com/choueric/clog"
 	"github.com/choueric/jconfig"
 )
 
@@ -75,13 +75,14 @@ func (p *Profile) String() string {
  * get profile from @config by @arg.
  * @arg may be numberic index or name of profile, it cannot be empty.
  */
-func doGetProfile(arg string, config *Config) (*Profile, int) {
+func doGetProfile(arg string, config *Config) (*Profile, int, error) {
 	var p *Profile
 	var index int
 	if isNumber(arg) {
 		n, _ := strconv.Atoi(arg)
 		if n >= len(config.Profiles) || n < 0 {
-			clog.Fatalf("invalid profile index: [%d/%d]\n", n, len(config.Profiles))
+			return nil, -1, errors.New(fmt.Sprintf("invalid profile index: [%d/%d].",
+				n, len(config.Profiles)))
 		}
 		p = &config.Profiles[n]
 		index = n
@@ -95,13 +96,13 @@ func doGetProfile(arg string, config *Config) (*Profile, int) {
 		}
 	}
 
-	return p, index
+	return p, index, nil
 }
 
 /*
  * get current profile in @config
  */
-func getCurrentProfile(config *Config) (*Profile, int) {
+func getCurrentProfile(config *Config) (*Profile, int, error) {
 	profile := strconv.Itoa(config.Current)
 	return doGetProfile(profile, config)
 }
@@ -156,7 +157,8 @@ func (c *Config) String() string {
 func (c *Config) fix() {
 	// validate config
 	if c.Current >= len(c.Profiles) {
-		clog.Fatal("Current in config.json is invalid: ", c.Current)
+		fmt.Fprintf(os.Stderr, "Current in config.json is invalid: %s\n", c.Current)
+		os.Exit(1)
 	}
 
 	// fix invaid configurations
@@ -170,12 +172,7 @@ func (c *Config) fix() {
 }
 
 func (c *Config) save() {
-	jc := c.getJc()
-	if jc == nil {
-		clog.Warn("jconfig is nil")
-		return
-	}
-	jc.Save()
+	c.getJc().Save()
 }
 
 func (c *Config) getInstallFilename(p *Profile) string {
@@ -191,7 +188,8 @@ func getConfig(dump bool) *Config {
 	jc := jconfig.New(filepath, Config{})
 
 	if _, err := jc.Load(DefaultConfig); err != nil {
-		clog.Fatal("load config error:", err)
+		fmt.Fprintf(os.Stderr, "load config error: %v", err)
+		os.Exit(1)
 	}
 
 	config := jc.Data().(*Config)

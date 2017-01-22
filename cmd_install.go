@@ -30,24 +30,36 @@ func installUsage() {
 }
 
 func installHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 
 	script := gConfig.getInstallFilename(p)
-	if checkFileExsit(script) == false {
+	ret, err := checkFileExsit(script)
+	if err != nil {
+		return 0, err
+	}
+
+	if ret == false {
 		// create and edit script
 		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
 		file, err := os.OpenFile(script, os.O_RDWR|os.O_CREATE, 0775)
-		checkError(err)
+		if err != nil {
+			return 0, err
+		}
+		defer file.Close()
+
 		str := fmt.Sprintf("#!/bin/sh\n\n# install script for profile '%s'", p.Name)
-		_, err = file.Write([]byte(str))
-		checkError(err)
-		file.Close()
-		return execCmd(gConfig.Editor, []string{gConfig.Editor, script}), nil
+		if _, err = file.Write([]byte(str)); err != nil {
+			return 0, err
+		}
+		return 0, execCmd(gConfig.Editor, []string{gConfig.Editor, script})
 	}
 
 	printCmd("install", p.Name)
 	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
 	cmd := exec.Command(script, args...) // args are the arguments for script.
 	cmd.Dir = p.SrcDir
-	return pipeCmd(cmd), nil
+	return 0, pipeCmd(cmd)
 }

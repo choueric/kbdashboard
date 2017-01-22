@@ -16,7 +16,7 @@
  */
 package main
 
-import "github.com/choueric/clog"
+import "errors"
 
 func chooseUsage() {
 	cmdTitle("choose <profile>", false)
@@ -26,11 +26,11 @@ func chooseUsage() {
 // args[0] is the profile to be choosen
 func chooseHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 || args[0] == "" {
-		clog.Fatal("Must specify profile's name or index.")
+		return 0, errors.New("'choose' needs name or index of profile.")
 	}
-	p, index := doGetProfile(args[0], gConfig)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
+	p, index, err := doGetProfile(args[0], gConfig)
+	if err != nil {
+		return 0, err
 	}
 
 	printCmd("choose", p.Name)

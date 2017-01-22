@@ -24,16 +24,7 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-
-	"github.com/choueric/clog"
 )
-
-func createDir(p string) {
-	err := os.MkdirAll(p, os.ModeDir|0777)
-	if err != nil {
-		clog.Printf("mkdir %s failed: %v\n", p, err)
-	}
-}
 
 func makeKernelOpt(p *Profile, target string) []string {
 	cmdArgs := []string{}
@@ -50,7 +41,6 @@ func makeKernelOpt(p *Profile, target string) []string {
 	if p.OutputDir != "" {
 		output := []string{"O", p.OutputDir}
 		cmdArgs = append(cmdArgs, strings.Join(output, "="))
-		createDir(p.OutputDir)
 	}
 
 	if p.CrossComile != "" {
@@ -66,13 +56,19 @@ func makeKernelOpt(p *Profile, target string) []string {
 	if p.ModInstallDir != "" {
 		installModPath := []string{"INSTALL_MOD_PATH", p.ModInstallDir}
 		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
-		createDir(p.ModInstallDir)
 	}
 
 	return cmdArgs
 }
 
-func makeKernel(p *Profile, target string) int {
+func makeKernel(p *Profile, target string) error {
+	if err := checkDirExist(p.OutputDir); err != nil {
+		return err
+	}
+	if err := checkDirExist(p.ModInstallDir); err != nil {
+		return err
+	}
+
 	cmdArgs := makeKernelOpt(p, target)
 
 	cmd := exec.Command("make", cmdArgs...)
@@ -83,7 +79,14 @@ func makeKernel(p *Profile, target string) int {
 	return pipeCmd(cmd)
 }
 
-func configKernel(p *Profile, target string) int {
+func configKernel(p *Profile, target string) error {
+	if err := checkDirExist(p.OutputDir); err != nil {
+		return err
+	}
+	if err := checkDirExist(p.ModInstallDir); err != nil {
+		return err
+	}
+
 	cmdArgs := makeKernelOpt(p, target)
 	args := []string{"make"}
 	args = append(args, cmdArgs...)
@@ -93,17 +96,15 @@ func configKernel(p *Profile, target string) int {
 }
 
 // execute command with Stdout and Stderr being piped in a new process.
-func pipeCmd(cmd *exec.Cmd) int {
+func pipeCmd(cmd *exec.Cmd) error {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
-		clog.Println("Error creating StdoutPipe for Cmd:", err)
-		return 1
+		return err
 	}
 
 	stderrReader, err := cmd.StderrPipe()
 	if err != nil {
-		clog.Println("create stderrPipe:", err)
-		return 1
+		return err
 	}
 
 	scanner := bufio.NewScanner(stdoutReader)
@@ -122,32 +123,30 @@ func pipeCmd(cmd *exec.Cmd) int {
 
 	err = cmd.Start()
 	if err != nil {
-		clog.Println("Error starting Cmd:", err)
-		return 1
+		return err
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		clog.Println("Error waiting for Cmd:", err)
-		return 2
+		return err
 	}
 
-	return 0
+	return nil
 }
 
 // execute command directly.
-func execCmd(name string, argv []string) int {
+func execCmd(name string, argv []string) error {
 	binary, err := exec.LookPath(name)
 	if err != nil {
-		clog.Fatal(err)
+		return err
 	}
 
 	env := os.Environ()
 
 	err = syscall.Exec(binary, argv, env)
 	if err != nil {
-		clog.Fatal(err)
+		return err
 	}
 
-	return 0
+	return nil
 }

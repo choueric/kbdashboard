@@ -16,11 +16,7 @@
  */
 package main
 
-import (
-	"fmt"
-
-	"github.com/choueric/clog"
-)
+import "fmt"
 
 func buildUsage() {
 	cmdTitle("build [image|modules|dtb]", false)
@@ -40,9 +36,12 @@ func buildImageUsage() {
 }
 
 func buildImageHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	printCmd("build image", p.Name)
-	return makeKernel(p, p.Target), nil
+	return 0, makeKernel(p, p.Target)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,15 +53,18 @@ func buildModulesUsage() {
 }
 
 func buildModulesHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	printCmd("modules", p.Name)
 
-	ret := makeKernel(p, "modules")
-	if ret != 0 {
-		clog.Fatalf("make modules failed.\n")
+	err = makeKernel(p, "modules")
+	if err != nil {
+		return 0, err
 	}
 
-	return makeKernel(p, "modules_install"), nil
+	return 0, makeKernel(p, "modules_install")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,19 +75,21 @@ func buildDtbUsage() {
 }
 
 func buildDtbHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	printCmd("build DTB", p.Name)
 
-	if makeKernel(p, p.DTB) != 0 {
-		clog.Fatalf("build DTB failed.\n")
+	if err := makeKernel(p, p.DTB); err != nil {
+		return 0, err
 	}
 
 	src := p.OutputDir + "/arch/" + p.Arch + "/boot/dts/" + p.DTB
 	dst := p.OutputDir + "/" + p.DTB
 
-	if copyFileContents(src, dst) != nil {
-		return 1, nil
-	} else {
-		return 0, nil
+	if err := copyFileContents(src, dst); err != nil {
+		return 0, err
 	}
+	return 0, nil
 }

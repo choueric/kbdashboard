@@ -35,7 +35,7 @@ func editProfileUsage() {
 
 func editProfileHandler(args []string, data interface{}) (int, error) {
 	var argv = []string{gConfig.Editor, gConfig.filepath}
-	return execCmd(gConfig.Editor, argv), nil
+	return 0, execCmd(gConfig.Editor, argv)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,10 @@ func editInstallUsage() {
 }
 
 func editInstallHandler(args []string, data interface{}) (int, error) {
-	p, _ := getCurrentProfile(gConfig)
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
+	}
 	var argv = []string{gConfig.Editor, gConfig.getInstallFilename(p)}
-	return execCmd(gConfig.Editor, argv), nil
+	return 0, execCmd(gConfig.Editor, argv)
 }

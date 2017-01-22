@@ -17,15 +17,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/choueric/clog"
 	"github.com/choueric/cmdmux"
 )
 
 func main() {
-	clog.SetFlags(clog.Lshortfile | clog.LstdFlags | clog.Lcolor)
-
 	if len(os.Args) >= 2 && os.Args[1] == "dump" {
 		getConfig(true)
 		return
@@ -58,8 +56,8 @@ func main() {
 
 	ret, err := cmdmux.Execute(nil)
 	if err != nil {
-		clog.Warn("Execute error:", err)
-		os.Exit(0)
+		fmt.Fprintf(os.Stderr, "kbdashboard: %v\n", err)
+		os.Exit(-1)
 	}
 	os.Exit(ret)
 }

@@ -22,8 +22,6 @@ import (
 	"os"
 	"path"
 	"regexp"
-
-	"github.com/choueric/clog"
 )
 
 const (
@@ -80,37 +78,54 @@ func isNumber(str string) bool {
 	}
 }
 
-func checkFileExsit(p string) bool {
+func checkFileExsit(p string) (bool, error) {
 	_, err := os.Stat(p)
 	if err != nil && os.IsNotExist(err) {
-		return false
+		return false, nil
 	} else if err != nil {
-		clog.Fatal(err)
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
 
-func checkError(err error) {
+// check if exist, if not, create one
+func checkDirExist(p string) error {
+	exist, err := checkFileExsit(p)
 	if err != nil {
-		clog.Fatal(err)
+		return err
 	}
+
+	if exist {
+		return nil
+	}
+
+	err = os.MkdirAll(p, os.ModeDir|0775)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func copyFileContents(src, dst string) (err error) {
+func copyFileContents(src, dst string) error {
 	fmt.Printf("copy %s'%s'%s -> %s'%s'%s\n", CGREEN, src, CEND,
 		CGREEN, dst, CEND)
 	in, err := os.Open(src)
-	checkError(err)
+	if err != nil {
+		return err
+	}
 	defer in.Close()
 
 	out, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	checkError(err)
+	if err != nil {
+		return err
+	}
 	defer out.Close()
 
 	_, err = io.Copy(out, in)
-	checkError(err)
-
+	if err != nil {
+		return err
+	}
 	err = out.Sync()
-	return
+	return nil
 }

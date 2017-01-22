@@ -16,11 +16,7 @@
  */
 package main
 
-import (
-	"errors"
-
-	"github.com/choueric/clog"
-)
+import "errors"
 
 func makeUsage() {
 	cmdTitle("make <target>", false)
@@ -28,18 +24,17 @@ func makeUsage() {
 }
 
 func makeHandler(args []string, data interface{}) (int, error) {
-	if len(args) <= 1 {
-		clog.Error("'make' needs <target> and its parameters.")
-		return 0, errors.New("need paramters.")
+	if len(args) == 0 {
+		return 0, errors.New("'make' need paramters.")
 	}
 	target := args[0]
 	args = args[1:]
 
-	p, _ := getCurrentProfile(gConfig)
-	if p == nil {
-		clog.Fatalf("can not find profile [%s]\n", args[0])
+	p, _, err := getCurrentProfile(gConfig)
+	if err != nil {
+		return 0, err
 	}
 
 	printCmd("build", p.Name)
-	return makeKernel(p, target), nil
+	return 0, makeKernel(p, target)
 }
