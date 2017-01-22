@@ -24,22 +24,18 @@ func chooseUsage() {
 }
 
 // args[0] is the profile to be choosen
-func doChoose(args []string, config *Config) int {
+func chooseHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 || args[0] == "" {
 		clog.Fatal("Must specify profile's name or index.")
 	}
-	p, index := doGetProfile(args[0], config)
+	p, index := doGetProfile(args[0], gConfig)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	printCmd("choose", p.Name)
-	config.Current = index
-	config.save()
+	gConfig.Current = index
+	gConfig.save()
 
-	return 0
-}
-
-func chooseHandler(args []string, data interface{}) (int, error) {
-	return wrap(doChoose, args, data)
+	return 0, nil
 }

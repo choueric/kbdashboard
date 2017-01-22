@@ -29,24 +29,20 @@ func listUsage() {
 	cmdInfo("-v: Print with more information\n\n")
 }
 
-func doList(args []string, config *Config) int {
+func listHandler(args []string, data interface{}) (int, error) {
 	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
 
 	flagSet := flag.NewFlagSet("list", flag.ExitOnError)
 	flagSet.BoolVar(&listVerbose, "v", false, "print with more information")
 	flagSet.Parse(args)
 
-	for i, p := range config.Profiles {
-		if config.Current == i {
+	for i, p := range gConfig.Profiles {
+		if gConfig.Current == i {
 			printProfile(&p, listVerbose, true, i)
 		} else {
 			printProfile(&p, listVerbose, false, i)
 		}
 	}
 
-	return 0
-}
-
-func listHandler(args []string, data interface{}) (int, error) {
-	return wrap(doList, args, data)
+	return 0, nil
 }

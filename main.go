@@ -30,7 +30,7 @@ func main() {
 		getConfig(true)
 		return
 	}
-	config := getConfig(false)
+	gConfig = getConfig(false)
 
 	cmdmux.HandleFunc("/", helpHandler)
 	cmdmux.HandleFunc("/help", helpHandler)
@@ -56,7 +56,7 @@ func main() {
 	cmdmux.HandleFunc("/version", versionHandler)
 	cmdmux.HandleFunc("/completion", completionHandler)
 
-	ret, err := cmdmux.Execute(config)
+	ret, err := cmdmux.Execute(nil)
 	if err != nil {
 		clog.Warn("Execute error:", err)
 		os.Exit(0)

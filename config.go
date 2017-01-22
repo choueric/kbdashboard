@@ -46,6 +46,8 @@ const DefaultConfig = `
 }
 `
 
+var gConfig *Config
+
 type Profile struct {
 	Name          string `json:"name"`
 	SrcDir        string `json:"src_dir"`

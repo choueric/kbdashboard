@@ -114,9 +114,3 @@ func copyFileContents(src, dst string) (err error) {
 	err = out.Sync()
 	return
 }
-
-func wrap(f func([]string, *Config) int, args []string, data interface{}) (int, error) {
-	config := data.(*Config)
-	ret := f(args, config)
-	return ret, nil
-}

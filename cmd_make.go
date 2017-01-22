@@ -16,30 +16,30 @@
  */
 package main
 
-import "github.com/choueric/clog"
+import (
+	"errors"
+
+	"github.com/choueric/clog"
+)
 
 func makeUsage() {
 	cmdTitle("make <target>", false)
 	cmdInfo("Execute '$ make <target>' on current kernel.\n\n")
 }
 
-func doMake(args []string, config *Config) int {
+func makeHandler(args []string, data interface{}) (int, error) {
 	if len(args) <= 1 {
 		clog.Error("'make' needs <target> and its parameters.")
-		return -1
+		return 0, errors.New("need paramters.")
 	}
 	target := args[0]
 	args = args[1:]
 
-	p, _ := getCurrentProfile(config)
+	p, _ := getCurrentProfile(gConfig)
 	if p == nil {
 		clog.Fatalf("can not find profile [%s]\n", args[0])
 	}
 
 	printCmd("build", p.Name)
-	return makeKernel(p, target)
-}
-
-func makeHandler(args []string, data interface{}) (int, error) {
-	return wrap(doMake, args, data)
+	return makeKernel(p, target), nil
 }

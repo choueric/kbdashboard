@@ -38,14 +38,10 @@ func configMenuUsage() {
 	subcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
 }
 
-func doConfigMenu(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
-	printCmd("config menu", p.Name)
-	return configKernel(p, "menuconfig")
-}
-
 func configMenuHandler(args []string, data interface{}) (int, error) {
-	return wrap(doConfigMenu, args, data)
+	p, _ := getCurrentProfile(gConfig)
+	printCmd("config menu", p.Name)
+	return configKernel(p, "menuconfig"), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,14 +51,10 @@ func configDefUsage() {
 	subcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
 }
 
-func doConfigDef(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
-	printCmd("config def", p.Name)
-	return makeKernel(p, p.Defconfig)
-}
-
 func configDefHandler(args []string, data interface{}) (int, error) {
-	return wrap(doConfigDef, args, data)
+	p, _ := getCurrentProfile(gConfig)
+	printCmd("config def", p.Name)
+	return makeKernel(p, p.Defconfig), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +65,8 @@ func configSaveUsage() {
 	subcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
 }
 
-func doConfigSave(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
+func configSaveHandler(args []string, data interface{}) (int, error) {
+	p, _ := getCurrentProfile(gConfig)
 
 	printCmd("config save", p.Name)
 	if makeKernel(p, "savedefconfig") != 0 {
@@ -85,12 +77,8 @@ func doConfigSave(args []string, config *Config) int {
 	dst := p.SrcDir + "/arch/" + p.Arch + "/configs/" + p.Defconfig
 
 	if copyFileContents(src, dst) != nil {
-		return 1
+		return 1, nil
 	} else {
-		return 0
+		return 0, nil
 	}
-}
-
-func configSaveHandler(args []string, data interface{}) (int, error) {
-	return wrap(doConfigSave, args, data)
 }

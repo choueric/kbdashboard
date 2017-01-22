@@ -33,13 +33,9 @@ func editProfileUsage() {
 	subcmdInfo("Edit the kbdashboard's configuration file.\n")
 }
 
-func doEditProfile(args []string, config *Config) int {
-	var argv = []string{config.Editor, config.filepath}
-	return execCmd(config.Editor, argv)
-}
-
 func editProfileHandler(args []string, data interface{}) (int, error) {
-	return wrap(doEditProfile, args, data)
+	var argv = []string{gConfig.Editor, gConfig.filepath}
+	return execCmd(gConfig.Editor, argv), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,12 +45,8 @@ func editInstallUsage() {
 	subcmdInfo("Edit current profile's installation script.\n")
 }
 
-func doEditInstall(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
-	var argv = []string{config.Editor, config.getInstallFilename(p)}
-	return execCmd(config.Editor, argv)
-}
-
 func editInstallHandler(args []string, data interface{}) (int, error) {
-	return wrap(doEditInstall, args, data)
+	p, _ := getCurrentProfile(gConfig)
+	var argv = []string{gConfig.Editor, gConfig.getInstallFilename(p)}
+	return execCmd(gConfig.Editor, argv), nil
 }

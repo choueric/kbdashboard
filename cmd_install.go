@@ -29,10 +29,10 @@ func installUsage() {
 	cmdInfo("Execute the install script of current profile with [option].\n\n")
 }
 
-func doInstall(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
+func installHandler(args []string, data interface{}) (int, error) {
+	p, _ := getCurrentProfile(gConfig)
 
-	script := config.getInstallFilename(p)
+	script := gConfig.getInstallFilename(p)
 	if checkFileExsit(script) == false {
 		// create and edit script
 		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
@@ -42,16 +42,12 @@ func doInstall(args []string, config *Config) int {
 		_, err = file.Write([]byte(str))
 		checkError(err)
 		file.Close()
-		return execCmd(config.Editor, []string{config.Editor, script})
+		return execCmd(gConfig.Editor, []string{gConfig.Editor, script}), nil
 	}
 
 	printCmd("install", p.Name)
 	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
 	cmd := exec.Command(script, args...) // args are the arguments for script.
 	cmd.Dir = p.SrcDir
-	return pipeCmd(cmd)
-}
-
-func installHandler(args []string, data interface{}) (int, error) {
-	return wrap(doInstall, args, data)
+	return pipeCmd(cmd), nil
 }

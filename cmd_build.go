@@ -39,14 +39,10 @@ func buildImageUsage() {
 	subcmdInfo("Equal to '$kbdashboard make uImage'.\n")
 }
 
-func doBuildImage(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
-	printCmd("build image", p.Name)
-	return makeKernel(p, p.Target)
-}
-
 func buildImageHandler(args []string, data interface{}) (int, error) {
-	return wrap(doBuildImage, args, data)
+	p, _ := getCurrentProfile(gConfig)
+	printCmd("build image", p.Name)
+	return makeKernel(p, p.Target), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,8 +53,8 @@ func buildModulesUsage() {
 	subcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
 }
 
-func doBuildModules(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
+func buildModulesHandler(args []string, data interface{}) (int, error) {
+	p, _ := getCurrentProfile(gConfig)
 	printCmd("modules", p.Name)
 
 	ret := makeKernel(p, "modules")
@@ -66,11 +62,7 @@ func doBuildModules(args []string, config *Config) int {
 		clog.Fatalf("make modules failed.\n")
 	}
 
-	return makeKernel(p, "modules_install")
-}
-
-func buildModulesHandler(args []string, data interface{}) (int, error) {
-	return wrap(doBuildModules, args, data)
+	return makeKernel(p, "modules_install"), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,8 +72,8 @@ func buildDtbUsage() {
 	subcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
 }
 
-func doBuildDtb(args []string, config *Config) int {
-	p, _ := getCurrentProfile(config)
+func buildDtbHandler(args []string, data interface{}) (int, error) {
+	p, _ := getCurrentProfile(gConfig)
 	printCmd("build DTB", p.Name)
 
 	if makeKernel(p, p.DTB) != 0 {
@@ -92,12 +84,8 @@ func doBuildDtb(args []string, config *Config) int {
 	dst := p.OutputDir + "/" + p.DTB
 
 	if copyFileContents(src, dst) != nil {
-		return 1
+		return 1, nil
 	} else {
-		return 0
+		return 0, nil
 	}
-}
-
-func buildDtbHandler(args []string, data interface{}) (int, error) {
-	return wrap(doBuildDtb, args, data)
 }
