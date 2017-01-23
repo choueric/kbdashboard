@@ -28,7 +28,6 @@ First you need a Golang build environment, which is easy to
 [install](https://golang.org/doc/install).
 
 ```
-$ cd kernelBuildDashboard
 $ make
 $ sudo make install
 ```
