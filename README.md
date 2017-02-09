@@ -3,7 +3,7 @@
 This tool (i.e. `kbdashboard`) is used to configure and manage building process
 of multiple linux kernels. It is written in Golang.
 
-[![Build Status](https://travis-ci.org/choueric/kernelBuildDashboard.svg?branch=master)](https://travis-ci.org/choueric/kernelBuildDashboard)
+[![Build Status](https://travis-ci.org/choueric/kbdashboard.svg?branch=master)](https://travis-ci.org/choueric/kbdashboard)
 
 # Overview
 
