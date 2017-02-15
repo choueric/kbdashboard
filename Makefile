@@ -17,7 +17,7 @@ all:bin $(COMP)
 
 bin:
 	@echo "Build Version: $(VER)"
-	@go build -ldflags "$(X_ARGS)" -o $(EXEC) -v
+	@go build -ldflags "$(X_ARGS)" -o $(EXEC)
 
 $(COMP): $(EXEC)
 	@./$(EXEC) completion
@@ -33,3 +33,6 @@ clean:
 archive:
 	@echo "archive to $(TAR)"
 	@git archive master --prefix="$(EXEC)-$(VER)/" --format tar.gz -o $(TAR)
+
+check:bin
+	go test
