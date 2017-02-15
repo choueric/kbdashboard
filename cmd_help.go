@@ -91,7 +91,7 @@ func completionHandler(args []string, data interface{}) (int, error) {
 	if err = cmdmux.GenerateCompletion("kbdashboard", file); err != nil {
 		return 0, err
 	}
-	fmt.Printf("Create completion file '%s' OK.", COMP_FILENAME)
+	fmt.Printf("Create completion file '%s' OK.\n", COMP_FILENAME)
 
 	return 0, nil
 }

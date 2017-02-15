@@ -149,9 +149,11 @@ func (c *Config) String() string {
 	line := fmt.Sprintf("Config File\t: %s\nEditor\t\t: %s\nColor\t\t: %v\n"+
 		"Current Profile\t: %d\n",
 		c.filepath, c.Editor, c.Color, c.Current)
-	for _, v := range c.Profiles {
-		line += v.String()
-	}
+	/*
+		for _, v := range c.Profiles {
+			line += v.String()
+		}
+	*/
 	return line
 }
 
