@@ -43,6 +43,9 @@ func defMark() string {
 }
 
 func cWrap(color string, str string) string {
+	if gConfig == nil {
+		return str
+	}
 	if gConfig.Color {
 		return color + str + cEND
 	} else {

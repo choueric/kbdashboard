@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"text/tabwriter"
 
 	"github.com/choueric/jconfig"
 )
@@ -62,14 +63,19 @@ type Profile struct {
 	ThreadNum     int    `json:"thread_num"`
 }
 
+// do not include 'Name' filed.
 func (p *Profile) String() string {
-	return fmt.Sprintf(
-		"name = %s\n"+
-			"  arch = %s, target = %s, defconfig = %s\n  DTB = %s\n"+
-			"  CC = %s\n"+
-			"  src_dir = %s\n  build_dir = %s\n  mod_dir = %s\n  thread num = %d\n",
-		cWrap(cGREEN, p.Name), p.Arch, p.Target, p.Defconfig, p.DTB, p.CrossComile,
-		p.SrcDir, p.OutputDir, p.ModInstallDir, p.ThreadNum)
+	line := ""
+	line += fmt.Sprintln("  SrcDir\t:", p.SrcDir)
+	line += fmt.Sprintln("  Arch\t:", p.Arch)
+	line += fmt.Sprintln("  CC\t:", p.CrossComile)
+	line += fmt.Sprintln("  Target\t:", p.Target)
+	line += fmt.Sprintln("  Defconfig\t:", p.Defconfig)
+	line += fmt.Sprintln("  DTB\t:", p.DTB)
+	line += fmt.Sprintln("  BuildDir\t:", p.OutputDir)
+	line += fmt.Sprintln("  ModInsDir\t:", p.ModInstallDir)
+	line += fmt.Sprintln("  ThreadNum\t:", p.ThreadNum)
+	return line
 }
 
 /*
@@ -109,31 +115,25 @@ func getCurrentProfile(config *Config) (*Profile, int, error) {
 }
 
 func printProfile(p *Profile, verbose bool, current bool, i int) {
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.TabIndent)
 	header := func(p *Profile, current bool) {
 		if current {
 			fmt.Printf("\n" + defMark() + " ")
 		} else {
 			fmt.Printf("\n  ")
 		}
-		fmt.Println(cWrap(cGREEN, fmt.Sprintf("[%d]\t: '%s'", i, p.Name)))
+		fmt.Println(cWrap(cGREEN, fmt.Sprintf("[%d] '%s'", i, p.Name)))
 	}
 	if verbose {
 		header(p, current)
-		fmt.Printf("  SrcDir\t\t: %s\n", p.SrcDir)
-		fmt.Printf("  Arch\t\t\t: %s\n", p.Arch)
-		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
-		fmt.Printf("  Target\t\t: %s\n", p.Target)
-		fmt.Printf("  Defconfig\t\t: %s\n", p.Defconfig)
-		fmt.Printf("  DTB\t\t\t: %s\n", p.DTB)
-		fmt.Printf("  BuildDir\t\t: %s\n", p.OutputDir)
-		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
-		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
+		fmt.Fprintf(w, "%v", p)
 	} else {
 		header(p, current)
-		fmt.Printf("  SrcDir: %s\n", p.SrcDir)
-		fmt.Printf("  Arch\t: %s\n", p.Arch)
-		fmt.Printf("  CC\t: %s\n", p.CrossComile)
+		fmt.Fprintf(w, "  SrcDir\t: %s\n", p.SrcDir)
+		fmt.Fprintf(w, "  Arch\t: %s\n", p.Arch)
+		fmt.Fprintf(w, "  CC\t: %s\n", p.CrossComile)
 	}
+	w.Flush()
 }
 
 type Config struct {
@@ -149,11 +149,9 @@ func (c *Config) String() string {
 	line := fmt.Sprintf("Config File\t: %s\nEditor\t\t: %s\nColor\t\t: %v\n"+
 		"Current Profile\t: %d\n",
 		c.filepath, c.Editor, c.Color, c.Current)
-	/*
-		for _, v := range c.Profiles {
-			line += v.String()
-		}
-	*/
+	for _, v := range c.Profiles {
+		line += v.Name + "\n" + v.String() + "\n"
+	}
 	return line
 }
 
@@ -172,6 +170,12 @@ func (c *Config) fix() {
 			p.Defconfig = "defconfig"
 		}
 	}
+}
+
+func (c *Config) dump() {
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.TabIndent)
+	fmt.Fprintf(w, "%v", c)
+	w.Flush()
 }
 
 func (c *Config) save() {
@@ -201,7 +205,7 @@ func getConfig(dump bool) *Config {
 	config.fix()
 
 	if dump {
-		fmt.Println(config)
+		config.dump()
 	}
 	return config
 }
