@@ -27,6 +27,7 @@ import (
 
 const DefaultConfig = `
 {
+	"color": true
 	"editor": "vim",
 	"current": 0,
 	"profile": [
@@ -63,11 +64,11 @@ type Profile struct {
 
 func (p *Profile) String() string {
 	return fmt.Sprintf(
-		"name = %s%s%s\n"+
+		"name = %s\n"+
 			"  arch = %s, target = %s, defconfig = %s\n  DTB = %s\n"+
 			"  CC = %s\n"+
 			"  src_dir = %s\n  build_dir = %s\n  mod_dir = %s\n  thread num = %d\n",
-		CGREEN, p.Name, CEND, p.Arch, p.Target, p.Defconfig, p.DTB, p.CrossComile,
+		cWrap(cGREEN, p.Name), p.Arch, p.Target, p.Defconfig, p.DTB, p.CrossComile,
 		p.SrcDir, p.OutputDir, p.ModInstallDir, p.ThreadNum)
 }
 
@@ -108,13 +109,16 @@ func getCurrentProfile(config *Config) (*Profile, int, error) {
 }
 
 func printProfile(p *Profile, verbose bool, current bool, i int) {
-	if verbose {
+	header := func(p *Profile, current bool) {
 		if current {
-			fmt.Printf("\n%s*%s ", CRED, CEND)
-			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+			fmt.Printf("\n" + defMark() + " ")
 		} else {
-			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
+			fmt.Printf("\n  ")
 		}
+		fmt.Println(cWrap(cGREEN, fmt.Sprintf("[%d]\t: '%s'", i, p.Name)))
+	}
+	if verbose {
+		header(p, current)
 		fmt.Printf("  SrcDir\t\t: %s\n", p.SrcDir)
 		fmt.Printf("  Arch\t\t\t: %s\n", p.Arch)
 		fmt.Printf("  CC\t\t\t: %s\n", p.CrossComile)
@@ -125,12 +129,7 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 		fmt.Printf("  ModInsDir\t\t: %s\n", p.ModInstallDir)
 		fmt.Printf("  ThreadNum\t\t: %d\n", p.ThreadNum)
 	} else {
-		if current {
-			fmt.Printf("\n%s*%s ", CRED, CEND)
-			fmt.Printf("%s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
-		} else {
-			fmt.Printf("\n  %s[%d]\t: '%s'%s\n", CGREEN, i, p.Name, CEND)
-		}
+		header(p, current)
 		fmt.Printf("  SrcDir: %s\n", p.SrcDir)
 		fmt.Printf("  Arch\t: %s\n", p.Arch)
 		fmt.Printf("  CC\t: %s\n", p.CrossComile)
@@ -140,14 +139,16 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 type Config struct {
 	Editor   string    `json:"editor"`
 	Current  int       `json:"current"`
+	Color    bool      `json:"color"`
 	Profiles []Profile `json:"profile"`
 	filepath string
 	jc       interface{} // must be interface{} or panic
 }
 
 func (c *Config) String() string {
-	line := fmt.Sprintf("Config File\t:%s\nEditor\t\t:%s\nCurrent Profile\t:%d\n",
-		c.filepath, c.Editor, c.Current)
+	line := fmt.Sprintf("Config File\t: %s\nEditor\t\t: %s\nColor\t\t: %v\n"+
+		"Current Profile\t: %d\n",
+		c.filepath, c.Editor, c.Color, c.Current)
 	for _, v := range c.Profiles {
 		line += v.String()
 	}

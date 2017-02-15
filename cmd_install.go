@@ -43,7 +43,7 @@ func installHandler(args []string, data interface{}) (int, error) {
 
 	if ret == false {
 		// create and edit script
-		fmt.Printf("create install script: %s'%s'%s\n", CGREEN, script, CEND)
+		fmt.Printf("create install script: '%s'\n", cWrap(cGREEN, script))
 		file, err := os.OpenFile(script, os.O_RDWR|os.O_CREATE, 0775)
 		if err != nil {
 			return 0, err
@@ -58,7 +58,7 @@ func installHandler(args []string, data interface{}) (int, error) {
 	}
 
 	printCmd("install", p.Name)
-	fmt.Printf("    %s%s%s\n", CGREEN, script, CEND)
+	fmt.Printf("    %s\n", cWrap(cGREEN, script))
 	cmd := exec.Command(script, args...) // args are the arguments for script.
 	cmd.Dir = p.SrcDir
 	return 0, pipeCmd(cmd)

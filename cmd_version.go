@@ -29,9 +29,9 @@ func versionUsage() {
 }
 
 func versionHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("Version    : %s%s%s\n", CGREEN, VERSION, CEND)
+	fmt.Printf("Version    : %s\n", cWrap(cGREEN, VERSION))
 	if BUILD_TIME != "nil" {
-		fmt.Printf("Build time : %s%s%s\n", CGREEN, BUILD_TIME, CEND)
+		fmt.Printf("Build time : %s\n", cWrap(cGREEN, BUILD_TIME))
 	}
 	return 0, nil
 }

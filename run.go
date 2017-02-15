@@ -74,7 +74,7 @@ func makeKernel(p *Profile, target string) error {
 	cmd := exec.Command("make", cmdArgs...)
 	cmd.Dir = p.SrcDir
 
-	fmt.Printf("    %s%v%s\n", CGREEN, cmdArgs, CEND)
+	fmt.Println(cWrap(cGREEN, fmt.Sprintf("    %v", cmdArgs)))
 
 	return pipeCmd(cmd)
 }
@@ -110,14 +110,14 @@ func pipeCmd(cmd *exec.Cmd) error {
 	scanner := bufio.NewScanner(stdoutReader)
 	go func() {
 		for scanner.Scan() {
-			fmt.Printf("%s>>%s %s\n", CGREEN, CEND, scanner.Text())
+			fmt.Println(cWrap(cGREEN, ">>"), scanner.Text())
 		}
 	}()
 
 	errScanner := bufio.NewScanner(stderrReader)
 	go func() {
 		for errScanner.Scan() {
-			fmt.Printf("%s!!%s %s\n", CRED, CEND, errScanner.Text())
+			fmt.Println(cWrap(cRED, "!!"), errScanner.Text())
 		}
 	}()
 
@@ -142,7 +142,6 @@ func execCmd(name string, argv []string) error {
 	}
 
 	env := os.Environ()
-
 	err = syscall.Exec(binary, argv, env)
 	if err != nil {
 		return err

@@ -30,18 +30,14 @@ func listUsage() {
 }
 
 func listHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("cmd %s'list'%s:\n", CGREEN, CEND)
+	fmt.Printf("cmd '%s':\n", cWrap(cGREEN, "list"))
 
 	flagSet := flag.NewFlagSet("list", flag.ExitOnError)
 	flagSet.BoolVar(&listVerbose, "v", false, "print with more information")
 	flagSet.Parse(args)
 
 	for i, p := range gConfig.Profiles {
-		if gConfig.Current == i {
-			printProfile(&p, listVerbose, true, i)
-		} else {
-			printProfile(&p, listVerbose, false, i)
-		}
+		printProfile(&p, listVerbose, gConfig.Current == i, i)
 	}
 
 	return 0, nil

@@ -25,18 +25,33 @@ import (
 )
 
 const (
-	CRED    = "\x1b[31;1m"
-	CGREEN  = "\x1b[32;1m"
-	CYELLOW = "\x1b[33;1m"
-	CEND    = "\x1b[0;m"
+	cRED    = "\x1b[31;1m"
+	cGREEN  = "\x1b[32;1m"
+	cYELLOW = "\x1b[33;1m"
+	cEND    = "\x1b[0;m"
 )
+
+func defMark() string {
+	if gConfig.Color {
+		return cRED + "*" + cEND
+	} else {
+		return "*"
+	}
+}
+
+func cWrap(color string, str string) string {
+	if gConfig.Color {
+		return color + str + cEND
+	} else {
+		return str
+	}
+}
 
 func cmdTitle(format string, def bool, v ...interface{}) {
 	if def {
-		fmt.Printf("  %s%s%s %s*%s\n", CGREEN, fmt.Sprintf(format, v...), CEND,
-			CRED, CEND)
+		fmt.Printf("  %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
-		fmt.Printf("  %s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+		fmt.Printf("  %s\n", cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	}
 }
 
@@ -46,9 +61,9 @@ func cmdInfo(format string, v ...interface{}) {
 
 func subcmdTitle(format string, def bool, v ...interface{}) {
 	if def {
-		fmt.Printf("  %s*%s %s%s%s\n", CRED, CEND, CGREEN, fmt.Sprintf(format, v...), CEND)
+		fmt.Printf("  %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
-		fmt.Printf("    %s%s%s\n", CGREEN, fmt.Sprintf(format, v...), CEND)
+		fmt.Printf("    %s\n", cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	}
 }
 
@@ -57,8 +72,8 @@ func subcmdInfo(format string, v ...interface{}) {
 }
 
 func printCmd(cmd string, profile string) {
-	fmt.Printf("execute command %s'%s'%s for %s[%s]%s\n", CGREEN, cmd, CEND,
-		CGREEN, profile, CEND)
+	fmt.Printf("execute command '%s' for [%s]\n", cWrap(cGREEN, cmd),
+		cWrap(cGREEN, profile))
 }
 
 // if OutputDir and ModInstallDir is relative, change it to absolute
@@ -73,9 +88,8 @@ func fixRelativeDir(p string, pre string) string {
 func isNumber(str string) bool {
 	if m, _ := regexp.MatchString("^[0-9]+$", str); !m {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func checkFileExsit(p string) (bool, error) {
@@ -108,8 +122,7 @@ func checkDirExist(p string) error {
 }
 
 func copyFileContents(src, dst string) error {
-	fmt.Printf("copy %s'%s'%s -> %s'%s'%s\n", CGREEN, src, CEND,
-		CGREEN, dst, CEND)
+	fmt.Printf("copy '%s' -> '%s'\n", cWrap(cGREEN, src), cWrap(cGREEN, dst))
 	in, err := os.Open(src)
 	if err != nil {
 		return err

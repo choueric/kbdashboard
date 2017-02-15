@@ -51,7 +51,7 @@ func helpUsage() {
 
 func helpHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 {
-		fmt.Printf("Usage of %s'%s'%s:\n\n", CYELLOW, os.Args[0], CEND)
+		fmt.Printf("Usage of '%s':\n\n", cWrap(cYELLOW, os.Args[0]))
 		for _, v := range cmdHelpMap {
 			v.f()
 		}
@@ -70,7 +70,7 @@ func helpHandler(args []string, data interface{}) (int, error) {
 		return 0, errors.New(fmt.Sprintf("invalid command '%s'.", cmd))
 	}
 
-	fmt.Printf("Usage of comamnd %s'%s'%s:\n\n", CYELLOW, cmd, CEND)
+	fmt.Printf("Usage of comamnd '%s':\n\n", cWrap(cYELLOW, cmd))
 	f()
 
 	return 1, nil
