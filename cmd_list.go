@@ -23,7 +23,7 @@ import (
 
 var listVerbose bool
 
-func listUsage() {
+func listUsage(sub bool) {
 	cmdTitle("list [-v]", false)
 	cmdInfo("List all profiles.\n")
 	cmdInfo("-v: Print with more information\n\n")

@@ -24,7 +24,7 @@ import (
 
 var installOption string
 
-func installUsage() {
+func installUsage(sub bool) {
 	cmdTitle("install [option]", false)
 	cmdInfo("Execute the install script of current profile with [option].\n\n")
 }

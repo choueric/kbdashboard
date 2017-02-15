@@ -18,11 +18,14 @@ package main
 
 import "fmt"
 
-func editUsage() {
+func editUsage(sub bool) {
 	cmdTitle("edit [profile|install]", false)
 	cmdInfo("Edit profiles or scripts with the config 'editor'.\n")
-	editProfileUsage()
-	editInstallUsage()
+	if sub {
+		fmt.Printf("\n")
+		editProfileUsage()
+		editInstallUsage()
+	}
 	fmt.Printf("\n")
 }
 

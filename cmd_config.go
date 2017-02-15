@@ -18,12 +18,15 @@ package main
 
 import "fmt"
 
-func configUsage() {
+func configUsage(sub bool) {
 	cmdTitle("config [menu|def|save]", false)
 	cmdInfo("Handle kernel's configuration.\n")
-	configMenuUsage()
-	configDefUsage()
-	configSaveUsage()
+	if sub {
+		fmt.Printf("\n")
+		configMenuUsage()
+		configDefUsage()
+		configSaveUsage()
+	}
 	fmt.Printf("\n")
 }
 

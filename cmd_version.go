@@ -23,7 +23,7 @@ const VERSION = "0.1.1"
 
 var BUILD_TIME = "nil"
 
-func versionUsage() {
+func versionUsage(sub bool) {
 	cmdTitle("version", false)
 	cmdInfo("Print the version.\n\n")
 }

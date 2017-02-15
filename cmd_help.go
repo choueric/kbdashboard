@@ -26,7 +26,7 @@ import (
 
 type helpMap struct {
 	cmd string
-	f   func()
+	f   func(sub bool)
 }
 
 var cmdHelpMap = []helpMap{
@@ -44,8 +44,8 @@ var cmdHelpMap = []helpMap{
 
 var COMP_FILENAME = "kbdashboard.bash-completion"
 
-func helpUsage() {
-	cmdTitle("help [command]", false)
+func helpUsage(sub bool) {
+	cmdTitle("help [command]", true)
 	cmdInfo("Print help message for one or all commands.\n\n")
 }
 
@@ -53,13 +53,13 @@ func helpHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 {
 		fmt.Printf("Usage of '%s':\n\n", cWrap(cYELLOW, os.Args[0]))
 		for _, v := range cmdHelpMap {
-			v.f()
+			v.f(false)
 		}
 		return 1, nil
 	}
 
 	cmd := args[0]
-	var f func()
+	var f func(bool)
 	for _, v := range cmdHelpMap {
 		if cmd == v.cmd {
 			f = v.f
@@ -71,12 +71,12 @@ func helpHandler(args []string, data interface{}) (int, error) {
 	}
 
 	fmt.Printf("Usage of comamnd '%s':\n\n", cWrap(cYELLOW, cmd))
-	f()
+	f(true)
 
 	return 1, nil
 }
 
-func completionUsage() {
+func completionUsage(sub bool) {
 	cmdTitle("completion", false)
 	cmdInfo("Generate a shell completion file '%s'.\n\n", COMP_FILENAME)
 }

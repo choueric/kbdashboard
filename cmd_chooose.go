@@ -18,7 +18,7 @@ package main
 
 import "errors"
 
-func chooseUsage() {
+func chooseUsage(sub bool) {
 	cmdTitle("choose <profile>", false)
 	cmdInfo("Choose <profile> as the current profile.\n\n")
 }

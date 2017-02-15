@@ -18,7 +18,7 @@ package main
 
 import "errors"
 
-func makeUsage() {
+func makeUsage(sub bool) {
 	cmdTitle("make <target>", false)
 	cmdInfo("Execute '$ make <target>' on current kernel.\n\n")
 }

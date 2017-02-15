@@ -18,12 +18,15 @@ package main
 
 import "fmt"
 
-func buildUsage() {
+func buildUsage(sub bool) {
 	cmdTitle("build [image|modules|dtb]", false)
 	cmdInfo("Build various targets of kernel.\n")
-	buildImageUsage()
-	buildModulesUsage()
-	buildDtbUsage()
+	if sub {
+		fmt.Printf("\n")
+		buildImageUsage()
+		buildModulesUsage()
+		buildDtbUsage()
+	}
 	fmt.Printf("\n")
 }
 

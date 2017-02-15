@@ -25,10 +25,13 @@ import (
 )
 
 const (
-	cRED    = "\x1b[31;1m"
-	cGREEN  = "\x1b[32;1m"
-	cYELLOW = "\x1b[33;1m"
-	cEND    = "\x1b[0;m"
+	cRED         = "\x1b[31;1m"
+	cGREEN       = "\x1b[32;1m"
+	cYELLOW      = "\x1b[33;1m"
+	cEND         = "\x1b[0;m"
+	level1Indent = "  "
+	level2Indent = "      "
+	level3Indent = "          "
 )
 
 func defMark() string {
@@ -49,26 +52,26 @@ func cWrap(color string, str string) string {
 
 func cmdTitle(format string, def bool, v ...interface{}) {
 	if def {
-		fmt.Printf("  %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Printf("%s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
-		fmt.Printf("  %s\n", cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Println(level1Indent + cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	}
 }
 
 func cmdInfo(format string, v ...interface{}) {
-	fmt.Printf("    %s", fmt.Sprintf(format, v...))
+	fmt.Printf(level2Indent + fmt.Sprintf(format, v...))
 }
 
 func subcmdTitle(format string, def bool, v ...interface{}) {
 	if def {
-		fmt.Printf("  %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Printf("    %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
-		fmt.Printf("    %s\n", cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Println(level2Indent + cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	}
 }
 
 func subcmdInfo(format string, v ...interface{}) {
-	fmt.Printf("      %s", fmt.Sprintf(format, v...))
+	fmt.Printf(level3Indent + fmt.Sprintf(format, v...))
 }
 
 func printCmd(cmd string, profile string) {
