@@ -26,6 +26,15 @@ import (
 	"github.com/choueric/jconfig"
 )
 
+type Config struct {
+	Editor   string    `json:"editor"`
+	Current  int       `json:"current"`
+	Color    bool      `json:"color"`
+	Profiles []Profile `json:"profile"`
+	filepath string
+	jc       interface{} // must be interface{} or panic
+}
+
 const DefaultConfig = `
 {
 	"color": true
@@ -49,101 +58,6 @@ const DefaultConfig = `
 `
 
 var gConfig *Config
-
-type Profile struct {
-	Name          string `json:"name"`
-	SrcDir        string `json:"src_dir"`
-	Arch          string `json:"arch"`
-	Target        string `json:"target"`
-	Defconfig     string `json:"defconfig"`
-	DTB           string `json:"dtb"`
-	CrossComile   string `json:"cross_compile"`
-	OutputDir     string `json:"output_dir"`
-	ModInstallDir string `json:"mod_install_dir"`
-	ThreadNum     int    `json:"thread_num"`
-}
-
-// do not include 'Name' filed.
-func (p *Profile) String() string {
-	line := ""
-	line += fmt.Sprintln("  SrcDir\t:", p.SrcDir)
-	line += fmt.Sprintln("  Arch\t:", p.Arch)
-	line += fmt.Sprintln("  CC\t:", p.CrossComile)
-	line += fmt.Sprintln("  Target\t:", p.Target)
-	line += fmt.Sprintln("  Defconfig\t:", p.Defconfig)
-	line += fmt.Sprintln("  DTB\t:", p.DTB)
-	line += fmt.Sprintln("  BuildDir\t:", p.OutputDir)
-	line += fmt.Sprintln("  ModInsDir\t:", p.ModInstallDir)
-	line += fmt.Sprintln("  ThreadNum\t:", p.ThreadNum)
-	return line
-}
-
-/*
- * get profile from @config by @arg.
- * @arg may be numberic index or name of profile, it cannot be empty.
- */
-func doGetProfile(arg string, config *Config) (*Profile, int, error) {
-	var p *Profile
-	var index int
-	if isNumber(arg) {
-		n, _ := strconv.Atoi(arg)
-		if n >= len(config.Profiles) || n < 0 {
-			return nil, -1, errors.New(fmt.Sprintf("invalid profile index: [%d/%d].",
-				n, len(config.Profiles)))
-		}
-		p = &config.Profiles[n]
-		index = n
-	} else {
-		for i, v := range config.Profiles {
-			if v.Name == arg {
-				p = &v
-				index = i
-				break
-			}
-		}
-	}
-
-	return p, index, nil
-}
-
-/*
- * get current profile in @config
- */
-func getCurrentProfile(config *Config) (*Profile, int, error) {
-	profile := strconv.Itoa(config.Current)
-	return doGetProfile(profile, config)
-}
-
-func printProfile(p *Profile, verbose bool, current bool, i int) {
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', tabwriter.TabIndent)
-	header := func(p *Profile, current bool) {
-		if current {
-			fmt.Printf("\n" + defMark() + " ")
-		} else {
-			fmt.Printf("\n  ")
-		}
-		fmt.Println(cWrap(cGREEN, fmt.Sprintf("[%d] '%s'", i, p.Name)))
-	}
-	if verbose {
-		header(p, current)
-		fmt.Fprintf(w, "%v", p)
-	} else {
-		header(p, current)
-		fmt.Fprintf(w, "  SrcDir\t: %s\n", p.SrcDir)
-		fmt.Fprintf(w, "  Arch\t: %s\n", p.Arch)
-		fmt.Fprintf(w, "  CC\t: %s\n", p.CrossComile)
-	}
-	w.Flush()
-}
-
-type Config struct {
-	Editor   string    `json:"editor"`
-	Current  int       `json:"current"`
-	Color    bool      `json:"color"`
-	Profiles []Profile `json:"profile"`
-	filepath string
-	jc       interface{} // must be interface{} or panic
-}
 
 func (c *Config) String() string {
 	line := fmt.Sprintf("Config File\t: %s\nEditor\t\t: %s\nColor\t\t: %v\n"+
@@ -208,4 +122,41 @@ func getConfig(dump bool) *Config {
 		config.dump()
 	}
 	return config
+}
+
+/*
+ * get profile from @config by @arg.
+ * @arg may be numberic index or name of profile, it cannot be empty.
+ */
+func doGetProfile(arg string, config *Config) (*Profile, int, error) {
+	var p *Profile
+	var index int
+	if isNumber(arg) {
+		n, _ := strconv.Atoi(arg)
+		total := len(config.Profiles)
+		if n >= total || n < 0 {
+			errMsg := fmt.Sprintf("invalid profile index: [%d/%d].", n, total)
+			return nil, -1, errors.New(errMsg)
+		}
+		p = &config.Profiles[n]
+		index = n
+	} else {
+		for i, v := range config.Profiles {
+			if v.Name == arg {
+				p = &v
+				index = i
+				break
+			}
+		}
+	}
+
+	return p, index, nil
+}
+
+/*
+ * get current profile in @config
+ */
+func getCurrentProfile(config *Config) (*Profile, int, error) {
+	profile := strconv.Itoa(config.Current)
+	return doGetProfile(profile, config)
 }
