@@ -35,6 +35,6 @@ func makeHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
-	printCmd("build", p.Name)
+	printCmd("make "+target, p.Name)
 	return 0, makeKernel(p, target)
 }

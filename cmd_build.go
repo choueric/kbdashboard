@@ -60,7 +60,7 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	printCmd("modules", p.Name)
+	printCmd("build modules", p.Name)
 
 	err = makeKernel(p, "modules")
 	if err != nil {
