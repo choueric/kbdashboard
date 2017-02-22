@@ -19,11 +19,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 )
 
 var listVerbose bool
 
-func listUsage(sub bool) {
+func listUsage(w io.Writer, m *helpMap) {
 	cmdTitle("list [-v]", false)
 	cmdInfo("List all profiles.\n")
 	cmdInfo("-v: Print with more information\n\n")

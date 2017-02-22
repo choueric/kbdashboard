@@ -16,17 +16,17 @@
  */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
-func buildUsage(sub bool) {
-	cmdTitle("build [image|modules|dtb]", false)
-	cmdInfo("Build various targets of kernel.\n")
-	if sub {
-		fmt.Printf("\n")
-		buildImageUsage()
-		buildModulesUsage()
-		buildDtbUsage()
-	}
+func buildUsage(w io.Writer, m *helpMap) {
+	defaultHelp(w, m)
+	fmt.Printf("\n")
+	buildImageUsage()
+	buildModulesUsage()
+	buildDtbUsage()
 	fmt.Printf("\n")
 }
 

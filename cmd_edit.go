@@ -16,16 +16,16 @@
  */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
-func editUsage(sub bool) {
-	cmdTitle("edit [profile|install]", false)
-	cmdInfo("Edit profiles or scripts with the config 'editor'.\n")
-	if sub {
-		fmt.Printf("\n")
-		editProfileUsage()
-		editInstallUsage()
-	}
+func editUsage(w io.Writer, m *helpMap) {
+	defaultHelp(w, m)
+	fmt.Printf("\n")
+	editProfileUsage()
+	editInstallUsage()
 	fmt.Printf("\n")
 }
 

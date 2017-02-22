@@ -18,11 +18,6 @@ package main
 
 import "errors"
 
-func chooseUsage(sub bool) {
-	cmdTitle("choose <profile>", false)
-	cmdInfo("Choose <profile> as the current profile.\n\n")
-}
-
 // args[0] is the profile to be choosen
 func chooseHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 || args[0] == "" {

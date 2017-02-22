@@ -19,14 +19,9 @@ package main
 
 import "fmt"
 
-const VERSION = "0.1.1"
+const VERSION = "0.1.2"
 
 var BUILD_TIME = "nil"
-
-func versionUsage(sub bool) {
-	cmdTitle("version", false)
-	cmdInfo("Print the version.\n\n")
-}
 
 func versionHandler(args []string, data interface{}) (int, error) {
 	fmt.Printf("Version    : %s\n", cWrap(cGREEN, VERSION))

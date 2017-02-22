@@ -18,11 +18,6 @@ package main
 
 import "errors"
 
-func makeUsage(sub bool) {
-	cmdTitle("make <target>", false)
-	cmdInfo("Execute '$ make <target>' on current kernel.\n\n")
-}
-
 func makeHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 {
 		return 0, errors.New("'make' need paramters.")

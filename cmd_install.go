@@ -24,11 +24,6 @@ import (
 
 var installOption string
 
-func installUsage(sub bool) {
-	cmdTitle("install [option]", false)
-	cmdInfo("Execute the install script of current profile with [option].\n\n")
-}
-
 func installHandler(args []string, data interface{}) (int, error) {
 	p, _, err := getCurrentProfile(gConfig)
 	if err != nil {

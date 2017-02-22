@@ -16,17 +16,17 @@
  */
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
-func configUsage(sub bool) {
-	cmdTitle("config [menu|def|save]", false)
-	cmdInfo("Handle kernel's configuration.\n")
-	if sub {
-		fmt.Printf("\n")
-		configMenuUsage()
-		configDefUsage()
-		configSaveUsage()
-	}
+func configUsage(w io.Writer, m *helpMap) {
+	defaultHelp(w, m)
+	fmt.Printf("\n")
+	configMenuUsage()
+	configDefUsage()
+	configSaveUsage()
 	fmt.Printf("\n")
 }
 
