@@ -35,9 +35,8 @@ type Config struct {
 	jc       interface{} // must be interface{} or panic
 }
 
-const DefaultConfig = `
-{
-	"color": true
+const DefaultConfig = `{
+	"color": true,
 	"editor": "vim",
 	"current": 0,
 	"profile": [
@@ -54,8 +53,7 @@ const DefaultConfig = `
 		"thread_num":4
 	}
 	]
-}
-`
+} `
 
 var gConfig *Config
 
