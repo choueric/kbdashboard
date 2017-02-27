@@ -23,7 +23,7 @@ import (
 	"text/tabwriter"
 )
 
-const VERSION = "0.2.0"
+const VERSION = "0.2.1"
 const GIT_DEF = "@"
 
 var (
