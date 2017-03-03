@@ -9,5 +9,10 @@ of multiple linux kernels. It is written in Golang.
 
 See [this blog](http://ericnode.info/post/kbdashboard/).
 
+# TODO
+- [ ] Built-in variables for installation scripts.
+- [ ] Add Dropbox support to sync and backup configurations and scripts.
+- [ ] Complete test code.
+
 # LICENSE
 The GPLv3 License. See `LICENSE.md` file for more details.
