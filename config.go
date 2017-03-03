@@ -32,12 +32,14 @@ type Config struct {
 	Current  int       `json:"current"`
 	Color    bool      `json:"color"`
 	Profiles []Profile `json:"profile"`
+	Debug    bool      `json:"debug"`
 	filepath string
 	jc       interface{} // must be interface{} or panic
 }
 
 const DefaultConfig = `{
 	"color": true,
+	"debug": false,
 	"editor": "vim",
 	"current": 0,
 	"profile": [
