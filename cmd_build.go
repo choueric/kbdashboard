@@ -89,8 +89,8 @@ func buildDtbHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
-	src := p.OutputDir + "/arch/" + p.Arch + "/boot/dts/" + p.DTB
-	dst := p.OutputDir + "/" + p.DTB
+	src := p.BuildDir + "/arch/" + p.Arch + "/boot/dts/" + p.DTB
+	dst := p.BuildDir + "/" + p.DTB
 
 	if err := copyFileContents(src, dst); err != nil {
 		return 0, err

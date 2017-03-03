@@ -49,7 +49,7 @@ const DefaultConfig = `{
 		"arch":"arm",
 		"cross_compile":"arm-eabi-",
 		"target":"uImage",
-		"output_dir":"./_build",
+		"build_dir":"./_build",
 		"defconfig":"at91rm9200_defconfig",
 		"dtb":"at91rm9200ek.dtb",
 		"mod_install_dir":"./_build/mod",
@@ -79,7 +79,7 @@ func (c *Config) fix() {
 
 	// fix invaid configurations
 	for _, p := range c.Profiles {
-		p.OutputDir = fixRelativeDir(p.OutputDir, p.SrcDir)
+		p.BuildDir = fixRelativeDir(p.BuildDir, p.SrcDir)
 		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
 		if p.Defconfig == "" {
 			p.Defconfig = "defconfig"

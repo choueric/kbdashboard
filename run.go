@@ -39,8 +39,8 @@ func makeKernelOpt(p *Profile, target string) []string {
 		cmdArgs = append(cmdArgs, strings.Join(j, ""))
 	}
 
-	if p.OutputDir != "" {
-		output := []string{"O", p.OutputDir}
+	if p.BuildDir != "" {
+		output := []string{"O", p.BuildDir}
 		cmdArgs = append(cmdArgs, strings.Join(output, "="))
 	}
 
@@ -63,7 +63,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 }
 
 func makeKernel(p *Profile, target string) error {
-	if err := checkDirExist(p.OutputDir); err != nil {
+	if err := checkDirExist(p.BuildDir); err != nil {
 		return err
 	}
 	if err := checkDirExist(p.ModInstallDir); err != nil {
@@ -81,7 +81,7 @@ func makeKernel(p *Profile, target string) error {
 }
 
 func configKernel(p *Profile, target string) error {
-	if err := checkDirExist(p.OutputDir); err != nil {
+	if err := checkDirExist(p.BuildDir); err != nil {
 		return err
 	}
 	if err := checkDirExist(p.ModInstallDir); err != nil {
@@ -97,6 +97,7 @@ func configKernel(p *Profile, target string) error {
 }
 
 // execute command with Stdout and Stderr being piped in a new process.
+// wait until this cmd finishes.
 func pipeCmd(cmd *exec.Cmd) error {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
@@ -132,6 +133,7 @@ func pipeCmd(cmd *exec.Cmd) error {
 		return err
 	}
 
+	logger.Println("end of pipeCmd.")
 	return nil
 }
 

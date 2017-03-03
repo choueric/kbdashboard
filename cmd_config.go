@@ -82,7 +82,7 @@ func configSaveHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
-	src := p.OutputDir + "/defconfig"
+	src := p.BuildDir + "/defconfig"
 	dst := p.SrcDir + "/arch/" + p.Arch + "/configs/" + p.Defconfig
 
 	if err := copyFileContents(src, dst); err != nil {

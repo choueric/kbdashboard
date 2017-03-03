@@ -31,7 +31,7 @@ type Profile struct {
 	Defconfig     string `json:"defconfig"`
 	DTB           string `json:"dtb"`
 	CrossComile   string `json:"cross_compile"`
-	OutputDir     string `json:"output_dir"`
+	BuildDir      string `json:"build_dir"`
 	ModInstallDir string `json:"mod_install_dir"`
 	ThreadNum     int    `json:"thread_num"`
 }
@@ -45,7 +45,7 @@ func (p *Profile) String() string {
 	line += fmt.Sprintln("  Target\t:", p.Target)
 	line += fmt.Sprintln("  Defconfig\t:", p.Defconfig)
 	line += fmt.Sprintln("  DTB\t:", p.DTB)
-	line += fmt.Sprintln("  BuildDir\t:", p.OutputDir)
+	line += fmt.Sprintln("  BuildDir\t:", p.BuildDir)
 	line += fmt.Sprintln("  ModInsDir\t:", p.ModInstallDir)
 	line += fmt.Sprintln("  ThreadNum\t:", p.ThreadNum)
 	return line
