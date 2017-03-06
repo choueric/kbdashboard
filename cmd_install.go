@@ -58,7 +58,8 @@ func createScript(fileName string, p *Profile) error {
 
 func buildEnviron(cmd *exec.Cmd, p *Profile) {
 	if cmd.Env == nil {
-		cmd.Env = os.Environ()
+		cmd.Env = make([]string, len(os.Environ()))
+		copy(cmd.Env, os.Environ())
 	}
 
 	addEnv := func(key, val string) {
