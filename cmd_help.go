@@ -41,6 +41,7 @@ var cmdHelpMap = []helpMap{
 	{"build", buildUsage, "Build various targets of kernel. [image|modules|dtb]."},
 	{"install", defaultHelp, "Execute the install script of current profile with [option]."},
 	{"make", defaultHelp, "Execute '$ make <target>' on current kernel."},
+	{"dts", dtsUsage, "List relevant DTS files."},
 	{"version", defaultHelp, "Print the version."},
 	{"completion", completionUsage, "Generate a shell completion file."},
 	{"help", defaultHelp, "Print help message for one or all commands. [cmd]."},

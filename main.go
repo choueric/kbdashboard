@@ -63,6 +63,11 @@ func main() {
 
 	cmdmux.HandleFunc("/install", installHandler)
 	cmdmux.HandleFunc("/make", makeHandler)
+
+	cmdmux.HandleFunc("/dts", dtsListHandler)
+	cmdmux.HandleFunc("/dts/list", dtsListHandler)
+	cmdmux.HandleFunc("/dts/link", dtsLinkHandler)
+
 	cmdmux.HandleFunc("/version", versionHandler)
 	cmdmux.HandleFunc("/completion", completionHandler)
 
