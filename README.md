@@ -11,6 +11,7 @@ See [this blog](http://ericnode.info/post/kbdashboard/).
 
 # TODO
 - [X] Built-in variables for installation scripts.
+- [X] Add dts gathering.
 - [ ] Add Dropbox support to sync and backup configurations and scripts.
 - [ ] Complete test code.
 
