@@ -17,7 +17,10 @@
 
 package main
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // args[0] is the profile to be choosen
 func chooseHandler(args []string, data interface{}) (int, error) {
@@ -29,7 +32,7 @@ func chooseHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
-	printCmd("choose", p.Name)
+	fmt.Printf("choose [%s]\n", cWrap(cGREEN, p.Name))
 	gConfig.Current = index
 	gConfig.save()
 

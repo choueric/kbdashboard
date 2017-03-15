@@ -19,7 +19,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io"
 )
 
@@ -31,8 +30,6 @@ func listUsage(w io.Writer, m *helpMap) {
 }
 
 func listHandler(args []string, data interface{}) (int, error) {
-	fmt.Printf("cmd '%s':\n", cWrap(cGREEN, "list"))
-
 	var verbose, current bool
 	flagSet := flag.NewFlagSet("list", flag.ExitOnError)
 	flagSet.BoolVar(&verbose, "v", false, "print with more information")
