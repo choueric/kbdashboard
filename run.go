@@ -75,7 +75,7 @@ func makeKernel(p *Profile, target string) error {
 	cmd := exec.Command("make", cmdArgs...)
 	cmd.Dir = p.SrcDir
 
-	fmt.Println(cWrap(cGREEN, fmt.Sprintf("    %v", cmdArgs)))
+	logger.Println(cWrap(cGREEN, fmt.Sprintf("%v", cmdArgs)))
 
 	return pipeCmd(cmd)
 }

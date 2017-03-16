@@ -79,7 +79,7 @@ func subcmdInfo(format string, v ...interface{}) {
 }
 
 func printCmd(cmd string, profile string) {
-	fmt.Printf("run '%s' for [%s]\n", cWrap(cGREEN, cmd),
+	logger.Printf("run '%s' for [%s]\n", cWrap(cGREEN, cmd),
 		cWrap(cGREEN, profile))
 }
 

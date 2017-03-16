@@ -104,7 +104,7 @@ func installHandler(args []string, data interface{}) (int, error) {
 	}
 
 	printCmd("install", p.Name)
-	fmt.Printf("   %s\n", cWrap(cGREEN, script))
+	logger.Printf("%s\n", cWrap(cGREEN, script))
 	cmd := exec.Command(script, args...) // args for script.
 	buildEnviron(cmd, p)
 	cmd.Dir = p.SrcDir
