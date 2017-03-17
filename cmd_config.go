@@ -43,7 +43,7 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 	printCmd("config def", p.Name)
-	return 0, makeKernel(p, p.Defconfig)
+	return 0, makeKernel(p, p.DefConfig)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ func configSaveHandler(args []string, data interface{}) (int, error) {
 	}
 
 	src := p.BuildDir + "/defconfig"
-	dst := p.SrcDir + "/arch/" + p.Arch + "/configs/" + p.Defconfig
+	dst := p.SrcDir + "/arch/" + p.Arch + "/configs/" + p.DefConfig
 
 	if err := copyFileContents(src, dst); err != nil {
 		return 0, err

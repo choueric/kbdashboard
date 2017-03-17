@@ -60,7 +60,7 @@ func buildEnviron(cmd *exec.Cmd, p *Profile) {
 	addEnv("KBD_CC", p.CrossComile)
 	addEnv("KBD_TARGET", p.Target)
 	addEnv("KBD_BUILD_DIR", p.BuildDir)
-	addEnv("KBD_DEFCONFIG", p.Defconfig)
+	addEnv("KBD_DEFCONFIG", p.DefConfig)
 	addEnv("KBD_DTB", p.DTB)
 	addEnv("KBD_MOD_DIR", p.ModInstallDir)
 	addEnv("KBD_TREAD_NUM", strconv.Itoa(p.ThreadNum))

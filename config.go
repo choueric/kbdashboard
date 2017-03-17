@@ -64,8 +64,8 @@ func (c *Config) fix() {
 	for _, p := range c.Profiles {
 		p.BuildDir = fixRelativeDir(p.BuildDir, p.SrcDir)
 		p.ModInstallDir = fixRelativeDir(p.ModInstallDir, p.SrcDir)
-		if p.Defconfig == "" {
-			p.Defconfig = "defconfig"
+		if p.DefConfig == "" {
+			p.DefConfig = "defconfig"
 		}
 	}
 }
