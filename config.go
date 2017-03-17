@@ -44,15 +44,15 @@ const DefaultConfig = `{
 	"current": 0,
 	"profile": [
 	{
-		"name":"demo",
-		"src_dir":"/home/user/kernel",
-		"arch":"arm",
-		"cross_compile":"arm-eabi-",
+		"name":"profile_name",
+		"src_dir":"/path/of/the/kernel/source",
+		"arch":"$ARCH: arm ",
+		"cross_compile":"$CROSS_COMPILE: arm-eabi-",
 		"target":"uImage",
-		"build_dir":"./_build",
+		"build_dir":"$O: ./_build",
 		"defconfig":"at91rm9200_defconfig",
 		"dtb":"at91rm9200ek.dtb",
-		"mod_install_dir":"./_build/mod",
+		"mod_install_dir":"$INSTALL_MOD_PATH: ./_build/modules",
 		"thread_num":4
 	}
 	]
