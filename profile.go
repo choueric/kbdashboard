@@ -10,11 +10,11 @@ type Profile struct {
 	Name          string `json:"name"`
 	SrcDir        string `json:"src_dir"`
 	Arch          string `json:"arch"`
-	Target        string `json:"target"`
-	DefConfig     string `json:"defconfig"`
-	DTB           string `json:"dtb"`
 	CrossComile   string `json:"cross_compile"`
 	BuildDir      string `json:"build_dir"`
+	DefConfig     string `json:"defconfig"`
+	Target        string `json:"target"`
+	DTB           string `json:"dtb"`
 	ModInstallDir string `json:"mod_install_dir"`
 	ThreadNum     int    `json:"thread_num"`
 }
@@ -25,10 +25,10 @@ func (p *Profile) String() string {
 	line += fmt.Sprintln("  SrcDir\t:", p.SrcDir)
 	line += fmt.Sprintln("  Arch\t:", p.Arch)
 	line += fmt.Sprintln("  CC\t:", p.CrossComile)
-	line += fmt.Sprintln("  Target\t:", p.Target)
-	line += fmt.Sprintln("  DefConfig\t:", p.DefConfig)
-	line += fmt.Sprintln("  DTB\t:", p.DTB)
 	line += fmt.Sprintln("  BuildDir\t:", p.BuildDir)
+	line += fmt.Sprintln("  DefConfig\t:", p.DefConfig)
+	line += fmt.Sprintln("  Target\t:", p.Target)
+	line += fmt.Sprintln("  DTB\t:", p.DTB)
 	line += fmt.Sprintln("  ModInsDir\t:", p.ModInstallDir)
 	line += fmt.Sprintln("  ThreadNum\t:", p.ThreadNum)
 	return line
