@@ -15,6 +15,11 @@ func chooseHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
+	if p == nil {
+		msg := fmt.Sprintf("can not find profile '%s'\n", args[0])
+		return 0, errors.New(msg)
+	}
+
 	fmt.Printf("choose [%s]\n", cWrap(cGREEN, p.Name))
 	gConfig.Current = index
 	gConfig.save()

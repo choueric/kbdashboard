@@ -56,7 +56,7 @@ func main() {
 
 	ret, err := cmdmux.Execute(nil)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "kbdashboard: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Execute Error: %v\n", err)
 		os.Exit(-1)
 	}
 	os.Exit(ret)
