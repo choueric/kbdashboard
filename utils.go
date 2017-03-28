@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 )
 
 const (
@@ -69,10 +70,29 @@ func printCmd(cmd string, profile string) {
 // if OutputDir and ModInstallDir is relative, change it to absolute
 // by adding SrcDir prefix.
 func fixRelativeDir(p string, pre string) string {
+	if p == "" {
+		return ""
+	}
 	if !path.IsAbs(p) {
 		p = path.Join(pre, p)
 	}
 	return p
+}
+
+func fixHomePath(p string) (ret string) {
+	if p == "" {
+		return ""
+	}
+	home := os.Getenv("HOME")
+
+	if strings.HasPrefix(p, "$HOME") {
+		ret = strings.Replace(p, "$HOME", home, 1)
+	} else if strings.HasPrefix(p, "~") {
+		ret = strings.Replace(p, "~", home, 1)
+	} else {
+		ret = p
+	}
+	return ret
 }
 
 func isNumber(str string) bool {
@@ -95,6 +115,10 @@ func checkFileExsit(p string) (bool, error) {
 
 // check if exist, if not, create one
 func checkDirExist(p string) error {
+	if p == "" {
+		return nil
+	}
+
 	exist, err := checkFileExsit(p)
 	if err != nil {
 		return err

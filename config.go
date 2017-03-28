@@ -11,11 +11,11 @@ import (
 )
 
 type Config struct {
-	Editor   string    `json:"editor"`
-	Current  int       `json:"current"`
-	Color    bool      `json:"color"`
-	Profiles []Profile `json:"profile"`
-	Debug    bool      `json:"debug"`
+	Editor   string     `json:"editor"`
+	Current  int        `json:"current"`
+	Color    bool       `json:"color"`
+	Profiles []*Profile `json:"profile"`
+	Debug    bool       `json:"debug"`
 	filepath string
 	jc       interface{} // must be interface{} or panic
 }
@@ -58,6 +58,14 @@ func (c *Config) fix() {
 	if c.Current >= len(c.Profiles) {
 		fmt.Fprintf(os.Stderr, "Current in config.json is invalid: %s\n", c.Current)
 		os.Exit(1)
+	}
+
+	// fix ~ or $HOME in path
+	for _, p := range c.Profiles {
+		p.SrcDir = fixHomePath(p.SrcDir)
+		p.BuildDir = fixHomePath(p.BuildDir)
+		p.ModInstallDir = fixHomePath(p.ModInstallDir)
+		p.CrossComile = fixHomePath(p.CrossComile)
 	}
 
 	// fix invaid configurations
@@ -122,12 +130,12 @@ func doGetProfile(arg string, config *Config) (*Profile, int, error) {
 			errMsg := fmt.Sprintf("invalid profile index: [%d/%d].", n, total)
 			return nil, -1, errors.New(errMsg)
 		}
-		p = &config.Profiles[n]
+		p = config.Profiles[n]
 		index = n
 	} else {
 		for i, v := range config.Profiles {
 			if v.Name == arg {
-				p = &v
+				p = v
 				index = i
 				break
 			}

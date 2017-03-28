@@ -21,12 +21,12 @@ func listHandler(args []string, data interface{}) (int, error) {
 
 	if current {
 		p := gConfig.Profiles[gConfig.Current]
-		printProfile(&p, true, true, gConfig.Current)
+		printProfile(p, true, true, gConfig.Current)
 		return 0, nil
 	}
 
 	for i, p := range gConfig.Profiles {
-		printProfile(&p, verbose, gConfig.Current == i, i)
+		printProfile(p, verbose, gConfig.Current == i, i)
 	}
 
 	return 0, nil
