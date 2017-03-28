@@ -37,6 +37,18 @@ func editInstallHandler(args []string, data interface{}) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	var argv = []string{gConfig.Editor, gConfig.getInstallFilename(p)}
-	return 0, execCmd(gConfig.Editor, argv)
+
+	script := gConfig.getInstallFilename(p)
+	ret, err := checkFileExsit(script)
+	if err != nil {
+		return 0, err
+	}
+
+	if ret == false {
+		// create and edit script
+		if err := createScript(script, p); err != nil {
+			return 0, err
+		}
+	}
+	return 0, execCmd(gConfig.Editor, []string{gConfig.Editor, script})
 }
