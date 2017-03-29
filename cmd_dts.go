@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -126,6 +127,10 @@ func dtsListHandler(args []string, data interface{}) (int, error) {
 	p, _, err := getCurrentProfile(gConfig)
 	if err != nil {
 		return 0, err
+	}
+
+	if p.DTB == "" {
+		return 0, errors.New("no specified DTS")
 	}
 
 	var printTree, verbose bool
