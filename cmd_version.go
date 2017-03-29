@@ -6,7 +6,7 @@ import (
 	"text/tabwriter"
 )
 
-const VERSION = "0.2.2"
+const VERSION = "0.2.3"
 const GIT_DEF = "@"
 
 var (
