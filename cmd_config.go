@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 )
 
 func configUsage(w io.Writer, m *helpMap) {
@@ -43,7 +44,7 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 	printCmd("config def", p.Name)
-	return 0, makeKernel(p, p.DefConfig)
+	return 0, makeKernel(p, p.DefConfig, os.Stdout, true)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +62,7 @@ func configSaveHandler(args []string, data interface{}) (int, error) {
 	}
 
 	printCmd("config save", p.Name)
-	if err := makeKernel(p, "savedefconfig"); err != nil {
+	if err := makeKernel(p, "savedefconfig", os.Stdout, true); err != nil {
 		return 0, err
 	}
 

@@ -91,5 +91,5 @@ func installHandler(args []string, data interface{}) (int, error) {
 	cmd := exec.Command(script, args...) // args for script.
 	buildEnviron(cmd, p)
 	cmd.Dir = p.SrcDir
-	return 0, pipeCmd(cmd)
+	return 0, pipeCmd(cmd, os.Stdout, true)
 }

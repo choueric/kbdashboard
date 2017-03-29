@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 )
 
 func buildUsage(w io.Writer, m *helpMap) {
@@ -28,7 +29,7 @@ func buildImageHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 	printCmd("build image", p.Name)
-	return 0, makeKernel(p, p.Target)
+	return 0, makeKernel(p, p.Target, os.Stdout, true)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,12 +47,12 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 	}
 	printCmd("build modules", p.Name)
 
-	err = makeKernel(p, "modules")
+	err = makeKernel(p, "modules", os.Stdout, true)
 	if err != nil {
 		return 0, err
 	}
 
-	return 0, makeKernel(p, "modules_install")
+	return 0, makeKernel(p, "modules_install", os.Stdout, true)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +69,7 @@ func buildDtbHandler(args []string, data interface{}) (int, error) {
 	}
 	printCmd("build DTB", p.Name)
 
-	if err := makeKernel(p, p.DTB); err != nil {
+	if err := makeKernel(p, p.DTB, os.Stdout, true); err != nil {
 		return 0, err
 	}
 

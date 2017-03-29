@@ -1,6 +1,9 @@
 package main
 
-import "errors"
+import (
+	"errors"
+	"os"
+)
 
 func makeHandler(args []string, data interface{}) (int, error) {
 	if len(args) == 0 {
@@ -15,5 +18,5 @@ func makeHandler(args []string, data interface{}) (int, error) {
 	}
 
 	printCmd("make "+target, p.Name)
-	return 0, makeKernel(p, target)
+	return 0, makeKernel(p, target, os.Stdout, true)
 }

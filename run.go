@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strconv"
@@ -45,7 +46,7 @@ func makeKernelOpt(p *Profile, target string) []string {
 	return cmdArgs
 }
 
-func makeKernel(p *Profile, target string) error {
+func makeKernel(p *Profile, target string, w io.Writer, useMarker bool) error {
 	if err := checkDirExist(p.BuildDir); err != nil {
 		return err
 	}
@@ -54,13 +55,12 @@ func makeKernel(p *Profile, target string) error {
 	}
 
 	cmdArgs := makeKernelOpt(p, target)
-
-	cmd := exec.Command("make", cmdArgs...)
-	cmd.Dir = p.SrcDir
-
 	logger.Println(cWrap(cGREEN, fmt.Sprintf("%v", cmdArgs)))
 
-	return pipeCmd(cmd)
+	cmd := exec.Command("make", cmdArgs...)
+	cmd.Dir = p.BuildDir
+
+	return pipeCmd(cmd, w, useMarker)
 }
 
 func configKernel(p *Profile, target string) error {
@@ -81,7 +81,7 @@ func configKernel(p *Profile, target string) error {
 
 // execute command with Stdout and Stderr being piped in a new process.
 // wait until this cmd finishes.
-func pipeCmd(cmd *exec.Cmd) error {
+func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 	stdoutReader, err := cmd.StdoutPipe()
 	if err != nil {
 		return err
@@ -92,17 +92,28 @@ func pipeCmd(cmd *exec.Cmd) error {
 		return err
 	}
 
+	stdoutMarker := cWrap(cGREEN, ">>")
+	stderrMarker := cWrap(cRED, "!!")
+
 	scanner := bufio.NewScanner(stdoutReader)
 	go func() {
 		for scanner.Scan() {
-			fmt.Println(cWrap(cGREEN, ">>"), scanner.Text())
+			if useMarker {
+				fmt.Fprintln(w, stdoutMarker, scanner.Text())
+			} else {
+				fmt.Fprintln(w, scanner.Text())
+			}
 		}
 	}()
 
 	errScanner := bufio.NewScanner(stderrReader)
 	go func() {
 		for errScanner.Scan() {
-			fmt.Println(cWrap(cRED, "!!"), errScanner.Text())
+			if useMarker {
+				fmt.Fprintln(w, stderrMarker, scanner.Text())
+			} else {
+				fmt.Fprintln(w, scanner.Text())
+			}
 		}
 	}()
 
