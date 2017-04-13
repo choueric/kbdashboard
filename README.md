@@ -5,6 +5,11 @@
 This tool (i.e. `kbdashboard`) is used to configure and manage building process
 of multiple linux kernels. It is written in Golang.
 
+It is just simply easy and comfortable to build ony one kernel with only one
+configuration. But it is perfectly different when you have to handle with 
+various kernels used in different projects or various configruations of one 
+kernel. This tool helps you tackle with the management.
+
 ## features
 
 - Run in any directories, no need of changing into the one where the kernel

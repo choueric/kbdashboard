@@ -37,5 +37,5 @@ archive:
 	@echo "archive to $(TAR)"
 	@git archive master --prefix="$(EXEC)-$(VER)/" --format tar.gz -o $(TAR)
 
-check:bin
+test:
 	go test
