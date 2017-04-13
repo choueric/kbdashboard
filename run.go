@@ -110,9 +110,9 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 	go func() {
 		for errScanner.Scan() {
 			if useMarker {
-				fmt.Fprintln(w, stderrMarker, scanner.Text())
+				fmt.Fprintln(w, stderrMarker, errScanner.Text())
 			} else {
-				fmt.Fprintln(w, scanner.Text())
+				fmt.Fprintln(w, errScanner.Text())
 			}
 		}
 	}()
