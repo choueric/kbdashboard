@@ -18,9 +18,9 @@ func buildUsage(w io.Writer, m *helpMap) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildImageUsage() {
-	subcmdTitle("build image", true)
-	subcmdInfo("Build kernel images for current profile.\n")
-	subcmdInfo("Equal to '$kbdashboard make uImage'.\n")
+	printSubcmdTitle("build image", true)
+	printSubcmdInfo("Build kernel images for current profile.\n")
+	printSubcmdInfo("Equal to '$kbdashboard make uImage'.\n")
 }
 
 func buildImageHandler(args []string, data interface{}) (int, error) {
@@ -35,9 +35,9 @@ func buildImageHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildModulesUsage() {
-	subcmdTitle("build modules", false)
-	subcmdInfo("Build and install modules for current profile.\n")
-	subcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
+	printSubcmdTitle("build modules", false)
+	printSubcmdInfo("Build and install modules for current profile.\n")
+	printSubcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
 }
 
 func buildModulesHandler(args []string, data interface{}) (int, error) {
@@ -58,8 +58,8 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func buildDtbUsage() {
-	subcmdTitle("build dtb", false)
-	subcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
+	printSubcmdTitle("build dtb", false)
+	printSubcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
 }
 
 func buildDtbHandler(args []string, data interface{}) (int, error) {

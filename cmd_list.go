@@ -8,10 +8,10 @@ import (
 )
 
 func listUsage(w io.Writer, m *helpMap) {
-	cmdTitle("list [-v|-a]", false)
-	cmdInfo("List all profiles.\n")
-	cmdInfo("-v: Print with more information\n")
-	cmdInfo("-c: Print full information of current profile.\n\n")
+	printCmdTitle("list [-v|-a]", false)
+	printCmdInfo("List all profiles.\n")
+	printCmdInfo("-v: Print with more information\n")
+	printCmdInfo("-c: Print full information of current profile.\n\n")
 }
 
 func printAdditional(p *Profile) {

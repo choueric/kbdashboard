@@ -113,10 +113,10 @@ func makeFileList(n *tree.Node, f func(*tree.Node) string) map[string]int {
 ////////////////////////////////////////////////////////////////////////////////
 
 func dtsListUsage() {
-	subcmdTitle("dts list [-t|-v]", true)
-	subcmdInfo("List all relevant DTS files. By default, print as a list.\n")
-	subcmdInfo("-t: Print as a tree-like graph.\n")
-	subcmdInfo("-v: Print absolute file path.\n")
+	printSubcmdTitle("dts list [-t|-v]", true)
+	printSubcmdInfo("List all relevant DTS files. By default, print as a list.\n")
+	printSubcmdInfo("-t: Print as a tree-like graph.\n")
+	printSubcmdInfo("-v: Print absolute file path.\n")
 }
 
 func makeDtsFilePath(p *Profile) string {
@@ -170,10 +170,10 @@ func dtsListHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func dtsLinkUsage() {
-	subcmdTitle("dts link [-o directory]", false)
-	subcmdInfo("Make soft link of all relevant DTS files into a dirctory.\n")
-	subcmdInfo("If without -o, the default out directory is '[profile_name]_dts' in current path.\n")
-	subcmdInfo("-o: Specify the output directory.\n")
+	printSubcmdTitle("dts link [-o directory]", false)
+	printSubcmdInfo("Make soft link of all relevant DTS files into a dirctory.\n")
+	printSubcmdInfo("If without -o, the default out directory is '[profile_name]_dts' in current path.\n")
+	printSubcmdInfo("-o: Specify the output directory.\n")
 }
 
 func dtsLinkHandler(args []string, data interface{}) (int, error) {

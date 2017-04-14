@@ -18,8 +18,8 @@ func configUsage(w io.Writer, m *helpMap) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configMenuUsage() {
-	subcmdTitle("config menu", true)
-	subcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
+	printSubcmdTitle("config menu", true)
+	printSubcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
 }
 
 func configMenuHandler(args []string, data interface{}) (int, error) {
@@ -34,8 +34,8 @@ func configMenuHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configDefUsage() {
-	subcmdTitle("config def", false)
-	subcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
+	printSubcmdTitle("config def", false)
+	printSubcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
 }
 
 func configDefHandler(args []string, data interface{}) (int, error) {
@@ -50,9 +50,9 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func configSaveUsage() {
-	subcmdTitle("config save", false)
-	subcmdInfo("Save current config as the default config.\n")
-	subcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
+	printSubcmdTitle("config save", false)
+	printSubcmdInfo("Save current config as the default config.\n")
+	printSubcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
 }
 
 func configSaveHandler(args []string, data interface{}) (int, error) {

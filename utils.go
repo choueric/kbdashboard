@@ -38,7 +38,7 @@ func cWrap(color string, str string) string {
 	}
 }
 
-func cmdTitle(format string, def bool, v ...interface{}) {
+func printCmdTitle(format string, def bool, v ...interface{}) {
 	if def {
 		fmt.Printf("%s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
@@ -46,11 +46,11 @@ func cmdTitle(format string, def bool, v ...interface{}) {
 	}
 }
 
-func cmdInfo(format string, v ...interface{}) {
+func printCmdInfo(format string, v ...interface{}) {
 	fmt.Printf(level2Indent + fmt.Sprintf(format, v...))
 }
 
-func subcmdTitle(format string, def bool, v ...interface{}) {
+func printSubcmdTitle(format string, def bool, v ...interface{}) {
 	if def {
 		fmt.Printf("    %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
@@ -58,7 +58,7 @@ func subcmdTitle(format string, def bool, v ...interface{}) {
 	}
 }
 
-func subcmdInfo(format string, v ...interface{}) {
+func printSubcmdInfo(format string, v ...interface{}) {
 	fmt.Printf(level3Indent + fmt.Sprintf(format, v...))
 }
 

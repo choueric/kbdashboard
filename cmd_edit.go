@@ -16,8 +16,8 @@ func editUsage(w io.Writer, m *helpMap) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func editProfileUsage() {
-	subcmdTitle("edit profile", true)
-	subcmdInfo("Edit the kbdashboard's configuration file.\n")
+	printSubcmdTitle("edit profile", true)
+	printSubcmdInfo("Edit the kbdashboard's configuration file.\n")
 }
 
 func editProfileHandler(args []string, data interface{}) (int, error) {
@@ -28,8 +28,8 @@ func editProfileHandler(args []string, data interface{}) (int, error) {
 ////////////////////////////////////////////////////////////////////////////////
 
 func editInstallUsage() {
-	subcmdTitle("edit install", false)
-	subcmdInfo("Edit current profile's installation script.\n")
+	printSubcmdTitle("edit install", false)
+	printSubcmdInfo("Edit current profile's installation script.\n")
 }
 
 func editInstallHandler(args []string, data interface{}) (int, error) {

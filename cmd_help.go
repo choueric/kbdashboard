@@ -58,7 +58,7 @@ func helpHandler(args []string, data interface{}) (int, error) {
 }
 
 func completionUsage(w io.Writer, m *helpMap) {
-	cmdInfo("Generate a shell completion file '%s'.\n\n", COMP_FILENAME)
+	printCmdInfo("Generate a shell completion file '%s'.\n\n", COMP_FILENAME)
 }
 
 func completionHandler(args []string, data interface{}) (int, error) {
