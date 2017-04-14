@@ -11,39 +11,44 @@ import (
 	"syscall"
 )
 
-func makeKernelOpt(p *Profile, target string) []string {
+func doMakeKernelOpt(t string, n int, b, c, a, m string) []string {
 	cmdArgs := []string{}
 
-	if target != "" {
-		cmdArgs = append(cmdArgs, target)
+	if t != "" {
+		cmdArgs = append(cmdArgs, t)
 	}
 
-	if p.ThreadNum > 0 {
-		j := []string{"-j", strconv.Itoa(p.ThreadNum)}
+	if n > 0 {
+		j := []string{"-j", strconv.Itoa(n)}
 		cmdArgs = append(cmdArgs, strings.Join(j, ""))
 	}
 
-	if p.BuildDir != "" {
-		output := []string{"O", p.BuildDir}
+	if b != "" {
+		output := []string{"O", b}
 		cmdArgs = append(cmdArgs, strings.Join(output, "="))
 	}
 
-	if p.CrossComile != "" {
-		cc := []string{"CROSS_COMPILE", p.CrossComile}
+	if c != "" {
+		cc := []string{"CROSS_COMPILE", c}
 		cmdArgs = append(cmdArgs, strings.Join(cc, "="))
 	}
 
-	if p.Arch != "" {
-		arch := []string{"ARCH", p.Arch}
+	if a != "" {
+		arch := []string{"ARCH", a}
 		cmdArgs = append(cmdArgs, strings.Join(arch, "="))
 	}
 
-	if p.ModInstallDir != "" {
-		installModPath := []string{"INSTALL_MOD_PATH", p.ModInstallDir}
+	if m != "" {
+		installModPath := []string{"INSTALL_MOD_PATH", m}
 		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
 	}
 
 	return cmdArgs
+}
+
+func makeKernelOpt(p *Profile, target string) []string {
+	return doMakeKernelOpt(target, p.ThreadNum, p.BuildDir, p.CrossComile,
+		p.Arch, p.ModInstallDir)
 }
 
 func makeKernel(p *Profile, target string, w io.Writer, useMarker bool) error {
