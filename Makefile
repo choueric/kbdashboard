@@ -4,7 +4,7 @@ COMP = $(EXEC).bash-completion
 VER = `grep "const VERSION" cmd_version.go  | cut -d "=" -f 2 | cut -d '"' -f 2`
 TAR = $(EXEC)-$(VER).tar.gz
 
-BUILD_TIME = `date +%Y-%m-%d:%H:%M:%S`
+BUILD_TIME = `date +%Y-%m-%d_%H:%M:%S`
 GIT_COMMIT=`git log --pretty=format:"%h" -1`
 GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
