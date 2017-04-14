@@ -38,4 +38,4 @@ archive:
 	@git archive master --prefix="$(EXEC)-$(VER)/" --format tar.gz -o $(TAR)
 
 test:
-	go test
+	@go test
