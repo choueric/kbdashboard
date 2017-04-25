@@ -63,7 +63,11 @@ func makeKernel(p *Profile, target string, w io.Writer, useMarker bool) error {
 	logger.Println(cWrap(cGREEN, fmt.Sprintf("%v", cmdArgs)))
 
 	cmd := exec.Command("make", cmdArgs...)
-	cmd.Dir = p.BuildDir
+	if target == "kernelversion" {
+		cmd.Dir = p.BuildDir
+	} else {
+		cmd.Dir = p.SrcDir
+	}
 
 	return pipeCmd(cmd, w, useMarker)
 }
