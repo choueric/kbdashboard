@@ -51,7 +51,7 @@ func printProfile(p *Profile, verbose bool, current bool, i int) {
 		header(p, current)
 		fmt.Fprintf(w, "  SrcDir\t: %s\n", p.SrcDir)
 		fmt.Fprintf(w, "  Arch\t: %s\n", p.Arch)
-		fmt.Fprintf(w, "  CC\t: %s\n", p.CrossComile)
+		fmt.Fprintf(w, "  BuildDir\t: %s\n", p.BuildDir)
 	}
 	w.Flush()
 }
