@@ -7,6 +7,36 @@ import (
 	"strconv"
 )
 
+const (
+	builtInComments = ` 
+# Built-in variables:
+# - KBD_COLOR: global, colorful ouput switch.
+# - KBD_DEBUG: global, debug output switch.
+# - KBD_EDITOR: global, edior name.
+# - KBD_CURRENT: global, current profile index.
+# - KBD_NAME: profile, name.
+# - KBD_SRC_DIR: profile, source directory.
+# - KBD_ARCH: profile, archetect.
+# - KBD_CC: profile, cross compiler.
+# - KBD_TARGET: profile, build target.
+# - KBD_BUILD_DIR: profile, build directory.
+# - KBD_DEFCONFIG: profile, default config name.
+# - KBD_DTB: profile, DTB target name.
+# - KBD_MOD_DIR: profile, modules install directory.
+# - KBD_THREAD_NUM: profile, thread number.
+`
+	scriptContent = `
+install -d $DEST_DIR
+
+case "$1" in 
+	"image") cp -v $IMAGE $DEST_DIR;;
+	"modules") cp -a $MODULES $DEST_DIR;;
+	"dtb") cp -v $DTB $DEST_DIR;;
+	*) echo "cmds: image|modules|dtb.";;
+esac
+`
+)
+
 func createScript(fileName string, p *Profile) error {
 	fmt.Printf("create install script: '%s'\n", cWrap(cGREEN, fileName))
 	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0775)
@@ -16,21 +46,12 @@ func createScript(fileName string, p *Profile) error {
 	defer file.Close()
 
 	str := fmt.Sprintf("#!/bin/sh\n\n# install script for profile '%s'\n", p.Name)
-	str += fmt.Sprintf("# Built-in variables:\n")
-	str += fmt.Sprintf("# - KBD_COLOR: global, colorful ouput switch.\n")
-	str += fmt.Sprintf("# - KBD_DEBUG: global, debug output switch.\n")
-	str += fmt.Sprintf("# - KBD_EDITOR: global, edior name.\n")
-	str += fmt.Sprintf("# - KBD_CURRENT: global, current profile index.\n")
-	str += fmt.Sprintf("# - KBD_NAME: profile, name.\n")
-	str += fmt.Sprintf("# - KBD_SRC_DIR: profile, source directory.\n")
-	str += fmt.Sprintf("# - KBD_ARCH: profile, archetect.\n")
-	str += fmt.Sprintf("# - KBD_CC: profile, cross compiler.\n")
-	str += fmt.Sprintf("# - KBD_TARGET: profile, build target.\n")
-	str += fmt.Sprintf("# - KBD_BUILD_DIR: profile, build directory.\n")
-	str += fmt.Sprintf("# - KBD_DEFCONFIG: profile, default config name.\n")
-	str += fmt.Sprintf("# - KBD_DTB: profile, DTB target name.\n")
-	str += fmt.Sprintf("# - KBD_MOD_DIR: profile, modules install directory.\n")
-	str += fmt.Sprintf("# - KBD_THREAD_NUM: profile, thread number.\n")
+	str += builtInComments + "\n"
+	str += fmt.Sprintf("IMAGE=\"$KBD_BUILD_DIR/arch/%s/boot/%s\"\n", p.Arch, p.Target)
+	str += fmt.Sprintf("MODULES=\"$KBD_MOD_DIR/lib/modules/{TODO:uname -r}\"\n")
+	str += fmt.Sprintf("DTB=\"$KBD_BUILD_DIR/%s\"\n", p.DTB)
+	str += "DEST_DIR=\"{TODO:dirname}\"\n"
+	str += scriptContent
 
 	if _, err = file.Write([]byte(str)); err != nil {
 		return err
