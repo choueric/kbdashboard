@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -155,4 +156,30 @@ func copyFileContents(src, dst string) error {
 	}
 	err = out.Sync()
 	return nil
+}
+
+// get the number of CPUs in the system
+func getCpuNum() int {
+	f, err := os.Open("/proc/cpuinfo")
+	if err != nil {
+		return 0
+	}
+	defer f.Close()
+
+	num := 0
+	r := bufio.NewReader(f)
+	for {
+		line, err := r.ReadString('\n')
+		if err != nil && err != io.EOF {
+			fmt.Println(err)
+			return 0
+		} else if err == io.EOF {
+			break
+		}
+		if strings.HasPrefix(line, "processor") {
+			num++
+		}
+	}
+
+	return num
 }

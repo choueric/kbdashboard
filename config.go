@@ -36,7 +36,7 @@ const DefaultConfig = `{
 		"target":"uImage",
 		"dtb":"at91rm9200ek.dtb",
 		"mod_install_dir":"$INSTALL_MOD_PATH: ./_build/modules",
-		"thread_num":4
+		"thread_num":%d
 	}
 	]
 } `
@@ -100,7 +100,7 @@ func getConfig(dump bool) *Config {
 	filepath := os.Getenv("HOME") + "/.kbdashboard/config.json"
 	jc := jconfig.New(filepath, Config{})
 
-	if _, err := jc.Load(DefaultConfig); err != nil {
+	if _, err := jc.Load(fmt.Sprintf(DefaultConfig, getCpuNum())); err != nil {
 		fmt.Fprintf(os.Stderr, "load config error: %v", err)
 		os.Exit(1)
 	}
