@@ -10,7 +10,7 @@ import (
 	"github.com/choueric/cmdmux"
 )
 
-var logger *log.Logger = log.New(os.Stderr, "", log.Ldate|log.Ltime|log.Lshortfile)
+var logger *log.Logger = log.New(ioutil.Discard, "", 0)
 
 func main() {
 	if len(os.Args) >= 2 && os.Args[1] == "dump" {
@@ -19,8 +19,8 @@ func main() {
 	}
 	gConfig = getConfig(false)
 
-	if !gConfig.Debug {
-		logger = log.New(ioutil.Discard, "", 0)
+	if gConfig.Debug {
+		logger = log.New(os.Stderr, "", log.Ldate|log.Ltime|log.Lshortfile)
 	}
 
 	cmdmux.HandleFunc("/", helpHandler)
