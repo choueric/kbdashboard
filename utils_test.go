@@ -5,7 +5,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/exec"
 	"path"
+	"strconv"
 	"testing"
 )
 
@@ -171,5 +173,22 @@ func Test_copyFileContents(t *testing.T) {
 
 	if !deepCompare(src, dst) {
 		t.Error("file dose not match")
+	}
+}
+
+func Test_getCpuNum(t *testing.T) {
+	// use 'grep -c ^processors.: /proc/cpuinfo' to get number of CPU
+	var result bytes.Buffer
+	cmd := exec.Command("grep", "-c", "^processor.:", "/proc/cpuinfo")
+	pipeCmd(cmd, &result, false)
+	num := result.String()
+	expect, err := strconv.Atoi(num[0 : len(num)-1])
+	if err != nil {
+		t.Error(err)
+	}
+
+	output := getCpuNum()
+	if expect != output {
+		t.Errorf("expect %d, output %d\n", expect, output)
 	}
 }
