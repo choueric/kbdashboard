@@ -104,6 +104,7 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 	stdoutMarker := cWrap(cGREEN, ">>")
 	stderrMarker := cWrap(cRED, "!!")
 
+	stdoutDone := make(chan struct{})
 	scanner := bufio.NewScanner(stdoutReader)
 	go func() {
 		for scanner.Scan() {
@@ -113,9 +114,11 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 				fmt.Fprintln(w, scanner.Text())
 			}
 		}
+		stdoutDone <- struct{}{}
 		logger.Printf("End of pipeCmd stdout goroutine: %v\n", scanner.Err())
 	}()
 
+	stderrDone := make(chan struct{})
 	errScanner := bufio.NewScanner(stderrReader)
 	go func() {
 		for errScanner.Scan() {
@@ -125,6 +128,7 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 				fmt.Fprintln(w, errScanner.Text())
 			}
 		}
+		stderrDone <- struct{}{}
 		logger.Printf("End of pipeCmd stderr goroutine: %v\n", errScanner.Err())
 	}()
 
@@ -133,6 +137,9 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 		return err
 	}
 	logger.Printf("pipeCmd start \n")
+
+	<-stdoutDone
+	<-stderrDone
 
 	err = cmd.Wait()
 	if err != nil {
