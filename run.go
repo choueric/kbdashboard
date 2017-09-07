@@ -113,6 +113,7 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 				fmt.Fprintln(w, scanner.Text())
 			}
 		}
+		logger.Printf("End of pipeCmd stdout goroutine: %v\n", scanner.Err())
 	}()
 
 	errScanner := bufio.NewScanner(stderrReader)
@@ -124,12 +125,14 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 				fmt.Fprintln(w, errScanner.Text())
 			}
 		}
+		logger.Printf("End of pipeCmd stderr goroutine: %v\n", errScanner.Err())
 	}()
 
 	err = cmd.Start()
 	if err != nil {
 		return err
 	}
+	logger.Printf("pipeCmd start \n")
 
 	err = cmd.Wait()
 	if err != nil {

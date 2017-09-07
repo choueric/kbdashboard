@@ -180,7 +180,10 @@ func Test_getCpuNum(t *testing.T) {
 	// use 'grep -c ^processors.: /proc/cpuinfo' to get number of CPU
 	var result bytes.Buffer
 	cmd := exec.Command("grep", "-c", "^processor.:", "/proc/cpuinfo")
-	pipeCmd(cmd, &result, false)
+	err := pipeCmd(cmd, &result, false)
+	if err != nil {
+		t.Error(err)
+	}
 	num := result.String()
 	expect, err := strconv.Atoi(num[0 : len(num)-1])
 	if err != nil {
