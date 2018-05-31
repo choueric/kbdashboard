@@ -56,7 +56,7 @@ func (c *Config) String() string {
 func (c *Config) fix() {
 	// validate config
 	if c.Current >= len(c.Profiles) {
-		fmt.Fprintf(os.Stderr, "Current in config.json is invalid: %s\n", c.Current)
+		fmt.Fprintf(os.Stderr, "Current in config.json is invalid: %d\n", c.Current)
 		os.Exit(1)
 	}
 
