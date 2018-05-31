@@ -8,6 +8,8 @@ import (
 	"path"
 	"regexp"
 	"strings"
+
+	"github.com/kr/text"
 )
 
 const (
@@ -16,8 +18,7 @@ const (
 	cYELLOW      = "\x1b[33;1m"
 	cEND         = "\x1b[0;m"
 	level1Indent = "  "
-	level2Indent = "      "
-	level3Indent = "          "
+	level2Indent = "    "
 )
 
 func defMark() string {
@@ -39,28 +40,16 @@ func cWrap(color string, str string) string {
 	}
 }
 
-func printCmdTitle(format string, def bool, v ...interface{}) {
+func cmdTitle(w io.Writer, def bool, format string, v ...interface{}) {
 	if def {
-		fmt.Printf("%s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Fprintf(w, "%s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	} else {
-		fmt.Println(level1Indent + cWrap(cGREEN, fmt.Sprintf(format, v...)))
+		fmt.Fprintln(w, level1Indent+cWrap(cGREEN, fmt.Sprintf(format, v...)))
 	}
 }
 
-func printCmdInfo(format string, v ...interface{}) {
-	fmt.Printf(level2Indent + fmt.Sprintf(format, v...))
-}
-
-func printSubcmdTitle(format string, def bool, v ...interface{}) {
-	if def {
-		fmt.Printf("    %s %s\n", defMark(), cWrap(cGREEN, fmt.Sprintf(format, v...)))
-	} else {
-		fmt.Println(level2Indent + cWrap(cGREEN, fmt.Sprintf(format, v...)))
-	}
-}
-
-func printSubcmdInfo(format string, v ...interface{}) {
-	fmt.Printf(level3Indent + fmt.Sprintf(format, v...))
+func cmdUsage(w io.Writer, format string, v ...interface{}) {
+	fmt.Fprintf(w, text.Indent(fmt.Sprintf(format, v...), level2Indent))
 }
 
 func printCmd(cmd string, profile string) {

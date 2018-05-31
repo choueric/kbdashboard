@@ -18,8 +18,8 @@ var versionHelp = &helpNode{
 	cmd:      "version",
 	synopsis: "Print version information.",
 	usage: func(w io.Writer, h *helpNode) {
-		printCmdTitle("version", false)
-		printCmdInfo("Output the version information.\n")
+		cmdTitle(w, false, "version")
+		cmdUsage(w, "Output the version information.\n")
 	},
 }
 

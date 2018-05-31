@@ -10,8 +10,8 @@ var chooseHelp = &helpNode{
 	cmd:      "choose",
 	synopsis: "Choose <profile> as the current profile.",
 	usage: func(w io.Writer, h *helpNode) {
-		printCmdTitle("choose <profile>", false)
-		printCmdInfo("Choose <profile> as current one.\n")
+		cmdTitle(w, false, "choose <profile>")
+		cmdUsage(w, "Choose <profile> as current one.\n")
 	},
 }
 

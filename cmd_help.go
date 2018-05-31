@@ -40,8 +40,8 @@ var helpJar = []*helpNode{
 		cmd:      "help",
 		synopsis: "Print help message for one or all commands. [cmd].",
 		usage: func(w io.Writer, h *helpNode) {
-			printCmdTitle("help [cmd]", false)
-			printCmdInfo("Print the all or [cmd]'s help message.\n")
+			cmdTitle(w, false, "help [cmd]")
+			cmdUsage(w, "Print the all commands or [cmd]'s help message.\n")
 		},
 	},
 }
@@ -87,8 +87,8 @@ var completionHelp = &helpNode{
 	cmd:      "completion",
 	synopsis: "Generate a shell completion file.",
 	usage: func(w io.Writer, h *helpNode) {
-		printCmdTitle("completion", false)
-		printCmdInfo("Generate a shell completion file '%s'.\n", COMP_FILENAME)
+		cmdTitle(w, false, "completion")
+		cmdUsage(w, "Generate a shell completion file '%s'.\n", COMP_FILENAME)
 	},
 }
 

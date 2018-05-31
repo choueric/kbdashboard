@@ -11,9 +11,10 @@ var listHelp = &helpNode{
 	cmd:      "list",
 	synopsis: "List profiles' information.",
 	usage: func(w io.Writer, h *helpNode) {
-		printCmdTitle("list [-v|-a]", false)
-		printCmdInfo("-a: Print with more information\n")
-		printCmdInfo("-c: Print full information of current profile.\n")
+		cmdTitle(w, false, "list [-a|-v]")
+		cmdUsage(w, "Without any options, print current profile's brief details.\n"+
+			"-a: Print with all profile's brief details.\n"+
+			"-v: Print current profile's full information.\n")
 	},
 }
 

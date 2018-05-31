@@ -9,16 +9,16 @@ var buildHelp = &helpNode{
 	cmd:      "build",
 	synopsis: "Build various targets of kernel. [image|modules|dtb].",
 	usage: func(w io.Writer, h *helpNode) {
-		printSubcmdTitle("build image", true)
-		printSubcmdInfo("Build kernel images for current profile.\n")
-		printSubcmdInfo("Equal to '$kbdashboard make uImage'.\n")
+		cmdTitle(w, true, "build image")
+		cmdUsage(w, "Build kernel images for current profile.\n"+
+			"Equal to '$kbdashboard make uImage'.\n")
 
-		printSubcmdTitle("build modules", false)
-		printSubcmdInfo("Build and install modules for current profile.\n")
-		printSubcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
+		cmdTitle(w, false, "build modules")
+		cmdUsage(w, "Build and install modules for current profile.\n"+
+			"Eqaul to '$ make modules' then '$ make modules_install'.\n")
 
-		printSubcmdTitle("build dtb", false)
-		printSubcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
+		cmdTitle(w, false, "build dtb")
+		cmdUsage(w, "Build 'dtb' file and install into 'BuildDir'.\n")
 	},
 }
 

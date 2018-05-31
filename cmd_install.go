@@ -42,9 +42,11 @@ var installHelp = &helpNode{
 	cmd:      "install",
 	synopsis: "Execute your own install script.",
 	usage: func(w io.Writer, h *helpNode) {
-		printCmdTitle("install [args]", false)
-		printSubcmdInfo("Execute your own install script of the current profile.\n")
-		printSubcmdInfo("The [args] will transferred to the script.\n")
+		cmdTitle(w, false, "install [args]")
+		cmdUsage(w, "Execute your own install script of the current profile.\n"+
+			"The [args] will transferred to the script.\n"+
+			"If there is no install scripts, kbdashboard will create one for you,\n"+
+			"which defines some simple actions.\n")
 	},
 }
 

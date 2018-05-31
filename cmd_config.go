@@ -9,15 +9,15 @@ var configHelp = &helpNode{
 	cmd:      "config",
 	synopsis: "Handle kernel's configuration. [menu|def|save].",
 	usage: func(w io.Writer, h *helpNode) {
-		printSubcmdTitle("config menu", true)
-		printSubcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
+		cmdTitle(w, true, "config menu")
+		cmdUsage(w, "Invoke 'make menuconfig' on the current kernel.\n")
 
-		printSubcmdTitle("config def", false)
-		printSubcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
+		cmdTitle(w, false, "config def")
+		cmdUsage(w, "Invoke 'make defconfig' on the current kernel.\n")
 
-		printSubcmdTitle("config save", false)
-		printSubcmdInfo("Save current config as the default config.\n")
-		printSubcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
+		cmdTitle(w, false, "config save")
+		cmdUsage(w, "Save current config as the default config.\n"+
+			"Invoke 'make savedefconfig' and then overwrite the original config file.\n")
 	},
 }
 

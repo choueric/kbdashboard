@@ -29,15 +29,15 @@ var dtsHelp = &helpNode{
 	cmd:      "dts",
 	synopsis: "List relevant DTS files.",
 	usage: func(w io.Writer, h *helpNode) {
-		printSubcmdTitle("dts list [-t|-v]", true)
-		printSubcmdInfo("List all relevant DTS files. By default, print as a list.\n")
-		printSubcmdInfo("-t: Print as a tree-like graph.\n")
-		printSubcmdInfo("-v: Print absolute file path.\n")
+		cmdTitle(w, true, "dts list [-t|-v]")
+		cmdUsage(w, "List all relevant DTS files. By default, print as a list.\n"+
+			"-t: Print as a tree-like graph.\n"+
+			"-v: Print absolute file path.\n")
 
-		printSubcmdTitle("dts link [-o directory]", false)
-		printSubcmdInfo("Make soft link of all relevant DTS files into a dirctory.\n")
-		printSubcmdInfo("If without -o, the default out directory is '[profile_name]_dts' in current path.\n")
-		printSubcmdInfo("-o: Specify the output directory.\n")
+		cmdTitle(w, false, "dts link [-o directory]")
+		cmdUsage(w, "Create all relevant DTSs' soft-link into a dirctory.\n"+
+			"-o: Specify the output directory.\n"+
+			"    Without -o, the default is '[profile_name]_dts' in current path.\n")
 	},
 }
 
