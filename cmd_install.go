@@ -62,7 +62,7 @@ func createScript(fileName string, p *Profile) error {
 	str += builtInComments + "\n"
 	str += fmt.Sprintf("IMAGE=\"$KBD_BUILD_DIR/arch/%s/boot/%s\"\n", p.Arch, p.Target)
 	str += fmt.Sprintf("MODULES=\"$KBD_MOD_DIR/lib/modules/{TODO:uname -r}\"\n")
-	str += fmt.Sprintf("DTB=\"$KBD_BUILD_DIR/%s\"\n", p.DTB)
+	str += "DTB=\"$KBD_BUILD_DIR/$KBD_DTB\"\n"
 	str += "DEST_DIR=\"{TODO:dirname}\"\n"
 	str += scriptContent
 
