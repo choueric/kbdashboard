@@ -25,12 +25,20 @@ type FileNode struct {
 	filePath string // absolute path
 }
 
-func dtsUsage(w io.Writer, m *helpMap) {
-	defaultHelp(w, m)
-	fmt.Printf("\n")
-	dtsListUsage()
-	dtsLinkUsage()
-	fmt.Printf("\n")
+var dtsHelp = &helpNode{
+	cmd:      "dts",
+	synopsis: "List relevant DTS files.",
+	usage: func(w io.Writer, h *helpNode) {
+		printSubcmdTitle("dts list [-t|-v]", true)
+		printSubcmdInfo("List all relevant DTS files. By default, print as a list.\n")
+		printSubcmdInfo("-t: Print as a tree-like graph.\n")
+		printSubcmdInfo("-v: Print absolute file path.\n")
+
+		printSubcmdTitle("dts link [-o directory]", false)
+		printSubcmdInfo("Make soft link of all relevant DTS files into a dirctory.\n")
+		printSubcmdInfo("If without -o, the default out directory is '[profile_name]_dts' in current path.\n")
+		printSubcmdInfo("-o: Specify the output directory.\n")
+	},
 }
 
 // return the absolute path.
@@ -112,13 +120,6 @@ func makeFileList(n *tree.Node, f func(*tree.Node) string) map[string]int {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func dtsListUsage() {
-	printSubcmdTitle("dts list [-t|-v]", true)
-	printSubcmdInfo("List all relevant DTS files. By default, print as a list.\n")
-	printSubcmdInfo("-t: Print as a tree-like graph.\n")
-	printSubcmdInfo("-v: Print absolute file path.\n")
-}
-
 func makeDtsFilePath(p *Profile) string {
 	return path.Join(p.SrcDir, "arch", p.Arch, "boot/dts", p.DTB[0:len(p.DTB)-1]+"s")
 }
@@ -168,13 +169,6 @@ func dtsListHandler(args []string, data interface{}) (int, error) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-func dtsLinkUsage() {
-	printSubcmdTitle("dts link [-o directory]", false)
-	printSubcmdInfo("Make soft link of all relevant DTS files into a dirctory.\n")
-	printSubcmdInfo("If without -o, the default out directory is '[profile_name]_dts' in current path.\n")
-	printSubcmdInfo("-o: Specify the output directory.\n")
-}
 
 func dtsLinkHandler(args []string, data interface{}) (int, error) {
 	p, _, err := getCurrentProfile(gConfig)

@@ -1,35 +1,22 @@
 package main
 
-import (
-	"fmt"
-	"io"
-)
+import "io"
 
-func editUsage(w io.Writer, m *helpMap) {
-	defaultHelp(w, m)
-	fmt.Printf("\n")
-	editProfileUsage()
-	editInstallUsage()
-	fmt.Printf("\n")
-}
+var editHelp = &helpNode{
+	cmd:      "edit",
+	synopsis: "Edit profiles or scripts with the 'editor'. [profile|install].",
+	usage: func(w io.Writer, h *helpNode) {
+		printSubcmdTitle("edit profile", true)
+		printSubcmdInfo("Edit the kbdashboard's configuration file.\n")
 
-////////////////////////////////////////////////////////////////////////////////
-
-func editProfileUsage() {
-	printSubcmdTitle("edit profile", true)
-	printSubcmdInfo("Edit the kbdashboard's configuration file.\n")
+		printSubcmdTitle("edit install", false)
+		printSubcmdInfo("Edit current profile's installation script.\n")
+	},
 }
 
 func editProfileHandler(args []string, data interface{}) (int, error) {
 	var argv = []string{gConfig.Editor, gConfig.filepath}
 	return 0, execCmd(gConfig.Editor, argv)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func editInstallUsage() {
-	printSubcmdTitle("edit install", false)
-	printSubcmdInfo("Edit current profile's installation script.\n")
 }
 
 func editInstallHandler(args []string, data interface{}) (int, error) {

@@ -1,26 +1,25 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os"
 )
 
-func buildUsage(w io.Writer, m *helpMap) {
-	defaultHelp(w, m)
-	fmt.Printf("\n")
-	buildImageUsage()
-	buildModulesUsage()
-	buildDtbUsage()
-	fmt.Printf("\n")
-}
+var buildHelp = &helpNode{
+	cmd:      "build",
+	synopsis: "Build various targets of kernel. [image|modules|dtb].",
+	usage: func(w io.Writer, h *helpNode) {
+		printSubcmdTitle("build image", true)
+		printSubcmdInfo("Build kernel images for current profile.\n")
+		printSubcmdInfo("Equal to '$kbdashboard make uImage'.\n")
 
-////////////////////////////////////////////////////////////////////////////////
+		printSubcmdTitle("build modules", false)
+		printSubcmdInfo("Build and install modules for current profile.\n")
+		printSubcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
 
-func buildImageUsage() {
-	printSubcmdTitle("build image", true)
-	printSubcmdInfo("Build kernel images for current profile.\n")
-	printSubcmdInfo("Equal to '$kbdashboard make uImage'.\n")
+		printSubcmdTitle("build dtb", false)
+		printSubcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
+	},
 }
 
 func buildImageHandler(args []string, data interface{}) (int, error) {
@@ -30,14 +29,6 @@ func buildImageHandler(args []string, data interface{}) (int, error) {
 	}
 	printCmd("build image", p.Name)
 	return 0, makeKernel(p, p.Target, os.Stdout, true)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func buildModulesUsage() {
-	printSubcmdTitle("build modules", false)
-	printSubcmdInfo("Build and install modules for current profile.\n")
-	printSubcmdInfo("Eqaul to '$ make modules' then '$ make modules_install'.\n")
 }
 
 func buildModulesHandler(args []string, data interface{}) (int, error) {
@@ -53,13 +44,6 @@ func buildModulesHandler(args []string, data interface{}) (int, error) {
 	}
 
 	return 0, makeKernel(p, "modules_install", os.Stdout, true)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func buildDtbUsage() {
-	printSubcmdTitle("build dtb", false)
-	printSubcmdInfo("Build 'dtb' file and install into 'BuildDir'.\n")
 }
 
 func buildDtbHandler(args []string, data interface{}) (int, error) {

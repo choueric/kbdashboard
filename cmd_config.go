@@ -1,25 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os"
 )
 
-func configUsage(w io.Writer, m *helpMap) {
-	defaultHelp(w, m)
-	fmt.Printf("\n")
-	configMenuUsage()
-	configDefUsage()
-	configSaveUsage()
-	fmt.Printf("\n")
-}
+var configHelp = &helpNode{
+	cmd:      "config",
+	synopsis: "Handle kernel's configuration. [menu|def|save].",
+	usage: func(w io.Writer, h *helpNode) {
+		printSubcmdTitle("config menu", true)
+		printSubcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
 
-////////////////////////////////////////////////////////////////////////////////
+		printSubcmdTitle("config def", false)
+		printSubcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
 
-func configMenuUsage() {
-	printSubcmdTitle("config menu", true)
-	printSubcmdInfo("Invoke 'make menuconfig' on the current kernel.\n")
+		printSubcmdTitle("config save", false)
+		printSubcmdInfo("Save current config as the default config.\n")
+		printSubcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
+	},
 }
 
 func configMenuHandler(args []string, data interface{}) (int, error) {
@@ -31,13 +30,6 @@ func configMenuHandler(args []string, data interface{}) (int, error) {
 	return 0, configKernel(p, "menuconfig")
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-func configDefUsage() {
-	printSubcmdTitle("config def", false)
-	printSubcmdInfo("Invoke 'make defconfig' on the current kernel.\n")
-}
-
 func configDefHandler(args []string, data interface{}) (int, error) {
 	p, _, err := getCurrentProfile(gConfig)
 	if err != nil {
@@ -45,14 +37,6 @@ func configDefHandler(args []string, data interface{}) (int, error) {
 	}
 	printCmd("config def", p.Name)
 	return 0, makeKernel(p, p.DefConfig, os.Stdout, true)
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-func configSaveUsage() {
-	printSubcmdTitle("config save", false)
-	printSubcmdInfo("Save current config as the default config.\n")
-	printSubcmdInfo("Invoke 'make savedefconfig' and then overwrite the original config file.\n")
 }
 
 func configSaveHandler(args []string, data interface{}) (int, error) {

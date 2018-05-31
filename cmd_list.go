@@ -7,11 +7,14 @@ import (
 	"io"
 )
 
-func listUsage(w io.Writer, m *helpMap) {
-	printCmdTitle("list [-v|-a]", false)
-	printCmdInfo("List all profiles.\n")
-	printCmdInfo("-v: Print with more information\n")
-	printCmdInfo("-c: Print full information of current profile.\n\n")
+var listHelp = &helpNode{
+	cmd:      "list",
+	synopsis: "List profiles' information.",
+	usage: func(w io.Writer, h *helpNode) {
+		printCmdTitle("list [-v|-a]", false)
+		printCmdInfo("-a: Print with more information\n")
+		printCmdInfo("-c: Print full information of current profile.\n")
+	},
 }
 
 func printAdditional(p *Profile) {

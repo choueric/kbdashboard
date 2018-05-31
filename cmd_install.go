@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strconv"
@@ -36,6 +37,16 @@ case "$1" in
 esac
 `
 )
+
+var installHelp = &helpNode{
+	cmd:      "install",
+	synopsis: "Execute your own install script.",
+	usage: func(w io.Writer, h *helpNode) {
+		printCmdTitle("install [args]", false)
+		printSubcmdInfo("Execute your own install script of the current profile.\n")
+		printSubcmdInfo("The [args] will transferred to the script.\n")
+	},
+}
 
 func createScript(fileName string, p *Profile) error {
 	fmt.Printf("create install script: '%s'\n", cWrap(cGREEN, fileName))
