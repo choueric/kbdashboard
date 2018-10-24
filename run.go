@@ -11,7 +11,7 @@ import (
 	"syscall"
 )
 
-func doMakeKernelOpt(t string, n int, b, c, a, m string) []string {
+func doMakeKernelOpt(t string, n int, b, c, a, m, extra string) []string {
 	cmdArgs := []string{}
 
 	if t != "" {
@@ -43,12 +43,18 @@ func doMakeKernelOpt(t string, n int, b, c, a, m string) []string {
 		cmdArgs = append(cmdArgs, strings.Join(installModPath, "="))
 	}
 
+	if extra != "" {
+		for _, p := range strings.Fields(extra) {
+			cmdArgs = append(cmdArgs, p)
+		}
+	}
+
 	return cmdArgs
 }
 
 func makeKernelOpt(p *Profile, target string) []string {
 	return doMakeKernelOpt(target, p.ThreadNum, p.BuildDir, p.CrossComile,
-		p.Arch, p.ModInstallDir)
+		p.Arch, p.ModInstallDir, p.ExtraOpts)
 }
 
 func makeKernel(p *Profile, target string, w io.Writer, useMarker bool) error {
@@ -115,7 +121,7 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 			}
 		}
 		stdoutDone <- struct{}{}
-		logger.Printf("End of pipeCmd stdout goroutine: %v\n", scanner.Err())
+		logger.Printf("End of stdout goroutine. error: %v\n", scanner.Err())
 	}()
 
 	stderrDone := make(chan struct{})
@@ -129,14 +135,14 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 			}
 		}
 		stderrDone <- struct{}{}
-		logger.Printf("End of pipeCmd stderr goroutine: %v\n", errScanner.Err())
+		logger.Printf("End of stderr goroutine. error: %v\n", errScanner.Err())
 	}()
 
 	err = cmd.Start()
 	if err != nil {
 		return err
 	}
-	logger.Printf("pipeCmd start \n")
+	logger.Println("Start pipeCmd")
 
 	<-stdoutDone
 	<-stderrDone
@@ -146,7 +152,7 @@ func pipeCmd(cmd *exec.Cmd, w io.Writer, useMarker bool) error {
 		return err
 	}
 
-	logger.Println("end of pipeCmd.")
+	logger.Println("End of pipeCmd")
 	return nil
 }
 

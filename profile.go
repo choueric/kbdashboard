@@ -11,6 +11,7 @@ type Profile struct {
 	SrcDir        string `json:"src_dir"`
 	Arch          string `json:"arch"`
 	CrossComile   string `json:"cross_compile"`
+	ExtraOpts     string `json:"extra_opts"`
 	BuildDir      string `json:"build_dir"`
 	DefConfig     string `json:"defconfig"`
 	Target        string `json:"target"`
@@ -25,6 +26,7 @@ func (p *Profile) String() string {
 	line += fmt.Sprintln("  SrcDir\t:", p.SrcDir)
 	line += fmt.Sprintln("  Arch\t:", p.Arch)
 	line += fmt.Sprintln("  CC\t:", p.CrossComile)
+	line += fmt.Sprintln("  ExtraOpts\t:", p.ExtraOpts)
 	line += fmt.Sprintln("  BuildDir\t:", p.BuildDir)
 	line += fmt.Sprintln("  DefConfig\t:", p.DefConfig)
 	line += fmt.Sprintln("  Target\t:", p.Target)
