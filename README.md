@@ -29,6 +29,9 @@ See [this post](http://ericnode.info/post/kbdashboard/).
 # TODO
 - [X] Built-in variables for installation scripts.
 - [X] Add dts gathering.
+- [X] Add extra options for kernel build, like `CFLAGS_KERNEL=-march=armv7-a`.
+- [ ] Improve the install script template.
+- [ ] Get the version string, include local version, like `3.14.28-132859-g953d55a`
 - [ ] Add Dropbox support to sync and backup configurations and scripts.
 - [ ] Complete test code.
 
