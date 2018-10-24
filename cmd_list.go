@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -18,21 +17,19 @@ var listHelp = &helpNode{
 	},
 }
 
-func printAdditional(p *Profile) {
-	var result bytes.Buffer
-
-	err := makeKernel(p, "kernelversion", &result, false)
-	if err == nil {
-		fmt.Printf("  Version   : %s", result.String())
-	}
-}
-
 func listHandler(args []string, data interface{}) (int, error) {
 	var verbose, all bool
 	flagSet := flag.NewFlagSet("list", flag.ExitOnError)
 	flagSet.BoolVar(&verbose, "v", false, "print with more information.")
 	flagSet.BoolVar(&all, "a", false, "print all profiles.")
 	flagSet.Parse(args)
+
+	printAdditional := func(p *Profile) {
+		version, err := kernelFullVersion(p)
+		if err == nil {
+			fmt.Println("  Version   :", version)
+		}
+	}
 
 	if !all {
 		p := gConfig.Profiles[gConfig.Current]

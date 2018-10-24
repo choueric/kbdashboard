@@ -2,10 +2,12 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"path"
 	"strconv"
 	"strings"
 	"syscall"
@@ -76,6 +78,45 @@ func makeKernel(p *Profile, target string, w io.Writer, useMarker bool) error {
 	}
 
 	return pipeCmd(cmd, w, useMarker)
+}
+
+func kernelVersion(p *Profile) (string, error) {
+	var buf bytes.Buffer
+
+	err := makeKernel(p, "kernelversion", &buf, false)
+	if err != nil {
+		return "", err
+	}
+	version := buf.String()
+	return version[0 : len(version)-1], nil
+}
+
+func localVersion(p *Profile) (string, error) {
+	setlocalversion := path.Join(p.SrcDir, "scripts/setlocalversion")
+	cmd := exec.Command(setlocalversion, p.SrcDir)
+	cmd.Dir = p.BuildDir
+
+	var buf bytes.Buffer
+	err := pipeCmd(cmd, &buf, false)
+	if err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
+}
+
+func kernelFullVersion(p *Profile) (string, error) {
+	version, err := kernelVersion(p)
+	if err != nil {
+		return "", err
+	}
+
+	local, err := localVersion(p)
+	if err == nil {
+		version += local
+	}
+
+	return version, nil
 }
 
 func configKernel(p *Profile, target string) error {
