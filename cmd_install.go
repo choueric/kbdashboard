@@ -97,7 +97,7 @@ func buildEnviron(cmd *exec.Cmd, p *Profile) {
 	addEnv("KBD_DEFCONFIG", p.DefConfig)
 	addEnv("KBD_DTB", p.DTB)
 	addEnv("KBD_MOD_DIR", p.ModInstallDir)
-	addEnv("KBD_TREAD_NUM", strconv.Itoa(p.ThreadNum))
+	addEnv("KBD_THREAD_NUM", strconv.Itoa(p.ThreadNum))
 }
 
 func installHandler(args []string, data interface{}) (int, error) {
