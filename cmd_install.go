@@ -17,7 +17,7 @@ const (
 # - KBD_CURRENT: global, current profile index.
 # - KBD_NAME: profile, name.
 # - KBD_SRC_DIR: profile, source directory.
-# - KBD_ARCH: profile, archetect.
+# - KBD_ARCH: profile, processor architecture.
 # - KBD_CC: profile, cross compiler.
 # - KBD_TARGET: profile, build target.
 # - KBD_BUILD_DIR: profile, build directory.
@@ -25,6 +25,7 @@ const (
 # - KBD_DTB: profile, DTB target name.
 # - KBD_MOD_DIR: profile, modules install directory.
 # - KBD_THREAD_NUM: profile, thread number.
+# - KBD_KERNEL_VERSION: profile, kernle full version, like "3.14.28-132859-g953d55a".
 `
 	scriptContent = `
 install -d $DEST_DIR
@@ -98,6 +99,11 @@ func buildEnviron(cmd *exec.Cmd, p *Profile) {
 	addEnv("KBD_DTB", p.DTB)
 	addEnv("KBD_MOD_DIR", p.ModInstallDir)
 	addEnv("KBD_THREAD_NUM", strconv.Itoa(p.ThreadNum))
+
+	version, err := kernelFullVersion(p)
+	if err == nil {
+		addEnv("KBD_KERNEL_VERSION", version)
+	}
 }
 
 func installHandler(args []string, data interface{}) (int, error) {
