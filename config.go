@@ -26,18 +26,19 @@ const DefaultConfig = `{
 	"editor": "vim",
 	"current": 0,
 	"profile": [
-	{
-		"name":"profile_name",
-		"src_dir":"/path/of/the/kernel/source",
-		"arch":"$ARCH: arm ",
-		"cross_compile":"$CROSS_COMPILE: arm-eabi-",
-		"build_dir":"$O: ./_build",
-		"defconfig":"at91rm9200_defconfig",
-		"target":"uImage",
-		"dtb":"at91rm9200ek.dtb",
-		"mod_install_dir":"$INSTALL_MOD_PATH: ./_build/modules",
-		"thread_num":%d
-	}
+		{
+			"name": "profile_name",
+			"src_dir": "/path/of/the/kernel/source",
+			"arch": "$ARCH: arm ",
+			"cross_compile": "$CROSS_COMPILE: arm-eabi-",
+			"extra_opts": "extra environment variables",
+			"build_dir": "$O: ./_build",
+			"defconfig": "at91rm9200_defconfig",
+			"target": "uImage",
+			"dtb": "at91rm9200ek.dtb",
+			"mod_install_dir": "$INSTALL_MOD_PATH: ./_build/modules",
+			"thread_num":%d
+		}
 	]
 } `
 
