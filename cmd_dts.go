@@ -89,7 +89,10 @@ func searchInclude(node *tree.Node, context *DtsContext) error {
 	return nil
 }
 
-func parseDTSFiles(dtsFile string, context *DtsContext) (*tree.Node, error) {
+// parseDTSFiles scans all included fils from a DTS file and builds a tree to
+// contain all dts files. At last, return root of this tree.
+func parseDTSFiles(dtsFile string) (*tree.Node, error) {
+	var context DtsContext
 	context.baseDir = path.Dir(dtsFile)
 	context.includeDir = path.Join(context.baseDir, "../../../../include")
 
@@ -101,7 +104,7 @@ func parseDTSFiles(dtsFile string, context *DtsContext) (*tree.Node, error) {
 	root := tree.New(&FileNode{filePath})
 	context.wait.Add(1)
 
-	go searchInclude(root, context)
+	go searchInclude(root, &context)
 	context.wait.Wait()
 
 	return root, nil
@@ -120,7 +123,7 @@ func makeFileList(n *tree.Node, f func(*tree.Node) string) map[string]int {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func makeDtsFilePath(p *Profile) string {
+func getDtsAbsPath(p *Profile) string {
 	return path.Join(p.SrcDir, "arch", p.Arch, "boot/dts", p.DTB[0:len(p.DTB)-1]+"s")
 }
 
@@ -141,8 +144,7 @@ func dtsListHandler(args []string, data interface{}) (int, error) {
 	flagSet.BoolVar(&verbose, "v", false, "print complete path.")
 	flagSet.Parse(args)
 
-	var context DtsContext
-	root, err := parseDTSFiles(makeDtsFilePath(p), &context)
+	root, err := parseDTSFiles(getDtsAbsPath(p))
 	if err != nil {
 		return 0, err
 	}
@@ -189,8 +191,7 @@ func dtsLinkHandler(args []string, data interface{}) (int, error) {
 		return 0, err
 	}
 
-	var context DtsContext
-	root, err := parseDTSFiles(makeDtsFilePath(p), &context)
+	root, err := parseDTSFiles(getDtsAbsPath(p))
 	if err != nil {
 		return 0, err
 	}
