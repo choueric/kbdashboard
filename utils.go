@@ -16,6 +16,8 @@ const (
 	cRED         = "\x1b[31;1m"
 	cGREEN       = "\x1b[32;1m"
 	cYELLOW      = "\x1b[33;1m"
+	cBLUE        = "\x1b[34;1m"
+	cMAGENTA     = "\x1b[35;1m"
 	cEND         = "\x1b[0;m"
 	level1Indent = "  "
 	level2Indent = "    "
@@ -53,8 +55,8 @@ func cmdUsage(w io.Writer, format string, v ...interface{}) {
 }
 
 func printCmd(cmd string, profile string) {
-	logger.Printf("run '%s' for [%s]\n", cWrap(cGREEN, cmd),
-		cWrap(cGREEN, profile))
+	fmt.Printf("run '%s' for [%s]\n", cWrap(cMAGENTA, cmd),
+		cWrap(cYELLOW, profile))
 }
 
 // if OutputDir and ModInstallDir is relative, change it to absolute
