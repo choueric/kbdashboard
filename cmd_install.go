@@ -42,7 +42,7 @@ esac
 var installHelp = &helpNode{
 	cmd:      "install",
 	synopsis: "Execute your own install script.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "install [args]")
 		cmdUsage(w, "Execute your own install script of the current profile.\n"+
 			"The [args] will transferred to the script.\n"+

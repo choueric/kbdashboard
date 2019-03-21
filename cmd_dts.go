@@ -28,7 +28,7 @@ type FileNode struct {
 var dtsHelp = &helpNode{
 	cmd:      "dts",
 	synopsis: "List relevant DTS files.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, true, "dts list [-t|-v]")
 		cmdUsage(w, "List all relevant DTS files. By default, print as a list.\n"+
 			"-t: Print as a tree-like graph.\n"+

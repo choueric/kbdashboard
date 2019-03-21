@@ -9,7 +9,7 @@ import (
 var makeHelp = &helpNode{
 	cmd:      "make",
 	synopsis: "Execute '$ make <target>' on current kernel.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "make <target>")
 		cmdUsage(w, "This is the way to pass through kbdashboard and invoke\n"+
 			"kernel's make directly.\n"+

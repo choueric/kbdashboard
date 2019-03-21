@@ -12,6 +12,11 @@ import (
 
 var COMP_FILENAME = "kbdashboard.bash-completion"
 
+type helpSubNode struct {
+	name  string
+	usage func(w io.Writer)
+}
+
 /*
  * One cmd's help output:
  *   ```
@@ -28,9 +33,10 @@ var COMP_FILENAME = "kbdashboard.bash-completion"
  *   ```
  */
 type helpNode struct {
-	cmd      string                         // one line
-	synopsis string                         // one line
-	usage    func(w io.Writer, h *helpNode) // maybe multi-lines
+	cmd      string // one line
+	synopsis string // one line
+	subs     []helpSubNode
+	usage    func(w io.Writer)
 }
 
 var helpJar = []*helpNode{
@@ -38,10 +44,12 @@ var helpJar = []*helpNode{
 	installHelp, makeHelp, dtsHelp, versionHelp, completionHelp,
 	&helpNode{
 		cmd:      "help",
-		synopsis: "Print help message for one or all commands. [cmd].",
-		usage: func(w io.Writer, h *helpNode) {
-			cmdTitle(w, false, "help [cmd]")
-			cmdUsage(w, "Print the all commands or [cmd]'s help message.\n")
+		synopsis: "Print help message for one or all commands.",
+		subs: []helpSubNode{
+			{"<cmd>", func(w io.Writer) {
+				cmdTitle(w, false, "help [cmd]")
+				cmdUsage(w, "Print the all commands or [cmd]'s help message.\n")
+			}},
 		},
 	},
 }
@@ -51,12 +59,30 @@ func outputBanner(w io.Writer, h *helpNode) {
 }
 
 func outputSynopsis(w io.Writer, h *helpNode) {
-	fmt.Fprintf(w, "  %s\t: %s\n", h.cmd, h.synopsis)
+	fmt.Fprintf(w, "  %s\t: %s", h.cmd, h.synopsis)
+	if len(h.subs) != 0 {
+		str := " ["
+		for i, sub := range h.subs {
+			if i != 0 {
+				str += "|"
+			}
+			str += sub.name
+
+		}
+		str += "]."
+		fmt.Fprintf(w, "%s", str)
+	}
+	fmt.Fprintf(w, "\n")
 }
 
 func outputUsage(w io.Writer, h *helpNode) {
 	if h.usage != nil {
-		h.usage(w, h)
+		h.usage(w)
+		return
+	}
+
+	for _, sub := range h.subs {
+		sub.usage(w)
 	}
 }
 
@@ -86,7 +112,7 @@ func helpHandler(args []string, data interface{}) (int, error) {
 var completionHelp = &helpNode{
 	cmd:      "completion",
 	synopsis: "Generate a shell completion file.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "completion")
 		cmdUsage(w, "Generate a shell completion file '%s'.\n", COMP_FILENAME)
 	},

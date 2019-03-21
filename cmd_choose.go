@@ -9,7 +9,7 @@ import (
 var chooseHelp = &helpNode{
 	cmd:      "choose",
 	synopsis: "Choose <profile> as the current profile.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "choose <profile>")
 		cmdUsage(w, "Choose <profile> as current one.\n")
 	},

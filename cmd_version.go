@@ -17,7 +17,7 @@ var (
 var versionHelp = &helpNode{
 	cmd:      "version",
 	synopsis: "Print version information.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "version")
 		cmdUsage(w, "Output the version information.\n")
 	},

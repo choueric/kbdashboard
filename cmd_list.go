@@ -9,7 +9,7 @@ import (
 var listHelp = &helpNode{
 	cmd:      "list",
 	synopsis: "List profiles' information.",
-	usage: func(w io.Writer, h *helpNode) {
+	usage: func(w io.Writer) {
 		cmdTitle(w, false, "list [-a|-v]")
 		cmdUsage(w, "Without any options, print current profile's brief details.\n"+
 			"-a: Print with all profile's brief details.\n"+
