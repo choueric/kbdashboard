@@ -36,6 +36,7 @@ const DefaultConfig = `{
 			"defconfig": "at91rm9200_defconfig",
 			"target": "uImage",
 			"dtb": "at91rm9200ek.dtb",
+			"extra_dtbs": "",
 			"mod_install_dir": "$INSTALL_MOD_PATH: ./_build/modules",
 			"thread_num":%d
 		}

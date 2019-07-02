@@ -1,8 +1,12 @@
 package main
 
 import (
+	"errors"
+	"flag"
+	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 var buildHelp = &helpNode{
@@ -21,7 +25,8 @@ var buildHelp = &helpNode{
 		}},
 		{"dtb", func(w io.Writer) {
 			cmdTitle(w, false, "build dtb")
-			cmdUsage(w, "Build 'dtb' file and install into 'BuildDir'.\n")
+			cmdUsage(w, "Build 'dtb' file.\n"+
+				"-e: build extra DTBs 'extra_dtbs' addtionally.\n")
 		}},
 	},
 }
@@ -55,10 +60,32 @@ func buildDtbHandler(args []string, data interface{}) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	printCmd("build DTB", p.Name)
+
+	extra := false
+	flagSet := flag.NewFlagSet("buildDtb", flag.ExitOnError)
+	flagSet.BoolVar(&extra, "e", false, "build extra DTBs.")
+	flagSet.Parse(args)
+
+	s := "build DTB"
+	if extra {
+		s += " with extra DTBs"
+	}
+	printCmd(s, p.Name)
 
 	if err := makeKernel(p, p.DTB, os.Stdout, true); err != nil {
 		return 0, err
+	}
+
+	if extra {
+		dtbs := strings.Fields(p.ExtraDTBs)
+		for _, dtb := range dtbs {
+			if dtb == p.DTB {
+				return 0, errors.New(fmt.Sprintf("duplicate '%s' in 'extra_dtbs'", dtb))
+			}
+			if err := makeKernel(p, dtb, os.Stdout, true); err != nil {
+				return 0, err
+			}
+		}
 	}
 
 	return 0, nil

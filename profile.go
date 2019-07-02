@@ -16,6 +16,7 @@ type Profile struct {
 	DefConfig     string `json:"defconfig"`
 	Target        string `json:"target"`
 	DTB           string `json:"dtb"`
+	ExtraDTBs     string `json:"extra_dtbs"`
 	ModInstallDir string `json:"mod_install_dir"`
 	ThreadNum     int    `json:"thread_num"`
 }
@@ -31,6 +32,7 @@ func (p *Profile) String() string {
 	line += fmt.Sprintln("  DefConfig\t:", p.DefConfig)
 	line += fmt.Sprintln("  Target\t:", p.Target)
 	line += fmt.Sprintln("  DTB\t:", p.DTB)
+	line += fmt.Sprintln("  ExtraDTBs\t:", p.ExtraDTBs)
 	line += fmt.Sprintln("  ModInsDir\t:", p.ModInstallDir)
 	line += fmt.Sprintln("  ThreadNum\t:", p.ThreadNum)
 	return line
